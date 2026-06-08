@@ -18,19 +18,64 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-white text-gray-950">
-    <header class="border-b border-gray-100">
-      <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <%= link_to "Mwlabs", root_path, class: "text-lg font-bold tracking-tight" %>
+  <body class="min-h-screen bg-white text-slate-950">
+    <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
+      <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <%= link_to root_path, class: "flex items-center" do %>
+          <%= tag.img src: "/images/mwlogo-navbar-cropped.png", alt: "M&W Labs", class: "h-11 w-auto object-contain md:h-14" %>
+        <% end %>
 
-        <div class="flex items-center gap-4 text-sm font-medium">
-          <%= link_to "Home", root_path, class: "text-gray-600 hover:text-gray-950" %>
-          <% if user_signed_in? %>
-            <%= link_to "Dashboard", dashboard_root_path, class: "text-gray-600 hover:text-gray-950" %>
-            <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "rounded-lg bg-gray-950 px-4 py-2 text-white hover:bg-gray-800" %>
-          <% else %>
-            <%= link_to "Sign in", new_user_session_path, class: "rounded-lg bg-gray-950 px-4 py-2 text-white hover:bg-gray-800" %>
-          <% end %>
+        <button data-collapse-toggle="visitor-navbar-menu" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-200 lg:hidden" aria-controls="visitor-navbar-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>
+
+        <div id="visitor-navbar-menu" class="hidden w-full items-center justify-between gap-8 lg:flex lg:w-auto">
+          <div class="mt-5 flex flex-col gap-1 text-sm font-bold text-slate-900 lg:mt-0 lg:flex-row lg:items-center lg:gap-8">
+            <%= link_to "Home", root_path, class: "border-b-2 border-blue-600 px-1 py-4 text-blue-600" %>
+
+            <div>
+              <button id="services-dropdown-button" data-dropdown-toggle="services-dropdown" class="flex w-full items-center justify-between gap-2 px-1 py-4 text-slate-900 hover:text-blue-600" type="button">
+                Services
+                <svg class="h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+              </button>
+              <div id="services-dropdown" class="z-50 hidden w-56 divide-y divide-slate-100 rounded-xl border border-slate-100 bg-white shadow-xl">
+                <ul class="py-2 text-sm font-semibold text-slate-700" aria-labelledby="services-dropdown-button">
+                  <li><a href="#" class="block px-4 py-3 hover:bg-blue-50 hover:text-blue-700">Web Development</a></li>
+                  <li><a href="#" class="block px-4 py-3 hover:bg-blue-50 hover:text-blue-700">Digital Marketing</a></li>
+                  <li><a href="#" class="block px-4 py-3 hover:bg-blue-50 hover:text-blue-700">AI Automation</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <a href="#" class="px-1 py-4 hover:text-blue-600">About Us</a>
+            <a href="#" class="px-1 py-4 hover:text-blue-600">Our Work</a>
+            <a href="#" class="px-1 py-4 hover:text-blue-600">Pricing</a>
+            <a href="#" class="px-1 py-4 hover:text-blue-600">Blog</a>
+            <a href="#" class="px-1 py-4 hover:text-blue-600">Contact</a>
+          </div>
+
+          <div class="mt-4 lg:mt-0">
+            <% if user_signed_in? %>
+              <%= link_to dashboard_root_path, class: "inline-flex items-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700" do %>
+                Dashboard
+                <svg class="ms-2 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h10m0 0-4-4m4 4-4 4"/>
+                </svg>
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path, class: "inline-flex items-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700" do %>
+                Get a Free Strategy Call
+                <svg class="ms-2 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.5 5.5c.7 4.1 5.9 9.3 10 10l2.4-2.4-3.4-2.2-1.2 1.2c-1.9-.8-3.6-2.5-4.4-4.4l1.2-1.2-2.2-3.4L2.5 5.5Z"/>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </nav>
     </header>
