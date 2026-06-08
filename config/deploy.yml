@@ -48,7 +48,8 @@ env:
 
     # Match this to any external database server to configure Active Record correctly
     # Use mwlabs-db for a db accessory server on same machine via local kamal docker network.
-    # DB_HOST: 192.168.0.2
+    # POSTGRES_HOST: 192.168.0.2
+    # POSTGRES_USER: mwlabs
 
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
@@ -62,7 +63,7 @@ aliases:
   dbc: app exec --interactive --reuse "bin/rails dbconsole"
 
 
-# Use a persistent storage volume for sqlite database files and local Active Storage files.
+# Use a persistent storage volume for local Active Storage files.
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
   - "mwlabs_storage:/rails/storage"
@@ -94,20 +95,18 @@ builder:
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:
 #   db:
-#     image: mysql:8.0
+#     image: postgres:16
 #     host: 192.168.0.2
-#     # Change to 3306 to expose port to the world instead of just local network.
-#     port: "127.0.0.1:3306:3306"
+#     # Change to 5432 to expose port to the world instead of just local network.
+#     port: "127.0.0.1:5432:5432"
 #     env:
 #       clear:
-#         MYSQL_ROOT_HOST: '%'
+#         POSTGRES_DB: mwlabs_production
+#         POSTGRES_USER: mwlabs
 #       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
+#         - POSTGRES_PASSWORD
 #     directories:
-#       - data:/var/lib/mysql
+#       - data:/var/lib/postgresql/data
 #   redis:
 #     image: redis:7.0
 #     host: 192.168.0.2
