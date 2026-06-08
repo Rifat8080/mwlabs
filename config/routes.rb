@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  scope path: "dashboard", as: "dashboard", module: "admin" do
-    root to: "dashboard#show"
-  end
+  get "dashboard", to: "admin/dashboard#show", as: :dashboard_root
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
