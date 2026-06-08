@@ -1,0 +1,14 @@
+<section class="mx-auto max-w-5xl px-6 py-24 text-center">
+  <p class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600">Mwlabs</p>
+  <h1 class="mt-6 text-4xl font-bold tracking-tight text-gray-950 sm:text-6xl">
+    Build, manage, and grow your application from one place.
+  </h1>
+  <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+    A clean public landing page for visitors, backed by an authenticated dashboard for managing the application.
+  </p>
+
+  <div class="mt-10 flex items-center justify-center gap-4">
+    <%= link_to "Go to dashboard", dashboard_root_path, class: "rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+    <%= link_to "Sign in", new_user_session_path, class: "rounded-lg border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50" %>
+  </div>
+</section>
