@@ -22,14 +22,14 @@
       </p>
 
       <div class="mt-9 flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
-        <%= link_to new_user_session_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
+        <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
           Start Your Project
           <svg class="ms-3 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h10m0 0-4-4m4 4-4 4"/>
           </svg>
         <% end %>
 
-        <a href="#" class="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm hover:bg-blue-50">
+        <a href="#services" class="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm hover:bg-blue-50">
           View Our Services
           <svg class="ms-3 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h10m0 0-4-4m4 4-4 4"/>
@@ -108,7 +108,7 @@
   </div>
 </section>
 
-<section class="bg-white py-16 sm:py-20">
+<section id="services" class="bg-white py-16 sm:py-20">
   <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
     <div class="mx-auto max-w-3xl text-center">
       <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Our Services</p>
@@ -123,37 +123,43 @@
           icon: "fa-code",
           color: "bg-blue-600 text-white",
           title: "Web & Software Development",
-          body: "Custom websites, web apps, SaaS platforms, dashboards and business systems."
+          body: "Custom websites, web apps, SaaS platforms, dashboards and business systems.",
+          slug: "web-development"
         },
         {
           icon: "fa-bullhorn",
           color: "bg-emerald-50 text-emerald-600",
           title: "Digital Marketing",
-          body: "SEO, Google & Meta Ads, lead generation, funnels, email and WhatsApp marketing."
+          body: "SEO, Google & Meta Ads, lead generation, funnels, email and WhatsApp marketing.",
+          slug: "digital-marketing"
         },
         {
           icon: "fa-pen-nib",
           color: "bg-purple-50 text-purple-600",
           title: "Branding & Design",
-          body: "Logo design, brand identity, social media creatives, brochures and more."
+          body: "Logo design, brand identity, social media creatives, brochures and more.",
+          slug: "branding-design"
         },
         {
           icon: "fa-clapperboard",
           color: "bg-pink-50 text-pink-600",
           title: "Video Editing & Content",
-          body: "Reels, YouTube videos, ads, corporate videos, motion graphics and more."
+          body: "Reels, YouTube videos, ads, corporate videos, motion graphics and more.",
+          slug: "video-editing"
         },
         {
           icon: "fa-robot",
           color: "bg-amber-50 text-amber-600",
           title: "AI & Automation",
-          body: "AI chatbots, automation, workflows, dashboards and smart integrations."
+          body: "AI chatbots, automation, workflows, dashboards and smart integrations.",
+          slug: "ai-automation"
         },
         {
           icon: "fa-bullseye",
           color: "bg-cyan-50 text-cyan-600",
           title: "Growth Strategy",
-          body: "Business strategy, market research, competitor analysis and scaling plans."
+          body: "Business strategy, market research, competitor analysis and scaling plans.",
+          slug: "growth-strategy"
         }
       ].each do |service| %>
         <div class="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-100/60">
@@ -164,10 +170,10 @@
           <h3 class="text-lg font-black leading-snug text-slate-950"><%= service[:title] %></h3>
           <p class="mt-4 flex-1 text-sm font-medium leading-7 text-slate-600"><%= service[:body] %></p>
 
-          <a href="#" class="mt-6 inline-flex items-center text-sm font-extrabold text-blue-600 hover:text-blue-700">
+          <%= link_to service_path(service[:slug]), class: "mt-6 inline-flex items-center text-sm font-extrabold text-blue-600 hover:text-blue-700" do %>
             Explore
             <i class="fa-solid fa-arrow-right ms-2 text-xs"></i>
-          </a>
+          <% end %>
         </div>
       <% end %>
     </div>
@@ -199,10 +205,10 @@
         <% end %>
       </div>
 
-      <a href="#" class="mt-8 inline-flex items-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700">
+      <%= link_to about_path, class: "mt-8 inline-flex items-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
         Learn More About Us
         <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
-      </a>
+      <% end %>
     </div>
 
     <div class="space-y-6">
@@ -352,10 +358,10 @@
     </div>
 
     <div class="mt-8 text-center">
-      <a href="#" class="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-white px-8 py-3 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100">
+      <%= link_to work_path, class: "inline-flex items-center justify-center rounded-lg border border-blue-200 bg-white px-8 py-3 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100" do %>
         View All Projects
         <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
-      </a>
+      <% end %>
     </div>
   </div>
 </section>
@@ -489,14 +495,14 @@
         </div>
 
         <div class="flex flex-col gap-4 sm:flex-row">
-          <a href="#" class="inline-flex items-center justify-center rounded-xl bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-xl shadow-blue-950/10 transition hover:-translate-y-0.5 hover:bg-blue-50">
+          <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-xl shadow-blue-950/10 transition hover:-translate-y-0.5 hover:bg-blue-50" do %>
             Book a Free Call
             <i class="fa-solid fa-phone ms-3 text-xs"></i>
-          </a>
-          <a href="#" class="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-sm font-extrabold text-white shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20">
+          <% end %>
+          <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-sm font-extrabold text-white shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20" do %>
             Request a Quote
             <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
-          </a>
+          <% end %>
         </div>
       </div>
     </div>

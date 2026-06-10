@@ -1,0 +1,25 @@
+<% content_for :title, "Our Team | Mwlabs" %>
+
+<%= render "pages/shared/hero",
+  eyebrow: "Our Team",
+  title: "Meet the People Behind M&W Labs",
+  description: "A multidisciplinary team of strategists, designers, developers and marketers working as one growth partner." %>
+
+<section class="bg-white py-14 sm:py-16">
+  <div class="mx-auto grid max-w-[104rem] gap-6 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-12 2xl:px-16">
+    <% [
+      [ "Alex Morgan", "Founder & CEO", "AM" ],
+      [ "Priya Shah", "Head of Strategy", "PS" ],
+      [ "Daniel Reed", "Lead Developer", "DR" ],
+      [ "Emily Carter", "Creative Director", "EC" ]
+    ].each do |name, role, initials| %>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-xl font-black text-white"><%= initials %></div>
+        <h2 class="mt-5 text-lg font-black text-slate-950"><%= name %></h2>
+        <p class="mt-2 text-sm font-bold text-slate-500"><%= role %></p>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= render "pages/shared/cta" %>

@@ -1,0 +1,50 @@
+<% content_for :title, "Contact | Mwlabs" %>
+
+<%= render "pages/shared/hero",
+  eyebrow: "Contact Us",
+  title: "Let's Start Your Next Project",
+  description: "Tell us about your goals and we'll get back to you with a clear plan and timeline." %>
+
+<section class="bg-white py-14 sm:py-16">
+  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:px-12 2xl:px-16">
+    <div class="space-y-6">
+      <% [
+        [ "fa-phone", "+1 (234) 567-8900", "tel:+12345678900" ],
+        [ "fa-envelope", "hello@mwlabs.com", "mailto:hello@mwlabs.com" ],
+        [ "fa-location-dot", "123 Innovation Drive, New York, NY 10001, USA", nil ]
+      ].each do |icon, text, href| %>
+        <div class="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+            <i class="fa-solid <%= icon %>"></i>
+          </span>
+          <% if href %>
+            <a href="<%= href %>" class="text-sm font-semibold leading-7 text-slate-600 hover:text-blue-600"><%= text %></a>
+          <% else %>
+            <p class="text-sm font-semibold leading-7 text-slate-600"><%= text %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <form class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label class="mb-2 block text-sm font-bold text-slate-700" for="contact-name">Name</label>
+          <input id="contact-name" type="text" class="block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500" placeholder="Your name">
+        </div>
+        <div>
+          <label class="mb-2 block text-sm font-bold text-slate-700" for="contact-email">Email</label>
+          <input id="contact-email" type="email" class="block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500" placeholder="you@company.com">
+        </div>
+      </div>
+      <div class="mt-5">
+        <label class="mb-2 block text-sm font-bold text-slate-700" for="contact-message">Message</label>
+        <textarea id="contact-message" rows="5" class="block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500" placeholder="Tell us about your project"></textarea>
+      </div>
+      <button type="button" class="mt-6 inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700">
+        Send Message
+        <i class="fa-solid fa-paper-plane ms-3 text-xs"></i>
+      </button>
+    </form>
+  </div>
+</section>

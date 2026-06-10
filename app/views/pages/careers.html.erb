@@ -1,0 +1,26 @@
+<% content_for :title, "Careers | Mwlabs" %>
+
+<%= render "pages/shared/hero",
+  eyebrow: "Careers",
+  title: "Join Our Growing Team",
+  description: "We're always looking for talented people who care about craft, collaboration and client success." %>
+
+<section class="bg-white py-14 sm:py-16">
+  <div class="mx-auto max-w-[104rem] space-y-4 px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <% [
+      [ "Senior Rails Developer", "Remote", "Full-time" ],
+      [ "Performance Marketing Specialist", "Remote", "Full-time" ],
+      [ "UI/UX Designer", "Hybrid", "Full-time" ]
+    ].each do |title, location, type| %>
+      <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-lg font-black text-slate-950"><%= title %></h2>
+          <p class="mt-2 text-sm font-semibold text-slate-500"><%= location %> · <%= type %></p>
+        </div>
+        <%= link_to "Apply Now", contact_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-extrabold text-white hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= render "pages/shared/cta" %>
