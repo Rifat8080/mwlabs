@@ -1,0 +1,13 @@
+<% content_for :title, "Edit #{resource_model.model_name.human} | M&W Labs Control Center" %>
+
+<div class="mx-auto max-w-5xl space-y-6">
+  <div class="rounded-[2rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_24rem),#ffffff] p-6 shadow-sm">
+    <%= link_to "← Back to #{resource_title}", polymorphic_path([ :admin, resource_model ]), class: "text-sm font-extrabold text-blue-600 hover:text-blue-700" %>
+    <h1 class="mt-3 text-4xl font-black tracking-tight text-slate-950">Edit <%= resource_model.model_name.human %></h1>
+    <p class="mt-2 text-sm font-medium leading-7 text-slate-600"><%= resource_description %></p>
+  </div>
+
+  <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+    <%= render "admin/resources/form" %>
+  </div>
+</div>

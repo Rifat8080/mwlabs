@@ -1,0 +1,112 @@
+<% quote_form = resource_fields.any? { |field| field[:type] == :quote_items } %>
+<%= form_with model: [ :admin, @resource ], class: "space-y-6", data: (quote_form ? { controller: "quote-calculator" } : {}) do |form| %>
+  <% if @resource.errors.any? %>
+    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+      <p class="font-semibold">Please fix the following:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <% @resource.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-5 md:grid-cols-2">
+    <% resource_fields.each do |field| %>
+      <% next if field[:type] == :quote_items %>
+      <% type = field[:type] || :text %>
+      <% wrapper_class = type == :textarea ? "md:col-span-2" : "" %>
+
+      <div class="<%= wrapper_class %>">
+        <%= form.label field[:name], admin_field_label(field), class: "block text-sm font-semibold text-gray-700" %>
+
+        <% case type %>
+        <% when :textarea %>
+          <%= form.text_area field[:name], rows: 5, class: "mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+        <% when :select %>
+          <%= form.select field[:name], options_for_select(field_options(field), @resource.public_send(field[:name])), { include_blank: "Select" }, class: "mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+        <% when :checkbox %>
+          <div class="mt-3 flex items-center gap-2">
+            <%= form.check_box field[:name], class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+            <span class="text-sm text-gray-600">Yes</span>
+          </div>
+        <% when :file %>
+          <%= form.file_field field[:name], class: "mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100" %>
+        <% when :decimal %>
+          <% calculator_target = field[:name] == :discount ? "discount" : field[:name] == :tax ? "tax" : nil %>
+          <%= form.number_field field[:name], step: 0.01, class: "mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100", data: { quote_calculator_target: calculator_target, action: calculator_target ? "input->quote-calculator#calculate" : nil }.compact %>
+        <% else %>
+          <%= form.public_send("#{type}_field", field[:name], class: "mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100") %>
+        <% end %>
+
+        <% if field[:hint].present? %>
+          <p class="mt-2 text-xs text-gray-500"><%= field[:hint] %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if quote_form %>
+    <div class="rounded-[1.5rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_26rem),#f8fbff] p-5 shadow-sm">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-950">Quote Line Items</h2>
+        <p class="mt-1 text-sm text-gray-600">Add services or custom charges. Totals are calculated when the quote is saved.</p>
+      </div>
+
+      <div class="mt-4 space-y-4">
+        <%= form.fields_for :quote_items do |item_form| %>
+          <div class="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-blue-100 hover:shadow-xl hover:shadow-blue-100/50 md:grid-cols-6">
+            <div>
+              <%= item_form.label :item_type, "Type", class: "block text-xs font-semibold text-gray-600" %>
+              <%= item_form.select :item_type, QuoteItem::ITEM_TYPES, {}, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+            </div>
+            <div class="md:col-span-2">
+              <%= item_form.label :name, "Name", class: "block text-xs font-semibold text-gray-600" %>
+              <%= item_form.text_field :name, list: "service-names", class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+            </div>
+            <div>
+              <%= item_form.label :quantity, "Qty", class: "block text-xs font-semibold text-gray-600" %>
+              <%= item_form.number_field :quantity, step: 0.01, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100", data: { quote_calculator_target: "quantity", action: "input->quote-calculator#calculate" } %>
+            </div>
+            <div>
+              <%= item_form.label :unit_price, "Unit price", class: "block text-xs font-semibold text-gray-600" %>
+              <%= item_form.number_field :unit_price, step: 0.01, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100", data: { quote_calculator_target: "unitPrice", action: "input->quote-calculator#calculate" } %>
+            </div>
+            <div class="flex items-end">
+              <label class="flex items-center gap-2 text-sm text-gray-600">
+                <%= item_form.check_box :_destroy, class: "h-4 w-4 rounded border-gray-300" %>
+                Remove
+              </label>
+            </div>
+            <div class="md:col-span-6">
+              <%= item_form.label :description, "Description", class: "block text-xs font-semibold text-gray-600" %>
+              <%= item_form.text_area :description, rows: 2, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mt-5 grid gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
+          <p class="text-xs font-black uppercase tracking-[0.22em] text-slate-500">Live subtotal</p>
+          <p class="mt-2 text-2xl font-black text-slate-950" data-quote-calculator-target="subtotal">$0.00</p>
+        </div>
+        <div class="rounded-2xl border border-blue-100 bg-blue-600 p-4 text-white shadow-xl shadow-blue-600/20">
+          <p class="text-xs font-black uppercase tracking-[0.22em] text-blue-100">Live total</p>
+          <p class="mt-2 text-2xl font-black" data-quote-calculator-target="total">$0.00</p>
+        </div>
+      </div>
+
+      <datalist id="service-names">
+        <% Service.order(:name).each do |service| %>
+          <option value="<%= service.name %>"></option>
+        <% end %>
+      </datalist>
+    </div>
+  <% end %>
+
+  <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6">
+    <%= link_to "Cancel", polymorphic_path([ :admin, resource_model ]), class: "rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50" %>
+    <%= form.submit class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700" %>
+  </div>
+<% end %>

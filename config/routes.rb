@@ -3,6 +3,27 @@ Rails.application.routes.draw do
 
   get "dashboard", to: "admin/dashboard#show", as: :dashboard_root
 
+  namespace :admin do
+    root to: "dashboard#show"
+
+    resources :users
+    resources :leads
+    resources :clients
+    resources :services
+    resources :quotes do
+      member do
+        patch :accept
+      end
+    end
+    resources :projects
+    resources :tasks
+    resources :invoices
+    resources :payments
+    resources :expenses
+    resources :file_uploads, path: "files"
+    resources :reminders, path: "follow-ups"
+  end
+
   get "about", to: "pages#about"
   get "work", to: "pages#work"
   get "pricing", to: "pages#pricing"

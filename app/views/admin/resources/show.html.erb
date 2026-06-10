@@ -1,0 +1,94 @@
+<% content_for :title, "#{resource_model.model_name.human} | M&W Labs Control Center" %>
+
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 rounded-[2rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_24rem),#ffffff] p-6 shadow-sm sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <%= link_to "← Back to #{resource_title}", polymorphic_path([ :admin, resource_model ]), class: "text-sm font-extrabold text-blue-600 hover:text-blue-700" %>
+      <h1 class="mt-3 text-4xl font-black tracking-tight text-slate-950"><%= @resource.try(:display_name) || resource_model.model_name.human %></h1>
+      <p class="mt-2 text-sm font-medium leading-7 text-slate-600"><%= resource_description %></p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <% if @resource.is_a?(Quote) && !@resource.accepted? %>
+        <%= button_to "Accept quote", accept_admin_quote_path(@resource), method: :patch, class: "rounded-xl bg-emerald-600 px-4 py-2 text-sm font-extrabold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700" %>
+      <% end %>
+      <%= link_to "Edit", edit_polymorphic_path([ :admin, @resource ]), class: "rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50" %>
+      <%= button_to "Delete", polymorphic_path([ :admin, @resource ]), method: :delete, form: { data: { turbo_confirm: "Delete this record?" } }, class: "rounded-xl border border-rose-200 bg-white px-4 py-2 text-sm font-extrabold text-rose-700 shadow-sm hover:bg-rose-50" %>
+    </div>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+      <h2 class="text-lg font-black text-slate-950">Details</h2>
+      <dl class="mt-5 grid gap-4 md:grid-cols-2">
+        <% resource_fields.each do |field| %>
+          <% next if field[:type] == :quote_items %>
+          <% value = field_value(@resource, field) %>
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <dt class="text-xs font-black uppercase tracking-[0.16em] text-slate-400"><%= admin_field_label(field) %></dt>
+            <dd class="mt-2 text-sm font-semibold text-slate-900"><%= admin_value(value) %></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+
+    <div class="space-y-6">
+      <% if @resource.is_a?(Quote) %>
+        <div class="rounded-[1.5rem] border border-blue-100 bg-blue-600 p-6 text-white shadow-xl shadow-blue-600/20">
+          <h2 class="text-lg font-black">Quote Totals</h2>
+          <div class="mt-4 space-y-2 text-sm text-blue-100">
+            <div class="flex justify-between"><span>Subtotal</span><strong><%= number_to_currency(@resource.subtotal) %></strong></div>
+            <div class="flex justify-between"><span>Discount</span><strong><%= number_to_currency(@resource.discount) %></strong></div>
+            <div class="flex justify-between"><span>Tax</span><strong><%= number_to_currency(@resource.tax) %></strong></div>
+            <div class="flex justify-between border-t border-blue-400/50 pt-3 text-base text-white"><span>Total</span><strong><%= number_to_currency(@resource.total_amount) %></strong></div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @activity_logs.present? %>
+        <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 class="text-lg font-black text-slate-950">Activity Timeline</h2>
+          <div class="mt-4 space-y-4">
+            <% @activity_logs.each do |log| %>
+              <div class="border-l-2 border-blue-200 pl-4">
+                <p class="text-sm font-bold text-slate-900"><%= log.action %></p>
+                <p class="mt-1 text-xs font-semibold text-slate-500"><%= log.created_at.to_fs(:long) %> by <%= log.user&.display_name || "System" %></p>
+                <% if log.details.present? %>
+                  <p class="mt-1 text-sm text-gray-600"><%= log.details %></p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @resource.is_a?(Quote) && @resource.quote_items.any? %>
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h2 class="text-lg font-semibold text-gray-950">Line Items</h2>
+      <div class="mt-4 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left font-semibold text-gray-600">Item</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-600">Qty</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-600">Price</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-600">Total</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <% @resource.quote_items.each do |item| %>
+              <tr>
+                <td class="px-4 py-3"><%= item.name %></td>
+                <td class="px-4 py-3"><%= item.quantity %></td>
+                <td class="px-4 py-3"><%= number_to_currency(item.unit_price) %></td>
+                <td class="px-4 py-3"><%= number_to_currency(item.total) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>

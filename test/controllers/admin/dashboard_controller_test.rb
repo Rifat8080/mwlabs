@@ -14,7 +14,7 @@ module Admin
       get dashboard_root_url
 
       assert_response :success
-      assert_select "h1", "Dashboard"
+      assert_select "h1", "Agency Operations Dashboard"
     end
   end
 end
