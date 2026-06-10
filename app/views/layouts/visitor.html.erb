@@ -101,13 +101,13 @@
 
             <div class="mt-5 flex items-center gap-3">
               <% [
-                [ "fa-facebook-f", "Facebook", "bg-blue-600" ],
-                [ "fa-instagram", "Instagram", "bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400" ],
-                [ "fa-linkedin-in", "LinkedIn", "bg-blue-700" ],
-                [ "fa-youtube", "YouTube", "bg-red-600" ],
-                [ "fa-whatsapp", "WhatsApp", "bg-emerald-500" ]
-              ].each do |icon, label, color| %>
-                <a href="#" class="flex h-8 w-8 items-center justify-center rounded-full text-sm text-white shadow-sm transition hover:-translate-y-1 <%= color %>" aria-label="<%= label %>">
+                [ "fa-facebook-f", "Facebook", "bg-blue-600", "https://www.facebook.com/info.mwlabs/" ],
+                [ "fa-instagram", "Instagram", "bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400", "https://www.instagram.com/info.mwlabs?igsh=MXFlYm9tbmNzanF5ZA==" ],
+                [ "fa-linkedin-in", "LinkedIn", "bg-blue-700", "https://www.linkedin.com/company/mwlabs" ],
+                [ "fa-youtube", "YouTube", "bg-red-600", "https://youtube.com/@mw_labs" ],
+                [ "fa-whatsapp", "WhatsApp", "bg-emerald-500", "https://wa.me/8801704014210" ]
+              ].each do |icon, label, color, url| %>
+                <a href="<%= url %>" class="flex h-8 w-8 items-center justify-center rounded-full text-sm text-white shadow-sm transition hover:-translate-y-1 <%= color %>" aria-label="<%= label %>">
                   <i class="fa-brands <%= icon %>"></i>
                 </a>
               <% end %>
@@ -152,19 +152,19 @@
                   <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
                     <i class="fa-solid fa-phone text-xs"></i>
                   </span>
-                  <a href="tel:+12345678900" class="transition hover:text-blue-600">+1 (234) 567-8900</a>
+                  <a href="tel:+8801704014210" class="transition hover:text-blue-600">+8801704014210</a>
                 </li>
                 <li class="flex gap-3.5">
                   <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
                     <i class="fa-solid fa-envelope text-xs"></i>
                   </span>
-                  <a href="mailto:hello@mwlabs.com" class="transition hover:text-blue-600">hello@mwlabs.com</a>
+                  <a href="mailto:info.mwlabs@gmail.com" class="transition hover:text-blue-600">info.mwlabs@gmail.com</a>
                 </li>
                 <li class="flex gap-3.5">
                   <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
                     <i class="fa-solid fa-location-dot text-xs"></i>
                   </span>
-                  <span>123 Innovation Drive,<br>New York, NY 10001, USA</span>
+                  <span>Demra,<br>Dhaka, Bangladesh</span>
                 </li>
               </ul>
             </div>
