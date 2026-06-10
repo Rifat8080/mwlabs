@@ -24,6 +24,23 @@ class Task < ApplicationRecord
     title
   end
 
+  def next_action
+    case status
+    when "To Do"
+      "Start work before #{due_date || 'the planned deadline'}."
+    when "In Progress"
+      "Continue work and submit for review."
+    when "Waiting"
+      "Get the required client input or asset."
+    when "Review"
+      "Review internally or request client approval."
+    when "Done"
+      "No action needed."
+    else
+      "Review task status."
+    end
+  end
+
   private
 
   def refresh_project_progress

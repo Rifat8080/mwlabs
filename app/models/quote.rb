@@ -7,10 +7,13 @@ class Quote < ApplicationRecord
   has_many :projects, dependent: :nullify
   has_many :invoices, dependent: :nullify
   has_many :activity_logs, as: :subject, dependent: :destroy
+  has_many :reminders, as: :remindable, dependent: :destroy
 
   accepts_nested_attributes_for :quote_items, allow_destroy: true, reject_if: :all_blank
 
   before_validation :calculate_totals
+  after_create_commit :record_created_activity
+  after_update_commit :sync_sales_workflow, if: :saved_change_to_status?
 
   validates :status, inclusion: { in: STATUSES }
   validates :total_amount, numericality: { greater_than_or_equal_to: 0 }
@@ -22,6 +25,23 @@ class Quote < ApplicationRecord
 
   def accepted?
     status == "Accepted"
+  end
+
+  def next_action
+    case status
+    when "Draft"
+      "Finalize pricing and send the quote."
+    when "Sent", "Viewed", "Revised"
+      "Follow up before the quote validity date."
+    when "Accepted"
+      "Confirm kickoff and review the generated project."
+    when "Rejected"
+      "Capture rejection reason and decide whether to revise."
+    when "Expired"
+      "Revise pricing or mark as future prospect."
+    else
+      "Review quote status."
+    end
   end
 
   def accept!(user: nil)
@@ -73,5 +93,52 @@ class Quote < ApplicationRecord
       status: "Draft",
       notes: payment_terms
     )
+  end
+
+  def record_created_activity
+    ActivityLog.record!(subject: self, action: "Quote created", details: "Quote total is #{format('%.2f', total_amount)}.")
+  end
+
+  def sync_sales_workflow
+    ActivityLog.record!(subject: self, action: "Quote status changed", details: "Moved to #{status}.")
+
+    case status
+    when "Sent", "Viewed", "Revised"
+      sync_lead_quote_sent!
+      schedule_quote_follow_up!
+    when "Rejected"
+      lead&.update!(status: "Lost")
+    when "Expired"
+      lead&.update!(status: "Future Prospect")
+    end
+  end
+
+  def sync_lead_quote_sent!
+    return if lead.blank? || lead.status.in?([ "Won", "Lost" ])
+
+    lead.update!(
+      status: "Quote Sent",
+      follow_up_date: suggested_follow_up_date
+    )
+  end
+
+  def schedule_quote_follow_up!
+    owner = lead&.assigned_to || User.where(role: "admin").first || User.first
+    return if owner.blank?
+
+    reminders.where(status: "Open").first_or_initialize.tap do |reminder|
+      reminder.user = owner
+      reminder.title = "Follow up quote for #{client&.display_name || lead&.display_name}"
+      reminder.due_date = suggested_follow_up_date
+      reminder.next_action = next_action
+      reminder.note = notes
+      reminder.save!
+    end
+  end
+
+  def suggested_follow_up_date
+    return 2.days.from_now.to_date if validity_date.blank?
+
+    [ Date.current, validity_date - 2.days ].max
   end
 end

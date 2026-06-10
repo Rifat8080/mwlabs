@@ -61,4 +61,53 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
   end
+
+  test "contact form captures complete lead information" do
+    assert_difference("Lead.count", 1) do
+      post leads_url, params: {
+        lead: {
+          name: "Ahmed Khan",
+          phone: "+8801700000000",
+          email: "ahmed@example.com",
+          company_name: "ABC Ltd",
+          country: "Bangladesh",
+          source: "Website Contact Form",
+          service_interest: "Software & Web Development",
+          budget: "1200",
+          urgency: "Urgent",
+          message: "Need a business website and CRM."
+        }
+      }
+    end
+
+    lead = Lead.order(:created_at).last
+    assert_redirected_to contact_url
+    assert_equal "Ahmed Khan", lead.name
+    assert_equal "+8801700000000", lead.phone
+    assert_equal "ahmed@example.com", lead.email
+    assert_equal "ABC Ltd", lead.company_name
+    assert_equal "Bangladesh", lead.country
+    assert_equal "Website Contact Form", lead.source
+    assert_equal "Software & Web Development", lead.service_interest
+    assert_equal BigDecimal("1200"), lead.budget
+    assert_equal "Urgent", lead.urgency
+    assert_equal "Need a business website and CRM.", lead.message
+    assert_equal "New", lead.status
+  end
+
+  test "invalid contact form renders errors without creating lead" do
+    assert_no_difference("Lead.count") do
+      post leads_url, params: {
+        lead: {
+          name: "",
+          email: "not-an-email",
+          message: "Need help"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "form"
+    assert_select "li", text: /Name can't be blank/
+  end
 end

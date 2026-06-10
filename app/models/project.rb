@@ -32,19 +32,36 @@ class Project < ApplicationRecord
     payments.sum(:amount) - expenses.sum(:amount)
   end
 
+  def next_action
+    return "Project is closed." if status.in?([ "Delivered", "Cancelled" ])
+    return "Collect missing requirements from the client." if status == "Requirement Collection"
+    return "Review waiting items with the client." if status == "Waiting for Client"
+    return "Package final delivery and send invoice." if status == "Completed"
+    return "Start the first task." if tasks.none?
+
+    next_task = tasks.where.not(status: "Done").order(:due_date, :created_at).first
+    next_task ? "Work on: #{next_task.title}" : "Confirm final delivery."
+  end
+
   def refresh_progress!
     total_tasks = tasks.count
     done_tasks = tasks.where(status: "Done").count
     calculated_progress = total_tasks.zero? ? progress : ((done_tasks.to_f / total_tasks) * 100).round
-    next_status =
-      if calculated_progress == 100 && total_tasks.positive?
-        "Completed"
-      elsif status == "Completed"
-        "In Progress"
-      else
-        status
-      end
+    next_status = calculated_status_for(calculated_progress, total_tasks)
 
     update_columns(progress: calculated_progress, status: next_status, updated_at: Time.current)
+  end
+
+  private
+
+  def calculated_status_for(calculated_progress, total_tasks)
+    return status if status.in?([ "Delivered", "Cancelled" ])
+    return "Not Started" if total_tasks.zero?
+    return "Completed" if calculated_progress == 100
+    return "Waiting for Client" if tasks.where(status: "Waiting").exists?
+    return "Revision" if tasks.where(status: "Review").exists?
+    return "In Progress" if tasks.where(status: "In Progress").exists? || calculated_progress.positive?
+
+    "Requirement Collection"
   end
 end

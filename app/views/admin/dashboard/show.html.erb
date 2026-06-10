@@ -1,23 +1,69 @@
 <% content_for :title, "Dashboard | M&W Labs Control Center" %>
 
 <div class="space-y-8">
-  <div class="relative overflow-hidden rounded-[2rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_28rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] p-6 shadow-sm">
+  <div class="relative overflow-hidden rounded-[2rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_28rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] p-6 shadow-sm lg:p-8">
     <div class="absolute right-0 top-0 h-64 w-64 rounded-full bg-cyan-100/60 blur-3xl"></div>
     <div class="relative">
       <div class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-700 shadow-sm">
         M&W Labs Control Center
         <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-600">+</span>
       </div>
-      <h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950">Agency Operations Dashboard</h1>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 lg:text-5xl">Agency Operations Dashboard</h1>
       <p class="mt-3 max-w-3xl text-sm font-medium leading-7 text-slate-600">Manage clients, leads, quotes, projects, tasks, invoices, payments, expenses, and follow-ups from one internal control center.</p>
     </div>
   </div>
 
+  <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[0.2em] text-blue-600">Workflow Command Center</p>
+        <h2 class="mt-2 text-2xl font-black tracking-tight text-slate-950">Real Agency Operating Flow</h2>
+        <p class="mt-1 text-sm font-medium text-slate-600">Follow the business from lead intake to closed cash without losing handoffs.</p>
+      </div>
+    </div>
+
+    <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <% @workflow_lanes.each_with_index do |lane, index| %>
+        <%= link_to lane[:path], class: "group rounded-2xl border border-slate-100 bg-slate-50 p-5 transition hover:-translate-y-1 hover:border-blue-100 hover:bg-white hover:shadow-xl hover:shadow-blue-100/60" do %>
+          <div class="flex items-start justify-between gap-4">
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
+              <i class="fa-solid <%= lane[:icon] %>"></i>
+            </span>
+            <span class="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Step <%= index + 1 %></span>
+          </div>
+          <p class="mt-4 text-sm font-black text-slate-950"><%= lane[:title] %></p>
+          <p class="mt-1 text-3xl font-black text-blue-600"><%= lane[:count] %></p>
+          <p class="mt-2 text-xs font-semibold leading-5 text-slate-500"><%= lane[:action] %></p>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <% icon_map = {
+      "Total leads" => "fa-user-plus",
+      "New leads this month" => "fa-arrow-trend-up",
+      "Active clients" => "fa-address-book",
+      "Active projects" => "fa-diagram-project",
+      "Pending quotes" => "fa-file-signature",
+      "Unpaid invoices" => "fa-file-invoice-dollar",
+      "Monthly revenue" => "fa-sack-dollar",
+      "Monthly expenses" => "fa-receipt",
+      "Estimated profit" => "fa-chart-line",
+      "Overdue tasks" => "fa-clock",
+      "Follow-ups due today" => "fa-bell"
+    } %>
     <% @cards.each do |label, value| %>
       <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-100/60">
-        <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400"><%= label %></p>
-        <p class="mt-3 text-2xl font-black text-slate-950"><%= value %></p>
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400"><%= label %></p>
+            <p class="mt-3 text-2xl font-black text-slate-950"><%= value %></p>
+          </div>
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <i class="fa-solid <%= icon_map[label] || 'fa-circle-dot' %>"></i>
+          </span>
+        </div>
       </div>
     <% end %>
   </div>
@@ -34,8 +80,11 @@
 
       <div class="mt-5 grid gap-3 md:grid-cols-3">
         <% @pipeline.each do |status, count| %>
-          <div class="rounded-2xl bg-slate-50 p-4">
-            <p class="text-sm font-bold text-slate-700"><%= status %></p>
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <p class="text-sm font-bold text-slate-700"><%= status %></p>
+              <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+            </div>
             <p class="mt-2 text-2xl font-black text-slate-950"><%= count %></p>
           </div>
         <% end %>
@@ -54,61 +103,82 @@
   </div>
 
   <div class="grid gap-6 xl:grid-cols-3">
-    <section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 class="text-lg font-semibold text-gray-950">Today’s Priorities</h2>
+    <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-black text-slate-950">Today’s Priorities</h2>
+          <p class="mt-1 text-sm font-medium text-slate-600">Tasks, lead follow-ups, and reminders due now.</p>
+        </div>
+        <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <i class="fa-solid fa-bolt"></i>
+        </span>
+      </div>
       <div class="mt-4 space-y-3">
         <% (@today_tasks + @today_leads + @reminders).first(10).each do |item| %>
-          <div class="rounded-xl bg-gray-50 p-4">
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
             <% if item.is_a?(Task) %>
-              <p class="text-sm font-semibold text-gray-950">Task: <%= item.title %></p>
-              <p class="mt-1 text-xs text-gray-500"><%= item.project.display_name %> · due <%= admin_value(item.due_date) %></p>
+              <p class="text-sm font-black text-slate-950">Task: <%= item.title %></p>
+              <p class="mt-1 text-xs font-semibold text-slate-500"><%= item.project.display_name %> · due <%= admin_value(item.due_date) %></p>
             <% elsif item.is_a?(Lead) %>
-              <p class="text-sm font-semibold text-gray-950">Follow up: <%= item.display_name %></p>
-              <p class="mt-1 text-xs text-gray-500"><%= item.service_interest.presence || item.notes.presence || "Lead follow-up" %></p>
+              <p class="text-sm font-black text-slate-950">Follow up: <%= item.display_name %></p>
+              <p class="mt-1 text-xs font-semibold text-slate-500"><%= item.service_interest.presence || item.notes.presence || "Lead follow-up" %></p>
             <% else %>
-              <p class="text-sm font-semibold text-gray-950">Reminder: <%= item.title %></p>
-              <p class="mt-1 text-xs text-gray-500"><%= item.next_action.presence || item.note.presence || "Next action due" %></p>
+              <p class="text-sm font-black text-slate-950">Reminder: <%= item.title %></p>
+              <p class="mt-1 text-xs font-semibold text-slate-500"><%= item.next_action.presence || item.note.presence || "Next action due" %></p>
             <% end %>
           </div>
         <% end %>
 
         <% if @today_tasks.empty? && @today_leads.empty? && @reminders.empty? %>
-          <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">No urgent priorities due today.</p>
+          <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
+            <i class="fa-solid fa-circle-check text-2xl text-emerald-500"></i>
+            <p class="mt-2 text-sm font-bold text-slate-600">No urgent priorities due today.</p>
+          </div>
         <% end %>
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm xl:col-span-2">
+    <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-gray-950">Active Projects</h2>
-        <%= link_to "Manage projects", admin_projects_path, class: "text-sm font-semibold text-blue-600 hover:text-blue-700" %>
+        <div>
+          <h2 class="text-lg font-black text-slate-950">Active Projects</h2>
+          <p class="mt-1 text-sm font-medium text-slate-600">Delivery work currently in motion.</p>
+        </div>
+        <%= link_to "Manage projects", admin_projects_path, class: "text-sm font-extrabold text-blue-600 hover:text-blue-700" %>
       </div>
 
-      <div class="mt-4 overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-          <thead class="bg-gray-50">
+      <div class="mt-5 overflow-hidden rounded-2xl border border-slate-100">
+        <table class="min-w-full divide-y divide-slate-100 text-sm">
+          <thead class="bg-slate-50">
             <tr>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">Project</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">Client</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">Status</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">Due Date</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">Progress</th>
+              <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Project</th>
+              <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Client</th>
+              <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Status</th>
+              <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Due Date</th>
+              <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Progress</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
+          <tbody class="divide-y divide-slate-100">
             <% @active_projects.each do |project| %>
-              <tr>
-                <td class="px-4 py-3 font-medium text-gray-950"><%= link_to project.name, admin_project_path(project), class: "hover:text-blue-700" %></td>
-                <td class="px-4 py-3 text-gray-700"><%= project.client.display_name %></td>
+              <tr class="hover:bg-blue-50/50">
+                <td class="px-4 py-4 font-black text-slate-950"><%= link_to project.name, admin_project_path(project), class: "hover:text-blue-700" %></td>
+                <td class="px-4 py-4 font-semibold text-slate-700"><%= project.client.display_name %></td>
                 <td class="px-4 py-3"><span class="rounded-full px-2.5 py-1 text-xs font-semibold ring-1 <%= admin_status_class(project.status) %>"><%= project.status %></span></td>
-                <td class="px-4 py-3 text-gray-700"><%= admin_value(project.deadline) %></td>
-                <td class="px-4 py-3 text-gray-700"><%= project.progress %>%</td>
+                <td class="px-4 py-4 font-semibold text-slate-700"><%= admin_value(project.deadline) %></td>
+                <td class="px-4 py-4 text-slate-700">
+                  <div class="flex min-w-32 items-center gap-3">
+                    <div class="h-2 flex-1 rounded-full bg-slate-100">
+                      <div class="h-2 rounded-full bg-blue-600" style="width: <%= project.progress %>%"></div>
+                    </div>
+                    <span class="text-xs font-black"><%= project.progress %>%</span>
+                  </div>
+                </td>
               </tr>
             <% end %>
 
             <% if @active_projects.empty? %>
               <tr>
-                <td colspan="5" class="px-4 py-8 text-center text-gray-500">No active projects yet.</td>
+                <td colspan="5" class="px-4 py-10 text-center font-semibold text-slate-500">No active projects yet.</td>
               </tr>
             <% end %>
           </tbody>
@@ -118,9 +188,9 @@
   </div>
 
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <%= link_to "Add Lead", new_admin_lead_path, class: "rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm font-semibold text-blue-700 hover:bg-blue-100" %>
-    <%= link_to "Create Quote", new_admin_quote_path, class: "rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm font-semibold text-emerald-700 hover:bg-emerald-100" %>
-    <%= link_to "Record Payment", new_admin_payment_path, class: "rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-sm font-semibold text-indigo-700 hover:bg-indigo-100" %>
-    <%= link_to "Add Expense", new_admin_expense_path, class: "rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm font-semibold text-amber-700 hover:bg-amber-100" %>
+    <%= link_to "Add Lead", new_admin_lead_path, class: "rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm font-black text-blue-700 transition hover:-translate-y-1 hover:bg-blue-100 hover:shadow-xl hover:shadow-blue-100/70" %>
+    <%= link_to "Create Quote", new_admin_quote_path, class: "rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm font-black text-emerald-700 transition hover:-translate-y-1 hover:bg-emerald-100 hover:shadow-xl hover:shadow-emerald-100/70" %>
+    <%= link_to "Record Payment", new_admin_payment_path, class: "rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-sm font-black text-indigo-700 transition hover:-translate-y-1 hover:bg-indigo-100 hover:shadow-xl hover:shadow-indigo-100/70" %>
+    <%= link_to "Add Expense", new_admin_expense_path, class: "rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm font-black text-amber-700 transition hover:-translate-y-1 hover:bg-amber-100 hover:shadow-xl hover:shadow-amber-100/70" %>
   </div>
 </div>

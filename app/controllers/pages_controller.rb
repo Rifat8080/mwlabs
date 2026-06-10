@@ -56,6 +56,7 @@ class PagesController < ApplicationController
   end
 
   def contact
+    @lead = Lead.new(source: "Website Contact Form")
   end
 
   def team

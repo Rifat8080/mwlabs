@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   get "pricing", to: "pages#pricing"
   get "blog", to: "pages#blog"
   get "contact", to: "pages#contact"
+  post "leads", to: "leads#create"
   get "team", to: "pages#team"
   get "careers", to: "pages#careers"
   get "testimonials", to: "pages#testimonials"

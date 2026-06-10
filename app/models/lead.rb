@@ -21,6 +21,7 @@ class Lead < ApplicationRecord
 
   after_create_commit :record_created_activity
   after_save_commit :sync_follow_up_reminder, if: :saved_change_to_follow_up_date?
+  after_save :sync_client_from_status, if: :saved_change_to_status?
   after_update_commit :record_status_activity, if: :saved_change_to_status?
 
   scope :followups_due, -> { where.not(follow_up_date: nil).where(follow_up_date: ..Date.current) }
@@ -28,6 +29,29 @@ class Lead < ApplicationRecord
 
   def display_name
     company_name.present? ? "#{name} (#{company_name})" : name
+  end
+
+  def next_action
+    case status
+    when "New"
+      "Contact the lead and confirm the requirement."
+    when "Contacted"
+      "Book a meeting or collect deeper requirements."
+    when "Need Requirement"
+      "Collect missing business details, assets, and scope."
+    when "Quote Preparing"
+      "Prepare and send the quote."
+    when "Quote Sent", "Follow Up"
+      "Follow up and handle objections."
+    when "Won"
+      "Start project onboarding."
+    when "Lost"
+      "Record why the lead was lost."
+    when "Future Prospect"
+      "Schedule a future nurture follow-up."
+    else
+      "Review lead status."
+    end
   end
 
   def convert_to_client!
@@ -49,6 +73,34 @@ class Lead < ApplicationRecord
   end
 
   private
+
+  def sync_client_from_status
+    case status
+    when "Won"
+      convert_to_client!
+    when "Lost"
+      remove_client_for_lost_lead!
+    end
+  end
+
+  def remove_client_for_lost_lead!
+    linked_client = client
+    return if linked_client.blank?
+
+    update_column(:client_id, nil)
+
+    if linked_client.projects.exists? || linked_client.invoices.exists?
+      linked_client.update!(status: "Inactive")
+      ActivityLog.record!(
+        subject: self,
+        action: "Client archived",
+        details: "Linked client was marked inactive because project or invoice history exists."
+      )
+    elsif linked_client.leads.where.not(id: id).none?
+      linked_client.destroy!
+      ActivityLog.record!(subject: self, action: "Client removed", details: "Linked client was removed after the lead was lost.")
+    end
+  end
 
   def record_created_activity
     ActivityLog.record!(subject: self, action: "Lead created", details: "Lead entered from #{source.presence || 'manual entry'}.")

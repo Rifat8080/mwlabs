@@ -8,6 +8,8 @@ class Invoice < ApplicationRecord
 
   before_validation :set_invoice_number, on: :create
   before_validation :calculate_total
+  after_create_commit :record_created_activity
+  after_update_commit :record_status_activity, if: :saved_change_to_status?
 
   validates :invoice_number, presence: true, uniqueness: true
   validates :status, inclusion: { in: STATUSES }
@@ -32,6 +34,23 @@ class Invoice < ApplicationRecord
 
   def due_amount
     total - paid_amount
+  end
+
+  def next_action
+    case status
+    when "Draft"
+      "Review and send invoice to the client."
+    when "Sent"
+      "Follow up before due date #{due_date || 'is reached'}."
+    when "Partially Paid"
+      "Chase remaining balance of #{format('%.2f', due_amount)}."
+    when "Overdue"
+      "Escalate payment follow-up immediately."
+    when "Paid"
+      "Reconcile payment and review project profitability."
+    else
+      "Review invoice status."
+    end
   end
 
   def refresh_payment_status!
@@ -63,5 +82,13 @@ class Invoice < ApplicationRecord
     return "Overdue" if due_date.present? && due_date < Date.current
 
     status.presence || "Draft"
+  end
+
+  def record_created_activity
+    ActivityLog.record!(subject: project, action: "Invoice drafted", details: "#{invoice_number} for #{format('%.2f', total)}.") if project.present?
+  end
+
+  def record_status_activity
+    ActivityLog.record!(subject: project, action: "Invoice status changed", details: "#{invoice_number} moved to #{status}.") if project.present?
   end
 end

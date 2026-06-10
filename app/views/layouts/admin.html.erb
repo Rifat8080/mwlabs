@@ -38,15 +38,12 @@
           </button>
 
           <%= link_to dashboard_root_path, class: "flex items-center gap-3" do %>
-            <%= tag.img src: "/images/logo.svg", alt: "M&W Labs", class: "h-10 w-auto object-contain" %>
-            <span class="hidden sm:block">
-              <span class="block text-sm font-black uppercase tracking-[0.18em] text-blue-600">Control Center</span>
-            </span>
+            <%= tag.img src: "/images/logo.svg", alt: "M&W Labs", class: "h-14 w-auto object-contain md:h-16" %>
           <% end %>
         </div>
 
         <div class="flex items-center gap-3">
-          <%= link_to root_path, class: "hidden rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-blue-50 hover:text-blue-700 sm:inline-flex sm:items-center sm:gap-2" do %>
+          <%= link_to root_path, class: "hidden rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700 shadow-sm transition hover:bg-blue-50 hover:text-blue-700 sm:inline-flex sm:items-center sm:gap-2" do %>
             View site
             <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
           <% end %>
@@ -71,9 +68,9 @@
       </div>
     </nav>
 
-    <aside id="admin-sidebar" class="fixed left-0 top-0 z-40 h-screen w-80 -translate-x-full border-r border-slate-100 bg-white/95 pt-20 shadow-xl shadow-slate-200/60 backdrop-blur transition-transform lg:translate-x-0" aria-label="Sidebar">
+    <aside id="admin-sidebar" class="fixed left-0 top-0 z-40 h-screen w-80 -translate-x-full border-r border-slate-100 bg-white/95 pt-24 shadow-xl shadow-slate-200/60 backdrop-blur transition-transform lg:translate-x-0" aria-label="Sidebar">
       <div class="h-full overflow-y-auto px-4 pb-6">
-        <div class="mb-5 rounded-[1.5rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_18rem),#ffffff] p-4">
+        <div class="mb-5 rounded-[1.5rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_18rem),#ffffff] p-4 shadow-sm">
           <p class="text-xs font-black uppercase tracking-[0.22em] text-blue-600">M&W Labs</p>
           <p class="mt-1 text-lg font-black text-slate-950">Agency OS</p>
         </div>
@@ -81,7 +78,7 @@
         <nav class="space-y-6">
           <% nav_sections.each do |section, links| %>
             <div>
-              <p class="mb-2 px-3 text-xs font-black uppercase tracking-[0.18em] text-slate-400"><%= section %></p>
+              <p class="mb-2 px-3 text-[0.68rem] font-black uppercase tracking-[0.2em] text-slate-400"><%= section %></p>
               <ul class="space-y-1 font-bold">
                 <% links.each do |label, path, icon| %>
                   <% active = current_page?(path) %>

@@ -19,6 +19,36 @@ module Admin
       ]
 
       @pipeline = Lead::STATUSES.index_with { |status| Lead.where(status: status).count }
+      @workflow_lanes = [
+        {
+          title: "Lead Intake",
+          icon: "fa-user-plus",
+          count: Lead.where(status: [ "New", "Contacted", "Need Requirement" ]).count,
+          action: "Qualify and collect requirements",
+          path: helpers.admin_leads_path
+        },
+        {
+          title: "Sales Closing",
+          icon: "fa-file-signature",
+          count: Quote.where(status: [ "Draft", "Sent", "Viewed", "Revised" ]).count,
+          action: "Send, follow up, and close quotes",
+          path: helpers.admin_quotes_path
+        },
+        {
+          title: "Delivery",
+          icon: "fa-diagram-project",
+          count: Project.where(status: [ "Requirement Collection", "In Progress", "Waiting for Client", "Revision" ]).count,
+          action: "Move projects through production",
+          path: helpers.admin_projects_path
+        },
+        {
+          title: "Cash Collection",
+          icon: "fa-sack-dollar",
+          count: Invoice.unpaid.count,
+          action: "Chase unpaid and overdue invoices",
+          path: helpers.admin_invoices_path
+        }
+      ]
       @today_tasks = Task.where(due_date: ..Date.current).where.not(status: "Done").includes(:project).order(:due_date).limit(6)
       @today_leads = Lead.followups_due.order(:follow_up_date).limit(6)
       @reminders = Reminder.due_today.includes(:user).order(:due_date).limit(6)

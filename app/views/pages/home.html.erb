@@ -170,11 +170,24 @@
           <h3 class="text-lg font-black leading-snug text-slate-950"><%= service[:title] %></h3>
           <p class="mt-4 flex-1 text-sm font-medium leading-7 text-slate-600"><%= service[:body] %></p>
 
-          <%= link_to service_path(service[:slug]), class: "mt-6 inline-flex items-center text-sm font-extrabold text-blue-600 hover:text-blue-700" do %>
-            Explore
-            <i class="fa-solid fa-arrow-right ms-2 text-xs"></i>
-          <% end %>
+          <div class="mt-6 space-y-3">
+            <%= link_to service_path(service[:slug]), class: "inline-flex items-center text-sm font-extrabold text-blue-600 hover:text-blue-700" do %>
+              Explore
+              <i class="fa-solid fa-arrow-right ms-2 text-xs"></i>
+            <% end %>
+            <%= link_to contact_path, class: "inline-flex w-full items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-xs font-extrabold text-blue-700 transition hover:-translate-y-0.5 hover:bg-blue-100" do %>
+              Get a Quote
+              <i class="fa-solid fa-paper-plane ms-2 text-[0.65rem]"></i>
+            <% end %>
+          </div>
         </div>
+      <% end %>
+    </div>
+
+    <div class="mt-10 text-center">
+      <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700" do %>
+        Not Sure What You Need? Talk to Us
+        <i class="fa-solid fa-comments ms-3 text-xs"></i>
       <% end %>
     </div>
   </div>
@@ -205,10 +218,16 @@
         <% end %>
       </div>
 
-      <%= link_to about_path, class: "mt-8 inline-flex items-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
-        Learn More About Us
-        <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
-      <% end %>
+      <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+        <%= link_to about_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
+          Learn More About Us
+          <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
+        <% end %>
+        <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm hover:bg-blue-50" do %>
+          Get Growth Advice
+          <i class="fa-solid fa-lightbulb ms-3 text-xs"></i>
+        <% end %>
+      </div>
     </div>
 
     <div class="space-y-6">
@@ -357,10 +376,14 @@
       <% end %>
     </div>
 
-    <div class="mt-8 text-center">
+    <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
       <%= link_to work_path, class: "inline-flex items-center justify-center rounded-lg border border-blue-200 bg-white px-8 py-3 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100" do %>
         View All Projects
         <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
+      <% end %>
+      <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700" do %>
+        Build Something Similar
+        <i class="fa-solid fa-rocket ms-3 text-xs"></i>
       <% end %>
     </div>
   </div>
@@ -406,6 +429,13 @@
             </div>
           </div>
         </div>
+      <% end %>
+    </div>
+
+    <div class="mt-10 text-center">
+      <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100" do %>
+        Start With a Discovery Call
+        <i class="fa-solid fa-calendar-check ms-3 text-xs"></i>
       <% end %>
     </div>
   </div>
@@ -478,6 +508,13 @@
     <div class="mt-4 flex justify-center gap-2" data-testimonials-dots>
       <% 3.times do |index| %>
         <button type="button" class="h-3 w-3 rounded-full transition <%= index.zero? ? "bg-blue-600" : "bg-blue-100" %>" data-testimonials-dot="<%= index %>" aria-label="Show testimonial <%= index + 1 %>" aria-pressed="<%= index.zero? %>"></button>
+      <% end %>
+    </div>
+
+    <div class="mt-8 text-center">
+      <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100" do %>
+        Get Results Like These
+        <i class="fa-solid fa-arrow-trend-up ms-3 text-xs"></i>
       <% end %>
     </div>
 

@@ -1,9 +1,11 @@
 <% flash.each do |type, message| %>
   <% next if message.blank? %>
 
-  <% styles = type.to_s == "alert" ? "border-red-200 bg-red-50 text-red-800" : "border-blue-200 bg-blue-50 text-blue-800" %>
+  <% styles = type.to_s == "alert" ? "border-rose-200 bg-rose-50 text-rose-800" : "border-blue-200 bg-blue-50 text-blue-800" %>
+  <% icon = type.to_s == "alert" ? "fa-triangle-exclamation" : "fa-circle-check" %>
 
-  <div class="mb-4 rounded-lg border px-4 py-3 text-sm <%= styles %>" role="status">
-    <%= message %>
+  <div class="mb-5 flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold shadow-sm <%= styles %>" role="status">
+    <i class="fa-solid <%= icon %> mt-0.5"></i>
+    <span><%= message %></span>
   </div>
 <% end %>
