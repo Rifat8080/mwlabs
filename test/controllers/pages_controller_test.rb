@@ -10,6 +10,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[alt='Shopify']"
     assert_select "img[alt='Tech To The Rescue']"
     assert_select "h2", text: /Everything Your Business Needs/
+    assert_select "h2", text: /We Don’t Just Deliver Services/
     assert_select ".fa-code"
   end
 end
