@@ -10,6 +10,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[alt='Shopify']"
     assert_select "img[alt='Tech To The Rescue']"
     assert_select "h2", text: /Everything Your Business Needs/
+    assert_select "body", text: /Selected founders get MVP builds/
+    assert_select "body", text: /Request Growth Report/
     assert_select "h2", text: /Some Recent Projects/
     assert_select "h2", text: /How We Work/
     assert_select "h2", text: /Real People\. Real Results\./
@@ -23,6 +25,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".fa-code"
     assert_select "a[href='#{about_path}']"
     assert_select "a[href='#{contact_path}']"
+    assert_select "a[href='#{new_user_session_path}']", text: "Login"
+    assert_select "a[href='#{new_user_registration_path}']", count: 0
   end
 
   test "shows visitor pages" do
@@ -49,6 +53,15 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "contact page shows free MVP and marketing report offers" do
+    get contact_url
+
+    assert_response :success
+    assert_select "option", text: "Free MVP Build"
+    assert_select "option", text: "Free Marketing Report"
+    assert_select "body", text: /Apply for an MVP partnership or growth report/
+  end
+
   test "shows service pages" do
     get service_url("web-development")
 
@@ -64,23 +77,26 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
   test "contact form captures complete lead information" do
     assert_difference("Lead.count", 1) do
-      post leads_url, params: {
-        lead: {
-          name: "Ahmed Khan",
-          phone: "+8801700000000",
-          email: "ahmed@example.com",
-          company_name: "ABC Ltd",
-          country: "Bangladesh",
-          source: "Website Contact Form",
-          service_interest: "Software & Web Development",
-          budget: "1200",
-          urgency: "Urgent",
-          message: "Need a business website and CRM."
+      assert_difference("User.where(role: 'client').count", 1) do
+        post leads_url, params: {
+          lead: {
+            name: "Ahmed Khan",
+            phone: "+8801700000000",
+            email: "ahmed@example.com",
+            company_name: "ABC Ltd",
+            country: "Bangladesh",
+            source: "Website Contact Form",
+            service_interest: "Software & Web Development",
+            budget: "1200",
+            urgency: "Urgent",
+            message: "Need a business website and CRM."
+          }
         }
-      }
+      end
     end
 
     lead = Lead.order(:created_at).last
+    user = User.find_by(email: "ahmed@example.com")
     assert_redirected_to contact_url
     assert_equal "Ahmed Khan", lead.name
     assert_equal "+8801700000000", lead.phone
@@ -93,17 +109,49 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Urgent", lead.urgency
     assert_equal "Need a business website and CRM.", lead.message
     assert_equal "New", lead.status
+    assert_equal "client", user.role
+    assert_equal "Ahmed Khan", user.name
+    assert_equal "+8801700000000", user.phone
   end
 
-  test "invalid contact form renders errors without creating lead" do
-    assert_no_difference("Lead.count") do
-      post leads_url, params: {
-        lead: {
-          name: "",
-          email: "not-an-email",
-          message: "Need help"
+  test "contact form reuses existing client account for repeat enquiries" do
+    User.create!(
+      name: "Existing Client",
+      email: "repeat@example.com",
+      password: "password123",
+      password_confirmation: "password123",
+      role: "client"
+    )
+
+    assert_difference("Lead.count", 1) do
+      assert_no_difference("User.count") do
+        post leads_url, params: {
+          lead: {
+            name: "Existing Client",
+            phone: "+8801711111111",
+            email: "repeat@example.com",
+            source: "Website Contact Form",
+            service_interest: "Digital Marketing",
+            message: "Need campaign support."
+          }
         }
-      }
+      end
+    end
+
+    assert_redirected_to contact_url
+  end
+
+  test "invalid contact form renders errors without creating lead or account" do
+    assert_no_difference("Lead.count") do
+      assert_no_difference("User.count") do
+        post leads_url, params: {
+          lead: {
+            name: "",
+            email: "not-an-email",
+            message: "Need help"
+          }
+        }
+      end
     end
 
     assert_response :unprocessable_entity
