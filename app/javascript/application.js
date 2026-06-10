@@ -3,4 +3,10 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "flowbite"
 import "@fortawesome/fontawesome-free"
+import { initProjectFilters } from "project_filters"
+import { initTestimonials } from "testimonials"
 
+document.addEventListener("turbo:load", () => {
+  initProjectFilters()
+  initTestimonials()
+})

@@ -88,5 +88,101 @@
 
       <%= yield %>
     </main>
+
+    <footer class="border-t border-slate-100 bg-white">
+      <div class="mx-auto max-w-[104rem] px-4 py-9 sm:px-6 lg:px-12 2xl:px-16">
+        <div class="grid gap-9 lg:grid-cols-[1.35fr_0.88fr_0.88fr_0.88fr_1.55fr] lg:gap-0">
+          <div class="lg:pr-10">
+            <%= link_to root_path, class: "inline-flex items-center" do %>
+              <%= tag.img src: "/images/mwlogo-navbar-cropped.png", alt: "M&W Labs", class: "h-11 w-auto object-contain md:h-14" %>
+            <% end %>
+
+            <p class="mt-4 max-w-xs text-sm font-semibold leading-7 text-slate-600">
+              From code to campaigns — we build digital growth systems that help businesses launch, grow and scale with confidence.
+            </p>
+
+            <div class="mt-5 flex items-center gap-3">
+              <% [
+                [ "fa-facebook-f", "Facebook", "bg-blue-600" ],
+                [ "fa-instagram", "Instagram", "bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400" ],
+                [ "fa-linkedin-in", "LinkedIn", "bg-blue-700" ],
+                [ "fa-youtube", "YouTube", "bg-red-600" ],
+                [ "fa-whatsapp", "WhatsApp", "bg-emerald-500" ]
+              ].each do |icon, label, color| %>
+                <a href="#" class="flex h-8 w-8 items-center justify-center rounded-full text-sm text-white shadow-sm transition hover:-translate-y-1 <%= color %>" aria-label="<%= label %>">
+                  <i class="fa-brands <%= icon %>"></i>
+                </a>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="lg:border-l lg:border-slate-100 lg:pl-9">
+            <h2 class="text-sm font-black text-slate-950">Services</h2>
+            <ul class="mt-5 space-y-2.5 text-sm font-semibold text-slate-600">
+              <% [ "Web Development", "Digital Marketing", "Branding & Design", "Video Editing", "AI & Automation", "Growth Strategy" ].each do |label| %>
+                <li><a href="#" class="transition hover:text-blue-600"><%= label %></a></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="lg:border-l lg:border-slate-100 lg:pl-9">
+            <h2 class="text-sm font-black text-slate-950">Company</h2>
+            <ul class="mt-5 space-y-2.5 text-sm font-semibold text-slate-600">
+              <% [ "About Us", "Our Team", "Careers", "Testimonials", "Blog", "Contact Us" ].each do |label| %>
+                <li><a href="#" class="transition hover:text-blue-600"><%= label %></a></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="lg:border-l lg:border-slate-100 lg:pl-9">
+            <h2 class="text-sm font-black text-slate-950">Resources</h2>
+            <ul class="mt-5 space-y-2.5 text-sm font-semibold text-slate-600">
+              <% [ "Case Studies", "Pricing", "FAQs", "Privacy Policy", "Terms & Conditions" ].each do |label| %>
+                <li><a href="#" class="transition hover:text-blue-600"><%= label %></a></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="relative overflow-hidden lg:border-l lg:border-slate-100 lg:pl-9">
+            <div class="absolute inset-y-0 right-0 hidden w-64 bg-[radial-gradient(circle,_#dbeafe_1px,_transparent_1.4px)] [background-size:13px_13px] opacity-55 lg:block"></div>
+            <div class="absolute right-8 top-7 hidden h-24 w-36 rounded-[50%] bg-slate-100/60 blur-xl lg:block"></div>
+            <div class="absolute right-20 top-20 hidden h-16 w-28 rounded-[50%] bg-slate-100/50 blur-xl lg:block"></div>
+            <div class="relative z-10">
+              <h2 class="text-sm font-black text-slate-950">Contact Us</h2>
+              <ul class="mt-5 space-y-4 text-sm font-semibold leading-6 text-slate-600">
+                <li class="flex gap-3.5">
+                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
+                    <i class="fa-solid fa-phone text-xs"></i>
+                  </span>
+                  <a href="tel:+12345678900" class="transition hover:text-blue-600">+1 (234) 567-8900</a>
+                </li>
+                <li class="flex gap-3.5">
+                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
+                    <i class="fa-solid fa-envelope text-xs"></i>
+                  </span>
+                  <a href="mailto:hello@mwlabs.com" class="transition hover:text-blue-600">hello@mwlabs.com</a>
+                </li>
+                <li class="flex gap-3.5">
+                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
+                    <i class="fa-solid fa-location-dot text-xs"></i>
+                  </span>
+                  <span>123 Innovation Drive,<br>New York, NY 10001, USA</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-100">
+        <div class="mx-auto flex max-w-[104rem] flex-col gap-4 px-4 py-5 text-sm font-semibold text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-12 2xl:px-16">
+          <p>© <%= Time.current.year %> M&W Labs. All rights reserved.</p>
+          <a href="#" class="inline-flex items-center font-extrabold text-blue-600 transition hover:text-blue-700">
+            Back to top
+            <i class="fa-solid fa-arrow-up ms-2 text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

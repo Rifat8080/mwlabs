@@ -253,3 +253,253 @@
   </div>
 </section>
 
+<section class="bg-white py-16 sm:py-20" data-project-section>
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Our Work</p>
+        <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+          Some Recent <span class="text-blue-600">Projects</span>
+        </h2>
+      </div>
+
+      <div class="flex flex-wrap gap-2" data-project-filters>
+        <% [ "All", "Web Development", "Marketing", "Branding", "Video" ].each_with_index do |filter, index| %>
+          <button type="button" class="rounded-lg border px-5 py-2.5 text-xs font-extrabold transition <%= index.zero? ? "border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700" %>" data-project-filter="<%= filter %>" aria-pressed="<%= index.zero? %>">
+            <%= filter %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6" data-project-grid>
+      <% [
+        {
+          title: "Fintech Website Development",
+          category: "Web Development",
+          icon: "fa-chart-pie",
+          accent: "from-blue-500 to-cyan-400",
+          panel: "bg-blue-50"
+        },
+        {
+          title: "Lead Generation Campaign",
+          category: "Marketing",
+          icon: "fa-bullseye",
+          accent: "from-emerald-500 to-teal-400",
+          panel: "bg-emerald-50"
+        },
+        {
+          title: "Coffee Brand Identity",
+          category: "Branding",
+          icon: "fa-mug-hot",
+          accent: "from-slate-900 to-amber-700",
+          panel: "bg-stone-100"
+        },
+        {
+          title: "YouTube Channel Editing",
+          category: "Video",
+          icon: "fa-play",
+          accent: "from-violet-600 to-fuchsia-500",
+          panel: "bg-violet-50"
+        },
+        {
+          title: "SaaS Dashboard Development",
+          category: "Web Development",
+          icon: "fa-table-columns",
+          accent: "from-blue-600 to-indigo-500",
+          panel: "bg-blue-50"
+        },
+        {
+          title: "Instagram Ad Campaign",
+          category: "Marketing",
+          icon: "fa-mobile-screen-button",
+          accent: "from-rose-400 to-orange-300",
+          panel: "bg-rose-50"
+        }
+      ].each do |project| %>
+        <article class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-100/70" data-project-card data-project-category="<%= project[:category] %>">
+          <div class="relative h-40 overflow-hidden <%= project[:panel] %>">
+            <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r <%= project[:accent] %>"></div>
+            <div class="absolute inset-4 rounded-xl bg-white/80 shadow-xl shadow-slate-200/70 ring-1 ring-white/80 transition duration-300 group-hover:scale-105">
+              <div class="flex items-center gap-1 border-b border-slate-100 px-3 py-2">
+                <span class="h-2 w-2 rounded-full bg-rose-400"></span>
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="grid h-[calc(100%-2rem)] grid-cols-[0.42fr_0.58fr] gap-3 p-3">
+                <div class="space-y-2">
+                  <span class="block h-3 rounded-full bg-slate-200"></span>
+                  <span class="block h-3 w-3/4 rounded-full bg-slate-100"></span>
+                  <span class="block h-16 rounded-lg bg-gradient-to-br <%= project[:accent] %>"></span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex h-16 items-center justify-center rounded-lg bg-slate-50 text-blue-600">
+                    <i class="fa-solid <%= project[:icon] %> text-3xl"></i>
+                  </div>
+                  <span class="block h-3 rounded-full bg-slate-200"></span>
+                  <span class="block h-3 w-2/3 rounded-full bg-slate-100"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-5">
+            <h3 class="text-base font-black leading-snug text-slate-950"><%= project[:title] %></h3>
+            <p class="mt-2 text-sm font-bold text-slate-500"><%= project[:category] %></p>
+          </div>
+        </article>
+      <% end %>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="#" class="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-white px-8 py-3 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100">
+        View All Projects
+        <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="overflow-hidden bg-white pb-16 sm:pb-20">
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <div>
+      <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Our Process</p>
+      <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">How We Work</h2>
+    </div>
+
+    <div class="relative mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-5 lg:gap-0">
+      <% [
+        [ "01", "Discover", "We understand your goals, audience and requirements.", "fa-magnifying-glass-chart" ],
+        [ "02", "Plan", "We create a strategic plan tailored to your business.", "fa-clipboard-list" ],
+        [ "03", "Build", "Our experts design, develop and create with precision.", "fa-code" ],
+        [ "04", "Launch", "We test everything and launch for maximum impact.", "fa-rocket" ],
+        [ "05", "Grow", "We analyze, optimize and scale your business growth.", "fa-chart-line" ]
+      ].each_with_index do |step, index| %>
+        <% number, title, body, icon = step %>
+        <div class="group relative rounded-2xl bg-white p-4 transition duration-300 hover:-translate-y-1 sm:p-5 lg:overflow-visible lg:rounded-none lg:p-0 lg:pr-8">
+          <% unless index == 4 %>
+            <svg class="pointer-events-none absolute left-[4.8rem] top-7 z-0 hidden h-14 w-[calc(100%-1.5rem)] text-blue-100 lg:block" aria-hidden="true" viewBox="0 0 190 56" fill="none" preserveAspectRatio="none">
+              <path d="M4 30 C52 2 105 2 156 30" stroke="currentColor" stroke-width="2" stroke-dasharray="5 7"/>
+            </svg>
+            <span class="absolute right-4 top-[2.25rem] z-20 hidden text-blue-600 lg:block">
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </span>
+          <% end %>
+
+          <div class="relative z-10 flex items-start gap-4">
+            <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 shadow-[0_18px_45px_rgba(37,99,235,0.12)] ring-8 ring-blue-50/70 transition duration-300 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white">
+              <i class="fa-solid <%= icon %> text-2xl"></i>
+            </div>
+
+            <div class="pt-1">
+              <div class="flex items-center gap-3">
+                <p class="text-sm font-black text-blue-600"><%= number %></p>
+                <h3 class="text-base font-black text-slate-950"><%= title %></h3>
+              </div>
+              <p class="mt-4 max-w-[13rem] text-sm font-semibold leading-7 text-slate-600 lg:max-w-[10.5rem]"><%= body %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white pb-16 sm:pb-20" data-testimonials-section>
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <div>
+      <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">What Clients Say</p>
+      <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+        Real People. Real <span class="text-blue-600">Results.</span>
+      </h2>
+    </div>
+
+    <div class="relative mt-9">
+      <button type="button" class="absolute -left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 shadow-xl shadow-blue-100 transition hover:bg-blue-600 hover:text-white sm:-left-5" data-testimonials-prev aria-label="Previous testimonial">
+        <i class="fa-solid fa-chevron-left text-sm"></i>
+      </button>
+
+      <div class="overflow-hidden px-1">
+        <div class="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-testimonials-track>
+          <% [
+            {
+              quote: "The team at M&W Labs is exceptional. They built our website, ran amazing ads and the results exceeded our expectations.",
+              name: "Jessica Brown",
+              role: "Marketing Manager, Brandco",
+              initials: "JB",
+              color: "from-rose-400 to-pink-500"
+            },
+            {
+              quote: "Highly professional and creative team. They understand our needs and deliver solutions that actually grow our business.",
+              name: "Michael Lee",
+              role: "Founder, Shopwise",
+              initials: "ML",
+              color: "from-blue-500 to-cyan-400"
+            },
+            {
+              quote: "From branding to video editing, everything was top quality. Communication was smooth and timely.",
+              name: "Sarah Johnson",
+              role: "CEO, Skyhigh",
+              initials: "SJ",
+              color: "from-purple-500 to-indigo-500"
+            }
+          ].each do |testimonial| %>
+            <article class="min-w-full snap-start rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-100/70 sm:min-w-[calc(50%-0.625rem)] lg:min-w-[calc(33.333%-0.875rem)]">
+              <i class="fa-solid fa-quote-left text-3xl text-blue-100"></i>
+              <blockquote class="mt-2 min-h-24 text-sm font-semibold leading-7 text-slate-600">
+                <%= testimonial[:quote] %>
+              </blockquote>
+
+              <div class="mt-6 flex items-center gap-4">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-black text-white shadow-lg <%= testimonial[:color] %>">
+                  <%= testimonial[:initials] %>
+                </div>
+                <div>
+                  <p class="font-black text-slate-950"><%= testimonial[:name] %></p>
+                  <p class="mt-1 text-xs font-bold text-slate-500"><%= testimonial[:role] %></p>
+                </div>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      </div>
+
+      <button type="button" class="absolute -right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 shadow-xl shadow-blue-100 transition hover:bg-blue-600 hover:text-white sm:-right-5" data-testimonials-next aria-label="Next testimonial">
+        <i class="fa-solid fa-chevron-right text-sm"></i>
+      </button>
+    </div>
+
+    <div class="mt-4 flex justify-center gap-2" data-testimonials-dots>
+      <% 3.times do |index| %>
+        <button type="button" class="h-3 w-3 rounded-full transition <%= index.zero? ? "bg-blue-600" : "bg-blue-100" %>" data-testimonials-dot="<%= index %>" aria-label="Show testimonial <%= index + 1 %>" aria-pressed="<%= index.zero? %>"></button>
+      <% end %>
+    </div>
+
+    <div class="relative mt-8 overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 px-6 py-9 text-white shadow-2xl shadow-blue-600/20 sm:px-10 lg:px-16">
+      <div class="absolute left-0 top-0 h-full w-40 opacity-20 [background-image:radial-gradient(circle,_white_1px,_transparent_1px)] [background-size:12px_12px]"></div>
+      <div class="absolute right-8 top-1/2 hidden -translate-y-1/2 text-white/90 lg:block">
+        <i class="fa-solid fa-paper-plane text-8xl drop-shadow-2xl"></i>
+      </div>
+
+      <div class="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center lg:pr-40">
+        <div>
+          <p class="text-sm font-extrabold text-blue-100">Ready to Grow Your Business?</p>
+          <h3 class="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Let's Build Something Amazing Together!</h3>
+          <p class="mt-4 max-w-2xl text-base font-semibold leading-8 text-blue-50">Book a free strategy call and let's discuss how we can help you grow.</p>
+        </div>
+
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <a href="#" class="inline-flex items-center justify-center rounded-xl bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-xl shadow-blue-950/10 transition hover:-translate-y-0.5 hover:bg-blue-50">
+            Book a Free Call
+            <i class="fa-solid fa-phone ms-3 text-xs"></i>
+          </a>
+          <a href="#" class="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-sm font-extrabold text-white shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20">
+            Request a Quote
+            <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
