@@ -1,135 +1,89 @@
-<% content_for :title, "Contact | Mwlabs" %>
+<% content_for :title, "Contact | M&W Labs" %>
 
-<%= render "pages/shared/hero",
-  eyebrow: "Contact Us",
-  title: "Let's Start Your Next Project",
-  description: "Tell us about your goals and we'll get back to you with a clear plan and timeline." %>
+<section class="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_34rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] py-14 sm:py-20">
+  <div class="absolute left-0 top-24 -z-10 h-80 w-80 rounded-full bg-blue-100/70 blur-3xl"></div>
+  <div class="absolute right-0 bottom-16 -z-10 h-[28rem] w-[28rem] rounded-full bg-cyan-100/60 blur-3xl"></div>
 
-<section class="relative isolate overflow-hidden bg-white py-14 sm:py-20">
-  <div class="absolute left-0 top-20 -z-10 h-72 w-72 rounded-full bg-blue-100/70 blur-3xl"></div>
-  <div class="absolute right-0 bottom-10 -z-10 h-80 w-80 rounded-full bg-cyan-100/60 blur-3xl"></div>
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <div class="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+      <div class="space-y-6 lg:sticky lg:top-28">
+        <div class="overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-xl shadow-slate-200/60">
+          <div class="relative bg-[radial-gradient(circle_at_top_right,_#dbeafe,_transparent_24rem),#ffffff] p-6 sm:p-8">
+            <div class="absolute right-6 top-6 hidden h-20 w-20 items-center justify-center rounded-full bg-blue-600 text-white shadow-2xl shadow-blue-600/30 sm:flex">
+              <i class="fa-solid fa-comments text-3xl"></i>
+            </div>
+            <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Contact M&W Labs</p>
+            <h1 class="mt-4 max-w-2xl text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl">
+              Let’s turn your idea into a clear growth plan.
+            </h1>
+            <p class="mt-5 max-w-2xl text-base font-semibold leading-8 text-slate-600">
+              Apply for an MVP partnership, request a complimentary marketing report, or ask for a project quote. Your enquiry goes into our CRM, creates your client portal, and gives our team the context needed to respond professionally.
+            </p>
+          </div>
 
-  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:px-12 2xl:px-16">
-    <div class="space-y-6 lg:sticky lg:top-28">
-      <div class="rounded-[2rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_26rem),#ffffff] p-6 shadow-sm sm:p-8">
-        <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Start With Clarity</p>
-        <h2 class="mt-4 text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-4xl">
-          Apply for an MVP partnership or growth report.
-        </h2>
-        <p class="mt-5 text-sm font-semibold leading-8 text-slate-600">
-          Your enquiry goes directly into our internal CRM, creates your client portal account, and helps us prepare a high-value recommendation based on your goals.
-        </p>
+          <div class="grid border-t border-slate-100 sm:grid-cols-3">
+            <% [
+              [ "fa-rocket", "MVP partnership", "Selected ideas receive strategic build support." ],
+              [ "fa-chart-line", "Growth report", "Get practical marketing insights and priorities." ],
+              [ "fa-user-lock", "Portal ready", "Track future updates from your client workspace." ]
+            ].each do |icon, title, body| %>
+              <div class="border-slate-100 p-5 sm:border-r sm:last:border-r-0">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                  <i class="fa-solid <%= icon %>"></i>
+                </span>
+                <p class="mt-4 text-sm font-black text-slate-950"><%= title %></p>
+                <p class="mt-2 text-xs font-semibold leading-5 text-slate-500"><%= body %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
 
-        <div class="mt-7 grid gap-3 sm:grid-cols-3">
+        <div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
           <% [
-            [ "fa-rocket", "MVP partnership", "Selected ideas receive build support" ],
-            [ "fa-chart-line", "Growth report", "Complimentary marketing insights" ],
-            [ "fa-user-lock", "Portal ready", "Account prepared for you" ]
-          ].each do |icon, title, body| %>
-            <div class="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            [ "fa-phone", "+8801704014210", "tel:+8801704014210", "Call or WhatsApp", "Fastest for urgent project conversations." ],
+            [ "fa-envelope", "info.mwlabs@gmail.com", "mailto:info.mwlabs@gmail.com", "Email us", "Share briefs, documents, and partnership context." ],
+            [ "fa-location-dot", "Demra, Dhaka, Bangladesh", nil, "Location", "Serving clients locally and internationally." ]
+          ].each do |icon, text, href, label, body| %>
+            <div class="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-100/60">
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                 <i class="fa-solid <%= icon %>"></i>
               </span>
-              <p class="mt-3 text-sm font-black text-slate-950"><%= title %></p>
-              <p class="mt-1 text-xs font-semibold leading-5 text-slate-500"><%= body %></p>
+              <div>
+                <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400"><%= label %></p>
+                <% if href %>
+                  <a href="<%= href %>" class="mt-1 block text-sm font-black leading-7 text-slate-800 hover:text-blue-600"><%= text %></a>
+                <% else %>
+                  <p class="mt-1 text-sm font-black leading-7 text-slate-800"><%= text %></p>
+                <% end %>
+                <p class="mt-1 text-xs font-semibold leading-5 text-slate-500"><%= body %></p>
+              </div>
             </div>
           <% end %>
         </div>
-      </div>
 
-      <div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-        <% [
-          [ "fa-phone", "+8801704014210", "tel:+8801704014210", "Call or WhatsApp" ],
-          [ "fa-envelope", "info.mwlabs@gmail.com", "mailto:info.mwlabs@gmail.com", "Email us" ],
-          [ "fa-location-dot", "Demra, Dhaka, Bangladesh", nil, "Location" ]
-        ].each do |icon, text, href, label| %>
-          <div class="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-              <i class="fa-solid <%= icon %>"></i>
-            </span>
-            <div>
-              <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400"><%= label %></p>
-              <% if href %>
-                <a href="<%= href %>" class="mt-1 block text-sm font-bold leading-7 text-slate-700 hover:text-blue-600"><%= text %></a>
-              <% else %>
-                <p class="mt-1 text-sm font-bold leading-7 text-slate-700"><%= text %></p>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <%= form_with model: @lead, url: leads_path, class: "rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8" do |form| %>
-      <div class="mb-6 border-b border-slate-100 pb-6">
-        <p class="text-sm font-extrabold uppercase tracking-[0.22em] text-blue-600">Project Enquiry</p>
-        <h2 class="mt-2 text-2xl font-black text-slate-950">Request an MVP review, growth report, or quote</h2>
-        <p class="mt-2 text-sm font-semibold leading-7 text-slate-600">Tell us whether you want to apply for an MVP partnership, request a growth report, or discuss a project quote. The more details you share, the sharper our recommendation will be.</p>
-      </div>
-
-      <%= form.hidden_field :source, value: @lead.source.presence || "Website Contact Form" %>
-      <div class="hidden" aria-hidden="true">
-        <label for="website">Website</label>
-        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-      </div>
-
-      <% if @lead.errors.any? %>
-        <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-700">
-          <p class="font-black">Please fix the following:</p>
-          <ul class="mt-2 list-disc space-y-1 pl-5">
-            <% @lead.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
+        <div class="rounded-[1.5rem] border border-slate-200 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-300/60">
+          <p class="text-xs font-black uppercase tracking-[0.22em] text-blue-200">What happens next</p>
+          <div class="mt-5 space-y-4">
+            <% [
+              [ "01", "We review your goals, budget, timeline, and offer fit." ],
+              [ "02", "Your lead is organized in our CRM with a prepared client portal." ],
+              [ "03", "We respond with the next strategic step, call, quote, or report." ]
+            ].each do |number, text| %>
+              <div class="flex gap-4">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-black text-blue-100"><%= number %></span>
+                <p class="pt-1 text-sm font-semibold leading-6 text-slate-200"><%= text %></p>
+              </div>
             <% end %>
-          </ul>
+          </div>
         </div>
-      <% end %>
+      </div>
 
-      <div class="grid gap-5 sm:grid-cols-2">
-        <div>
-          <%= form.label :name, "Name", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.text_field :name, required: true, autocomplete: "name", class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "Your name" %>
-        </div>
-        <div>
-          <%= form.label :email, "Email", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.email_field :email, required: true, autocomplete: "email", class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "you@company.com" %>
-        </div>
-        <div>
-          <%= form.label :phone, "Phone / WhatsApp", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.telephone_field :phone, autocomplete: "tel", class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "+880..." %>
-        </div>
-        <div>
-          <%= form.label :company_name, "Company Name", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.text_field :company_name, autocomplete: "organization", class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "Company or brand" %>
-        </div>
-        <div>
-          <%= form.label :country, "Country", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.text_field :country, autocomplete: "country-name", class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "Bangladesh, UK, USA..." %>
-        </div>
-        <div>
-          <%= form.label :service_interest, "Service Interest", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <% offer_options = [ "Free MVP Build", "Free Marketing Report" ] + Service::CATEGORIES %>
-          <%= form.select :service_interest, options_for_select(offer_options, @lead.service_interest), { include_blank: "Select a service or offer" }, class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500" %>
-        </div>
-        <div>
-          <%= form.label :budget, "Estimated Budget", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.number_field :budget, min: 0, step: 0.01, class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "500" %>
-        </div>
-        <div>
-          <%= form.label :urgency, "Urgency", class: "mb-2 block text-sm font-bold text-slate-700" %>
-          <%= form.select :urgency, options_for_select(Lead::URGENCIES, @lead.urgency), { include_blank: "Select urgency" }, class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500" %>
-        </div>
-      </div>
-      <div class="mt-5">
-        <%= form.label :message, "Project Details", class: "mb-2 block text-sm font-bold text-slate-700" %>
-        <%= form.text_area :message, rows: 5, required: true, class: "block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 focus:border-blue-500 focus:ring-blue-500", placeholder: "Tell us about your idea, audience, current marketing, timeline, required features, or what you want us to review." %>
-      </div>
-      <button type="submit" class="mt-6 inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700">
-        Send Request
-        <i class="fa-solid fa-paper-plane ms-3 text-xs"></i>
-      </button>
-      <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">
-        By sending this request, you agree that M&W Labs can contact you about your enquiry. MVP partnership slots are selected based on fit, potential, and scope. A client account will be prepared using your email for future updates.
-      </p>
-    <% end %>
+      <%= render "pages/shared/lead_form",
+        lead: @lead,
+        source: "Website Contact Form",
+        title: "Request an MVP review, growth report, or quote",
+        description: "Share the details that matter: what you want to build, who it serves, your timeline, current marketing, and the result you want next.",
+        button_label: "Send Project Enquiry" %>
+    </div>
   </div>
 </section>

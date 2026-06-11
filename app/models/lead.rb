@@ -1,6 +1,6 @@
 class Lead < ApplicationRecord
   SOURCES = [
-    "Website Contact Form", "Quotation Form", "Facebook", "Google Ads", "WhatsApp",
+    "Website Contact Form", "Landing Page", "Quotation Form", "Facebook", "Google Ads", "WhatsApp",
     "Referral", "Cold Email", "LinkedIn", "Manual Entry"
   ].freeze
   STATUSES = [

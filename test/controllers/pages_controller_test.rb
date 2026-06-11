@@ -10,6 +10,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[alt='Shopify']"
     assert_select "img[alt='Tech To The Rescue']"
     assert_select "h2", text: /Everything Your Business Needs/
+    assert_select "h2", text: /Tell us what you want to build/
+    assert_select "form input[name='lead[source]'][value='Landing Page']"
     assert_select "body", text: /Selected founders get MVP builds/
     assert_select "body", text: /Request Growth Report/
     assert_select "h2", text: /Some Recent Projects/
@@ -35,7 +37,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       work_url => /Projects That Drive Real Results/,
       pricing_url => /Flexible Plans for Every Stage/,
       blog_url => /Insights on Digital Growth/,
-      contact_url => /Let's Start Your Next Project/,
+      contact_url => /Let’s turn your idea into a clear growth plan/,
       team_url => /Meet the People Behind M&W Labs/,
       careers_url => /Join Our Growing Team/,
       testimonials_url => /Real People\. Real Results\./,
@@ -59,7 +61,12 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "option", text: "Free MVP Build"
     assert_select "option", text: "Free Marketing Report"
-    assert_select "body", text: /Apply for an MVP partnership or growth report/
+    assert_select "body", text: /Apply for an MVP partnership, request a complimentary marketing report/
+    assert_select "body", text: /What happens next/
+    assert_select "form input[name='lead[source]'][value='Website Contact Form']"
+    assert_select "form input[name='lead[country]']", count: 0
+    assert_select "form input[name='lead[budget]']", count: 0
+    assert_select "form select[name='lead[urgency]']", count: 0
   end
 
   test "shows service pages" do
@@ -84,11 +91,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
             phone: "+8801700000000",
             email: "ahmed@example.com",
             company_name: "ABC Ltd",
-            country: "Bangladesh",
             source: "Website Contact Form",
             service_interest: "Software & Web Development",
-            budget: "1200",
-            urgency: "Urgent",
             message: "Need a business website and CRM."
           }
         }
@@ -102,11 +106,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "+8801700000000", lead.phone
     assert_equal "ahmed@example.com", lead.email
     assert_equal "ABC Ltd", lead.company_name
-    assert_equal "Bangladesh", lead.country
     assert_equal "Website Contact Form", lead.source
     assert_equal "Software & Web Development", lead.service_interest
-    assert_equal BigDecimal("1200"), lead.budget
-    assert_equal "Urgent", lead.urgency
     assert_equal "Need a business website and CRM.", lead.message
     assert_equal "New", lead.status
     assert_equal "client", user.role
@@ -141,6 +142,29 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to dashboard_root_url
     user = User.find_by!(email: "password-client@example.com")
     assert user.valid_password?("newpassword123")
+  end
+
+  test "landing page enquiry captures source and creates client portal" do
+    assert_difference("Lead.count", 1) do
+      assert_difference("User.where(role: 'client').count", 1) do
+        post leads_url, params: {
+          lead: {
+            name: "Landing Client",
+            phone: "+8801733333333",
+            email: "landing-client@example.com",
+            company_name: "Landing Co",
+            source: "Landing Page",
+            service_interest: "Free Marketing Report",
+            message: "Need a growth review from the landing page."
+          }
+        }
+      end
+    end
+
+    lead = Lead.order(:created_at).last
+    assert_redirected_to edit_password_setup_url
+    assert_equal "Landing Page", lead.source
+    assert_equal "Landing Client", User.find_by!(email: "landing-client@example.com").name
   end
 
   test "contact form reuses existing client account for repeat enquiries" do

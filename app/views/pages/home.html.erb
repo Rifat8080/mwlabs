@@ -468,6 +468,47 @@
   </div>
 </section>
 
+<section class="relative isolate overflow-hidden bg-white py-14 sm:py-20" id="enquiry">
+  <div class="absolute left-0 top-24 -z-10 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl"></div>
+  <div class="absolute right-0 bottom-10 -z-10 h-80 w-80 rounded-full bg-cyan-100/50 blur-3xl"></div>
+
+  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 2xl:px-16">
+    <div>
+      <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Start Your Enquiry</p>
+      <h2 class="mt-4 max-w-2xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl">
+        Tell us what you want to build, market, or automate.
+      </h2>
+      <p class="mt-5 max-w-2xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">
+        Use the quick form and we’ll route your request into our CRM, prepare your client portal, and review whether an MVP partnership, growth report, or project quote is the right next step.
+      </p>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+        <% [
+          [ "fa-bolt", "Quick intake", "Share the essentials in under two minutes." ],
+          [ "fa-lock", "Portal access", "New clients get a secure workspace." ],
+          [ "fa-compass", "Strategic reply", "We respond with a focused next step." ]
+        ].each do |icon, title, body| %>
+          <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+              <i class="fa-solid <%= icon %>"></i>
+            </span>
+            <p class="mt-4 text-sm font-black text-slate-950"><%= title %></p>
+            <p class="mt-2 text-xs font-semibold leading-5 text-slate-500"><%= body %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= render "pages/shared/lead_form",
+      lead: Lead.new(source: "Landing Page"),
+      source: "Landing Page",
+      compact: true,
+      title: "Send a quick project enquiry",
+      description: "Perfect for MVP partnership applications, marketing report requests, website projects, campaigns, and automation ideas.",
+      button_label: "Submit Enquiry" %>
+  </div>
+</section>
+
 <section class="bg-white pb-16 sm:pb-20" data-testimonials-section>
   <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
     <div>
