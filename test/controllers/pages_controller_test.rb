@@ -19,6 +19,10 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: /Real People\. Real Results\./
     assert_select "[data-testimonials-section]"
     assert_select "[data-testimonials-dot]", count: 3
+    assert_select "[data-floating-cta]"
+    assert_select "[data-floating-cta-whatsapp]"
+    assert_select "[data-floating-cta-quote]"
+    assert_select "button[aria-label='Close floating contact buttons']"
     assert_select "[data-project-filter='Marketing']"
     assert_select "[data-project-card]", minimum: 6
     assert_select "h2", text: /We Don’t Just Deliver Services/

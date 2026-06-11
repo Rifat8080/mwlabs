@@ -108,6 +108,44 @@
   </div>
 </section>
 
+<div class="fixed inset-x-3 bottom-4 z-50 sm:inset-x-auto sm:right-6 sm:bottom-6" data-controller="floating-cta" data-floating-cta>
+  <div class="relative overflow-hidden rounded-[1.35rem] border border-white/70 bg-white/90 p-2 shadow-[0_24px_70px_rgba(15,23,42,0.18)] ring-1 ring-slate-900/5 backdrop-blur-xl sm:w-[19rem]">
+    <div class="pointer-events-none absolute -right-10 -top-12 h-28 w-28 rounded-full bg-blue-100 blur-2xl"></div>
+    <div class="pointer-events-none absolute -bottom-12 -left-10 h-28 w-28 rounded-full bg-emerald-100 blur-2xl"></div>
+
+    <button type="button" class="absolute right-3 top-3 z-20 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-xs text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-950 hover:text-white" aria-label="Close floating contact buttons" data-action="floating-cta#close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="relative hidden border-b border-slate-100 px-3 pb-3 pt-2 sm:block">
+      <p class="pr-8 text-xs font-black uppercase tracking-[0.2em] text-blue-600">Need a quick answer?</p>
+      <p class="mt-1 text-sm font-extrabold text-slate-950">Talk to M&W Labs</p>
+    </div>
+
+    <div class="relative grid grid-cols-2 gap-2 sm:mt-2 sm:grid-cols-1">
+      <a href="https://wa.me/8801704014210?text=Hi%20M%26W%20Labs%2C%20I%20want%20to%20discuss%20a%20project." target="_blank" rel="noopener" class="group inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-3 py-3 text-xs font-extrabold text-white shadow-lg shadow-emerald-500/25 transition hover:-translate-y-0.5 hover:bg-emerald-600 sm:justify-start sm:px-4 sm:py-3.5 sm:text-sm" data-floating-cta-whatsapp>
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20 text-lg transition group-hover:bg-white/25">
+          <i class="fa-brands fa-whatsapp"></i>
+        </span>
+        <span class="leading-tight">
+          WhatsApp
+          <span class="hidden text-[0.68rem] font-bold text-emerald-50 sm:block">Fast project chat</span>
+        </span>
+      </a>
+
+      <%= link_to contact_path, class: "group inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-3 py-3 text-xs font-extrabold text-white shadow-lg shadow-slate-950/20 transition hover:-translate-y-0.5 hover:bg-blue-600 sm:justify-start sm:px-4 sm:py-3.5 sm:text-sm", data: { floating_cta_quote: true } do %>
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sm transition group-hover:bg-white/20">
+          <i class="fa-solid fa-file-signature"></i>
+        </span>
+        <span class="leading-tight">
+          Get a Quote
+          <span class="hidden text-[0.68rem] font-bold text-slate-300 group-hover:text-blue-50 sm:block">Start your enquiry</span>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
 <section class="bg-white py-12">
   <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
     <div class="grid gap-5 rounded-2xl border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_28rem),#ffffff] p-6 shadow-sm lg:grid-cols-[1fr_auto] lg:items-center lg:p-8">
