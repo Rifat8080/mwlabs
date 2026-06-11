@@ -97,7 +97,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     lead = Lead.order(:created_at).last
     user = User.find_by(email: "ahmed@example.com")
-    assert_redirected_to contact_url
+    assert_redirected_to edit_password_setup_url
     assert_equal "Ahmed Khan", lead.name
     assert_equal "+8801700000000", lead.phone
     assert_equal "ahmed@example.com", lead.email
@@ -112,6 +112,35 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "client", user.role
     assert_equal "Ahmed Khan", user.name
     assert_equal "+8801700000000", user.phone
+  end
+
+  test "auto-created client can set password after lead submission" do
+    post leads_url, params: {
+      lead: {
+        name: "Password Client",
+        phone: "+8801722222222",
+        email: "password-client@example.com",
+        source: "Website Contact Form",
+        service_interest: "Free MVP Build",
+        message: "Need MVP support."
+      }
+    }
+
+    assert_redirected_to edit_password_setup_url
+    follow_redirect!
+    assert_response :success
+    assert_select "h1", "Set your secure client portal password."
+
+    patch password_setup_url, params: {
+      user: {
+        password: "newpassword123",
+        password_confirmation: "newpassword123"
+      }
+    }
+
+    assert_redirected_to dashboard_root_url
+    user = User.find_by!(email: "password-client@example.com")
+    assert user.valid_password?("newpassword123")
   end
 
   test "contact form reuses existing client account for repeat enquiries" do

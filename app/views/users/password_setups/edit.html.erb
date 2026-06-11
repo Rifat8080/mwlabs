@@ -1,0 +1,37 @@
+<% content_for :title, "Set Password | M&W Labs" %>
+
+<%= render "devise/shared/auth_panel",
+  title: "Set your secure client portal password.",
+  description: "Your enquiry has been received and your M&W Labs portal is ready. Create your own password to continue into the workspace.",
+  eyebrow: "Portal Password Setup",
+  form_title: "Create your password",
+  form_description: "Choose a password you will use for future project updates, quotes, invoices, files, and reports." do %>
+
+  <%= form_with model: current_user, url: password_setup_path, method: :patch, class: "space-y-5" do |form| %>
+    <%= render "devise/shared/error_messages", resource: current_user %>
+
+    <div class="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+      <div class="flex items-start gap-3">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm">
+          <i class="fa-solid fa-user-shield"></i>
+        </span>
+        <div>
+          <p class="text-sm font-black text-slate-950">Signed in as <%= current_user.email %></p>
+          <p class="mt-1 text-xs font-semibold leading-5 text-slate-600">This one-time setup secures your newly created client portal account.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <%= form.label :password, "New password", class: "mb-2 block text-sm font-black text-slate-700" %>
+      <%= form.password_field :password, autofocus: true, autocomplete: "new-password", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "6+ characters" %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation, "Confirm password", class: "mb-2 block text-sm font-black text-slate-700" %>
+      <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "Repeat your password" %>
+    </div>
+
+    <%= form.submit "Set Password and Continue", class: "w-full rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700" %>
+  <% end %>
+<% end %>

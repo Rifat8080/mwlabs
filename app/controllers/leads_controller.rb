@@ -7,7 +7,13 @@ class LeadsController < ApplicationController
     if spam_submission?
       redirect_to contact_path, notice: "Thanks. We received your request and will get back to you shortly."
     elsif save_lead_and_account
-      redirect_to contact_path, notice: "Thanks. Your project request was sent successfully. We also prepared your client portal account using your email."
+      if @created_client_account
+        sign_in(:user, @created_client_user)
+        session[:password_setup_user_id] = @created_client_user.id
+        redirect_to edit_password_setup_path, notice: "Thanks. Your request was sent successfully. Please set your client portal password to continue."
+      else
+        redirect_to contact_path, notice: "Thanks. Your project request was sent successfully. We also prepared your client portal account using your email."
+      end
     else
       flash.now[:alert] = "Please check the form and try again."
       render "pages/contact", status: :unprocessable_entity
@@ -39,9 +45,12 @@ class LeadsController < ApplicationController
   end
 
   def save_lead_and_account
+    @created_client_user = nil
+    @created_client_account = false
+
     ActiveRecord::Base.transaction do
       @lead.save!
-      create_client_account!
+      @created_client_user, @created_client_account = create_client_account!
     end
     true
   rescue ActiveRecord::RecordInvalid
@@ -49,20 +58,23 @@ class LeadsController < ApplicationController
   end
 
   def create_client_account!
-    return if @lead.email.blank?
+    return [ nil, false ] if @lead.email.blank?
 
     user = User.find_or_initialize_by(email: @lead.email.downcase)
+    created_account = user.new_record?
     user.assign_attributes(client_account_attributes(user))
-    user.password = SecureRandom.hex(18) if user.new_record?
-    user.password_confirmation = user.password if user.new_record?
+    user.password = SecureRandom.hex(18) if created_account
+    user.password_confirmation = user.password if created_account
     user.save!
 
     ActivityLog.record!(
       subject: @lead,
       user: user,
-      action: user.previously_new_record? ? "Client portal account created" : "Client portal account linked",
+      action: created_account ? "Client portal account created" : "Client portal account linked",
       details: "Account email: #{user.email}"
     )
+
+    [ user, created_account ]
   end
 
   def client_account_attributes(user)

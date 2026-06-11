@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
+  resource :password_setup, only: [ :edit, :update ], controller: "users/password_setups"
 
   get "dashboard", to: "admin/dashboard#show", as: :dashboard_root
 
