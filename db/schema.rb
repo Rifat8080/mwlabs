@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_10_155950) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_11_074317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -192,6 +192,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_155950) do
     t.index ["quote_id"], name: "index_quote_items_on_quote_id"
   end
 
+  create_table "quote_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "quote_id", null: false
+    t.uuid "user_id", null: false
+    t.text "message", null: false
+    t.string "kind", default: "message", null: false
+    t.boolean "internal", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quote_id"], name: "index_quote_messages_on_quote_id"
+    t.index ["user_id"], name: "index_quote_messages_on_user_id"
+  end
+
   create_table "quotes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "client_id"
     t.uuid "lead_id"
@@ -207,8 +219,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_155950) do
     t.datetime "accepted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "sent_at"
+    t.uuid "sent_by_id"
+    t.string "public_token"
+    t.string "negotiation_status", default: "none", null: false
     t.index ["client_id"], name: "index_quotes_on_client_id"
     t.index ["lead_id"], name: "index_quotes_on_lead_id"
+    t.index ["public_token"], name: "index_quotes_on_public_token", unique: true
+    t.index ["sent_by_id"], name: "index_quotes_on_sent_by_id"
   end
 
   create_table "reminders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -296,8 +314,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_155950) do
   add_foreign_key "projects", "quotes"
   add_foreign_key "projects", "users", column: "assigned_to_id"
   add_foreign_key "quote_items", "quotes"
+  add_foreign_key "quote_messages", "quotes"
+  add_foreign_key "quote_messages", "users"
   add_foreign_key "quotes", "clients"
   add_foreign_key "quotes", "leads"
+  add_foreign_key "quotes", "users", column: "sent_by_id"
   add_foreign_key "reminders", "users"
   add_foreign_key "tasks", "projects"
   add_foreign_key "tasks", "users", column: "assigned_to_id"

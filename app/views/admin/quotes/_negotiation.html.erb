@@ -1,0 +1,192 @@
+<% messages = @quote_messages || [] %>
+<% last_activity = quote.last_negotiation_activity_at %>
+
+<section id="quote-negotiation" class="overflow-hidden rounded-[1.5rem] border <%= quote.negotiation_open? ? 'border-amber-300 shadow-xl shadow-amber-100' : 'border-slate-200 shadow-sm' %> bg-white">
+  <div class="border-b <%= quote.negotiation_open? ? 'border-amber-200 bg-[radial-gradient(circle_at_top_right,_#fde68a,_transparent_22rem),#fffbeb]' : 'border-slate-100 bg-[radial-gradient(circle_at_top_right,_#dbeafe,_transparent_22rem),#ffffff]' %> p-6 lg:p-8">
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[0.2em] <%= quote.negotiation_open? ? 'text-amber-700' : 'text-blue-600' %>">Quote Negotiation</p>
+        <h2 class="mt-2 text-2xl font-black text-slate-950">Agree on scope, pricing, and timeline</h2>
+        <p class="mt-2 max-w-3xl text-sm font-semibold leading-7 text-slate-600">
+          <% if client_user? %>
+            Ask for specific changes before accepting. Add the business reason, target budget, and timing so the team can revise the quote quickly.
+          <% else %>
+            Track client objections, answer questions, add internal notes, and decide when a revised quote should be sent back for approval.
+          <% end %>
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <span class="rounded-full bg-white px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-slate-600 shadow-sm"><%= quote.status %></span>
+        <% if quote.negotiation_open? %>
+          <span class="rounded-full bg-amber-500 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-white shadow-lg shadow-amber-200">Acceptance locked</span>
+        <% elsif quote.sent? %>
+          <span class="rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-emerald-700">Portal published</span>
+        <% end %>
+      </div>
+    </div>
+
+    <% if quote.negotiation_open? %>
+      <div class="mt-5 rounded-2xl border border-amber-200 bg-white/80 p-4">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <p class="text-sm font-bold leading-6 text-amber-900">
+            This quote cannot be accepted yet. Post a client-facing response and choose
+            <strong>Ready for acceptance</strong> as the next step once the request is solved.
+          </p>
+          <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-amber-800">
+            Awaiting <%= quote.awaiting_response_from %>
+          </span>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-6 grid gap-3 md:grid-cols-4">
+      <div class="rounded-2xl border border-white/70 bg-white/85 p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Current Total</p>
+        <p class="mt-2 text-xl font-black text-slate-950"><%= number_to_currency(quote.total_amount) %></p>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/85 p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Messages</p>
+        <p class="mt-2 text-xl font-black text-slate-950"><%= quote.negotiation_message_count %></p>
+      </div>
+      <div class="rounded-2xl border <%= quote.negotiation_open? ? 'border-amber-300 bg-amber-100' : 'border-white/70 bg-white/85' %> p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Awaiting</p>
+        <p class="mt-2 text-xl font-black <%= quote.negotiation_open? ? 'text-amber-900' : 'text-slate-950' %>"><%= quote.awaiting_response_from %></p>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/85 p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Last Activity</p>
+        <p class="mt-2 text-sm font-black text-slate-950"><%= last_activity ? "#{time_ago_in_words(last_activity)} ago" : "Not started" %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid gap-0 lg:grid-cols-[1fr_24rem]">
+    <div class="bg-slate-50 p-5 lg:p-6">
+      <% if messages.present? %>
+        <div class="space-y-5">
+          <% messages.each do |message| %>
+            <% staff_message = message.from_staff? || message.system? %>
+            <div class="flex <%= staff_message ? 'justify-start' : 'justify-end' %>">
+              <div class="max-w-2xl rounded-[1.25rem] border p-4 shadow-sm <%= staff_message ? 'border-slate-200 bg-white' : 'border-blue-200 bg-blue-600 text-white' %> <%= message.internal? ? 'border-amber-200 bg-amber-50 text-slate-800' : '' %>">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-full <%= staff_message ? 'bg-blue-50 text-blue-600' : 'bg-white/15 text-white' %> <%= message.internal? ? 'bg-amber-100 text-amber-700' : '' %>">
+                      <% if message.system? %>
+                        <i class="fa-solid fa-circle-info"></i>
+                      <% elsif message.from_client? %>
+                        <i class="fa-solid fa-user"></i>
+                      <% else %>
+                        <i class="fa-solid fa-headset"></i>
+                      <% end %>
+                    </span>
+                    <div>
+                      <p class="text-sm font-black"><%= message.author_label %></p>
+                      <p class="mt-0.5 text-xs font-semibold <%= staff_message || message.internal? ? 'text-slate-500' : 'text-blue-100' %>"><%= message.kind_label %> · <%= message.created_at.to_fs(:long) %></p>
+                    </div>
+                  </div>
+                  <% if message.internal? %>
+                    <span class="rounded-full bg-amber-100 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-amber-700">Internal note</span>
+                  <% end %>
+                </div>
+                <div class="mt-3 text-sm font-medium leading-7 <%= staff_message || message.internal? ? 'text-slate-700' : 'text-blue-50' %>">
+                  <%= simple_format(message.message) %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="rounded-[1.25rem] border border-dashed border-slate-300 bg-white p-8 text-center">
+          <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <i class="fa-solid fa-comments-dollar"></i>
+          </span>
+          <p class="mt-4 text-base font-black text-slate-900">No negotiation has started yet.</p>
+          <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">When the client asks for a change or the team posts a clarification, the full decision trail will appear here.</p>
+        </div>
+      <% end %>
+    </div>
+
+    <aside class="border-t border-slate-100 bg-white p-5 lg:border-l lg:border-t-0 lg:p-6">
+      <% if can_negotiate_quote?(quote) %>
+        <div data-controller="quote-negotiation" class="space-y-5">
+          <div>
+            <h3 class="text-lg font-black text-slate-950"><%= client_user? ? "Request a revision" : "Respond to negotiation" %></h3>
+            <p data-quote-negotiation-target="hint" class="mt-2 text-sm font-semibold leading-6 text-slate-500">
+              <%= client_user? ? "Choose what should change so the team receives a clear request." : "Pick the response type so the thread clearly separates client-facing replies from internal notes." %>
+            </p>
+          </div>
+
+          <%= form_with model: QuoteMessage.new, url: admin_quote_quote_messages_path(quote), class: "space-y-4" do |form| %>
+            <% if client_user? %>
+              <div>
+                <%= form.label :request_type, "What needs to change?", class: "block text-sm font-black text-slate-700" %>
+                <%= form.select :request_type,
+                  options_for_select([ [ "Scope or deliverables", "scope" ], [ "Price or budget", "pricing" ], [ "Timeline", "timeline" ], [ "Payment terms", "payment_terms" ], [ "Other question", "general" ] ]),
+                  {},
+                  data: { action: "quote-negotiation#changeRequestType", quote_negotiation_target: "requestType" },
+                  class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div>
+                  <%= form.label :priority, "Priority", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+                  <%= form.select :priority, options_for_select([ [ "Normal", "normal" ], [ "High", "high" ], [ "Blocking acceptance", "blocking_acceptance" ] ]), {}, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+                </div>
+                <div>
+                  <%= form.label :target_budget, "Target budget", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+                  <%= form.text_field :target_budget, placeholder: "Optional", class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+                </div>
+              </div>
+
+              <div>
+                <%= form.label :target_timeline, "Ideal timeline", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+                <%= form.text_field :target_timeline, placeholder: "Example: Launch by July 15", class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+              </div>
+            <% else %>
+              <div>
+                <%= form.label :response_type, "Response type", class: "block text-sm font-black text-slate-700" %>
+                <%= form.select :response_type,
+                  options_for_select([ [ "Client-facing reply", "reply" ], [ "Revised terms sent", "revised_terms" ], [ "Need clarification", "clarification" ], [ "Internal note", "internal_note" ] ]),
+                  {},
+                  data: { action: "quote-negotiation#changeResponseType", quote_negotiation_target: "responseType" },
+                  class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+              </div>
+
+              <div>
+                <%= form.label :next_step, "Next step", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+                <%= form.select :next_step, options_for_select([ [ "Waiting for client", "waiting_for_client" ], [ "Revise quote pricing", "revise_quote_pricing" ], [ "Schedule a call", "schedule_call" ], [ "Ready for acceptance - resolve negotiation", "ready_for_acceptance" ] ]), {}, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+              </div>
+
+              <label class="inline-flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600">
+                <%= form.check_box :internal, data: { quote_negotiation_target: "internal" }, class: "h-4 w-4 rounded border-slate-300 text-blue-600" %>
+                Keep this message internal
+              </label>
+            <% end %>
+
+            <div>
+              <%= form.label :message, client_user? ? "Explain the requested change" : "Message", class: "block text-sm font-black text-slate-700" %>
+              <%= form.text_area :message,
+                rows: 6,
+                required: true,
+                maxlength: 1800,
+                data: { action: "input->quote-negotiation#count", quote_negotiation_target: "message" },
+                class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50",
+                placeholder: client_user? ? "Example: We can approve this if phase one stays under $3,000 and the analytics dashboard moves to phase two." : "Example: We can keep the timeline if we reduce the initial dashboard scope and move automations to phase two." %>
+              <div class="mt-2 flex items-center justify-between gap-3 text-xs font-semibold text-slate-500">
+                <span data-quote-negotiation-target="prompt"><%= client_user? ? "Be specific about trade-offs you can accept." : "Include concrete next steps and whether pricing needs to be updated." %></span>
+                <span><span data-quote-negotiation-target="count">0</span>/1800</span>
+              </div>
+            </div>
+
+            <%= form.submit client_user? ? "Send Revision Request" : "Post Negotiation Update", class: "w-full rounded-xl bg-blue-600 px-5 py-3 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+          <h3 class="text-base font-black text-slate-950">Negotiation closed</h3>
+          <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">This quote is not currently open for negotiation because its status is <%= quote.status %>.</p>
+        </div>
+      <% end %>
+    </aside>
+  </div>
+</section>

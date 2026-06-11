@@ -3,10 +3,13 @@ module Admin
     class_attribute :resource_model, :resource_title, :resource_description,
       :resource_columns, :resource_fields, :resource_includes
 
+    before_action :authorize_resource_access!
+    before_action :authorize_resource_management!, except: %i[ index show ]
     before_action :set_resource, only: %i[ show edit update destroy ]
 
     helper_method :resource_model, :resource_title, :resource_description,
-      :resource_columns, :resource_fields, :field_options, :field_value
+      :resource_columns, :resource_fields, :visible_resource_columns, :visible_resource_fields,
+      :field_options, :field_value
 
     def self.configure(model:, title:, description:, columns:, fields:, includes: [])
       self.resource_model = model
@@ -18,12 +21,12 @@ module Admin
     end
 
     def index
-      @resources = resource_model.includes(resource_includes).order(created_at: :desc)
+      @resources = resource_scope.includes(resource_includes).order(created_at: :desc)
       render "admin/resources/index"
     end
 
     def show
-      @activity_logs = @resource.try(:activity_logs)&.order(created_at: :desc)&.limit(20)
+      @activity_logs = client_user? ? [] : @resource.try(:activity_logs)&.order(created_at: :desc)&.limit(20)
       render "admin/resources/show"
     end
 
@@ -65,13 +68,110 @@ module Admin
       redirect_to polymorphic_path([ :admin, resource_model ]), notice: "#{resource_title.singularize} deleted."
     end
 
+    protected
+
+    def resource_scope
+      return resource_model.all if admin_user?
+      return team_member_scope if team_member?
+      return client_scope if client_user?
+
+      resource_model.none
+    end
+
     private
 
+    def authorize_resource_access!
+      return if can_access_resource?(resource_model)
+
+      redirect_to dashboard_root_path, alert: "You do not have access to that area."
+    end
+
+    def authorize_resource_management!
+      return if can_manage_resource?(resource_model)
+
+      redirect_to polymorphic_path([ :admin, resource_model ]), alert: "You can view this area, but you cannot make changes."
+    end
+
     def set_resource
-      @resource = resource_model.find(params[:id])
+      @resource = resource_scope.find(params[:id])
+    end
+
+    def team_member_scope
+      case resource_model.name
+      when "Lead"
+        Lead.where(assigned_to: current_user)
+      when "Quote"
+        Quote.left_outer_joins(:lead, :projects).where(leads: { assigned_to_id: current_user.id }).or(
+          Quote.left_outer_joins(:lead, :projects).where(projects: { assigned_to_id: current_user.id })
+        ).distinct
+      when "Project"
+        Project.where(assigned_to: current_user)
+      when "Task"
+        Task.where(assigned_to: current_user)
+      when "FileUpload"
+        FileUpload.left_outer_joins(:project, :task).where(projects: { assigned_to_id: current_user.id }).or(
+          FileUpload.left_outer_joins(:project, :task).where(tasks: { assigned_to_id: current_user.id })
+        ).distinct
+      when "Reminder"
+        Reminder.where(user: current_user)
+      else
+        resource_model.none
+      end
+    end
+
+    def client_scope
+      case resource_model.name
+      when "Lead"
+        client_lead_scope
+      when "Quote"
+        return resource_model.none if current_client.blank?
+
+        Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, client: current_client).or(
+          Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, leads: { email: current_user.email })
+        )
+      when "Project"
+        return resource_model.none if current_client.blank?
+
+        Project.where(client: current_client)
+      when "Task"
+        return resource_model.none if current_client.blank?
+
+        Task.joins(:project).where(projects: { client_id: current_client.id }, client_visible: true)
+      when "Invoice"
+        return resource_model.none if current_client.blank?
+
+        Invoice.where(client: current_client)
+      when "FileUpload"
+        return resource_model.none if current_client.blank?
+
+        FileUpload.left_outer_joins(:project).where(client: current_client, visibility: "Client Visible").or(
+          FileUpload.left_outer_joins(:project).where(projects: { client_id: current_client.id }, visibility: "Client Visible")
+        )
+      else
+        resource_model.none
+      end
+    end
+
+    def client_lead_scope
+      email_scope = Lead.where("LOWER(email) = ?", current_user.email.downcase)
+      return email_scope if current_client.blank?
+
+      Lead.where(client: current_client).or(email_scope)
     end
 
     def prepare_resource
+    end
+
+    def visible_resource_columns
+      return %i[ display_name service_interest status created_at ] if client_user? && resource_model == Lead
+
+      resource_columns
+    end
+
+    def visible_resource_fields
+      return resource_fields.select { |field| field[:name].in?(%i[ name email company_name source service_interest message status ]) } if client_user? && resource_model == Lead
+
+      resource_fields
     end
 
     def resource_params

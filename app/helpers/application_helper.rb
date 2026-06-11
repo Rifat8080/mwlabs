@@ -4,6 +4,8 @@ module ApplicationHelper
   end
 
   def admin_value(value)
+    return value.display_name if value.respond_to?(:display_name)
+
     case value
     when nil
       "—"

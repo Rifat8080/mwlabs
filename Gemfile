@@ -67,3 +67,6 @@ gem "tailwindcss-rails", "~> 4.4"
 gem "tailwindcss-ruby", "~> 4.3"
 
 gem "devise", "~> 5.0"
+gem "prawn", "~> 2.5"
+gem "prawn-svg", "~> 0.37"
+gem "prawn-table", "~> 0.2"

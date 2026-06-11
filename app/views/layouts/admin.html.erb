@@ -18,14 +18,7 @@
   </head>
 
   <body class="min-h-screen bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_34rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] text-slate-950">
-    <% nav_sections = {
-      "Overview" => [ [ "Dashboard", dashboard_root_path, "fa-gauge-high" ] ],
-      "CRM" => [ [ "Leads", admin_leads_path, "fa-user-plus" ], [ "Clients", admin_clients_path, "fa-address-book" ], [ "Follow-ups", admin_reminders_path, "fa-bell" ] ],
-      "Sales" => [ [ "Services", admin_services_path, "fa-layer-group" ], [ "Quotes", admin_quotes_path, "fa-file-signature" ] ],
-      "Projects" => [ [ "Projects", admin_projects_path, "fa-diagram-project" ], [ "Tasks", admin_tasks_path, "fa-list-check" ], [ "Files", admin_file_uploads_path, "fa-folder-open" ] ],
-      "Finance" => [ [ "Invoices", admin_invoices_path, "fa-file-invoice-dollar" ], [ "Payments", admin_payments_path, "fa-credit-card" ], [ "Expenses", admin_expenses_path, "fa-receipt" ] ],
-      "Team" => [ [ "Users", admin_users_path, "fa-users" ] ]
-    } %>
+    <% nav_sections = allowed_nav_sections %>
 
     <nav class="fixed left-0 right-0 top-0 z-50 border-b border-slate-100 bg-white/95 shadow-sm backdrop-blur">
       <div class="flex items-center justify-between px-4 py-3 lg:px-6">
@@ -72,7 +65,8 @@
       <div class="h-full overflow-y-auto px-4 pb-6">
         <div class="mb-5 rounded-[1.5rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_18rem),#ffffff] p-4 shadow-sm">
           <p class="text-xs font-black uppercase tracking-[0.22em] text-blue-600">M&W Labs</p>
-          <p class="mt-1 text-lg font-black text-slate-950">Agency OS</p>
+          <p class="mt-1 text-lg font-black text-slate-950"><%= client_user? ? "Client Portal" : "Agency OS" %></p>
+          <p class="mt-2 inline-flex rounded-full bg-blue-50 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-blue-700"><%= current_user.role.humanize %></p>
         </div>
 
         <nav class="space-y-6">

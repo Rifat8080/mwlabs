@@ -12,8 +12,12 @@ Rails.application.routes.draw do
     resources :clients
     resources :services
     resources :quotes do
+      resources :quote_messages, only: [ :create ]
       member do
         patch :accept
+        patch :reject
+        patch :send_quote
+        get :pdf
       end
     end
     resources :projects
