@@ -1,20 +1,21 @@
 <% content_for :title, "Mwlabs" %>
 
-<section class="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_34rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)]">
+<section class="relative isolate overflow-hidden bg-[radial-gradient(circle_at_18%_18%,_rgba(219,234,254,0.95),_transparent_30rem),radial-gradient(circle_at_88%_20%,_rgba(207,250,254,0.82),_transparent_34rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)]">
   <div class="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent"></div>
   <div class="absolute left-8 top-28 -z-10 h-80 w-80 rounded-full bg-blue-100/70 blur-3xl"></div>
   <div class="absolute right-0 top-24 -z-10 h-[34rem] w-[34rem] rounded-full bg-cyan-100/60 blur-3xl"></div>
+  <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-44 bg-[linear-gradient(180deg,_rgba(255,255,255,0.95),_rgba(255,255,255,0))]"></div>
 
   <div class="mx-auto grid max-w-[104rem] items-center gap-10 px-4 pb-14 pt-8 sm:px-6 sm:pt-10 lg:grid-cols-[0.86fr_1.14fr] lg:gap-20 lg:px-12 lg:pb-24 lg:pt-16 2xl:px-16">
     <div class="text-center lg:text-left">
-      <div class="mx-auto inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-700 shadow-sm sm:text-xs lg:mx-0">
+      <div class="mx-auto inline-flex items-center gap-2 rounded-full border border-blue-100/80 bg-white/90 px-4 py-2 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-700 shadow-[0_18px_45px_rgba(37,99,235,0.10)] backdrop-blur sm:text-xs lg:mx-0">
+        <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[0.58rem] text-white shadow-lg shadow-blue-500/25">+</span>
         Selected founders get MVP builds + marketing reports
-        <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-600">+</span>
       </div>
 
       <h1 class="mx-auto mt-7 max-w-3xl text-4xl font-black leading-[0.95] tracking-tight text-slate-950 sm:text-6xl lg:mx-0 lg:text-7xl">
         Build. Market.<br>
-        Automate. <span class="text-blue-600">Grow.</span>
+        Automate. <span class="bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-700 bg-clip-text text-transparent">Grow.</span>
       </h1>
 
       <p class="mx-auto mt-7 max-w-xl text-base font-medium leading-8 text-slate-600 sm:text-lg lg:mx-0">
@@ -22,14 +23,14 @@
       </p>
 
       <div class="mt-9 flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
-        <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
+        <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-2xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-700" do %>
           Apply for MVP Partnership
           <svg class="ms-3 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h10m0 0-4-4m4 4-4 4"/>
           </svg>
         <% end %>
 
-        <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm hover:bg-blue-50" do %>
+        <%= link_to contact_path, class: "inline-flex items-center justify-center rounded-2xl border border-blue-200 bg-white/90 px-7 py-4 text-sm font-extrabold text-blue-700 shadow-lg shadow-blue-100/50 backdrop-blur transition hover:-translate-y-0.5 hover:bg-blue-50" do %>
           Request Growth Report
           <svg class="ms-3 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h10m0 0-4-4m4 4-4 4"/>
@@ -59,23 +60,48 @@
 
     </div>
 
-    <div class="relative mx-auto min-h-[360px] w-full max-w-2xl overflow-visible sm:min-h-[430px] lg:-mr-8 lg:min-h-[580px] lg:max-w-5xl">
-      <div class="absolute left-1/2 top-1/2 h-[76%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-blue-200/80"></div>
+    <div class="hero-visual-stage relative mx-auto min-h-[380px] w-full max-w-2xl overflow-visible sm:min-h-[450px] lg:-mr-2 lg:min-h-[600px] lg:max-w-4xl xl:max-w-[58rem]">
+      <div class="hero-orbit absolute left-1/2 top-1/2 h-[78%] w-[91%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-blue-200/80"></div>
+      <div class="absolute left-1/2 top-1/2 h-[66%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-cyan-200/60"></div>
       <div class="absolute left-[13%] top-[45%] h-2.5 w-2.5 rounded-full bg-blue-600 shadow-lg shadow-blue-500/40 sm:h-3 sm:w-3"></div>
-      <div class="absolute right-[28%] top-[17%] h-2.5 w-2.5 rounded-full bg-blue-600 shadow-lg shadow-blue-500/40 sm:h-3 sm:w-3"></div>
-      <div class="absolute bottom-[12%] left-[56%] h-2.5 w-2.5 rounded-full bg-blue-600 shadow-lg shadow-blue-500/40 sm:h-3 sm:w-3"></div>
+      <div class="absolute right-[28%] top-[17%] h-2.5 w-2.5 rounded-full bg-cyan-500 shadow-lg shadow-cyan-500/40 sm:h-3 sm:w-3"></div>
+      <div class="absolute bottom-[12%] left-[56%] h-2.5 w-2.5 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/40 sm:h-3 sm:w-3"></div>
 
-      <%= tag.img src: "/images/hero.svg", alt: "M&W Labs digital services", class: "absolute left-1/2 top-1/2 z-10 w-[92%] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-2xl sm:w-[94%]" %>
+      <div class="hero-visual-card hero-sheen absolute left-1/2 top-[52%] h-[72%] w-[82%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/80 bg-white/45 shadow-[0_36px_100px_rgba(15,23,42,0.16)] backdrop-blur before:absolute before:inset-0 before:bg-[linear-gradient(135deg,_rgba(255,255,255,0.75),_rgba(219,234,254,0.24))] after:absolute after:-top-16 after:h-[130%] after:w-28 after:bg-white/30"></div>
+
+      <div class="absolute left-1/2 top-1/2 z-10 w-[94%] -translate-x-1/2 -translate-y-1/2">
+        <div class="relative">
+          <div class="absolute inset-x-[14%] bottom-4 h-16 rounded-full bg-blue-950/15 blur-2xl"></div>
+          <%= tag.img src: "/images/hero.svg", alt: "M&W Labs digital services", loading: "eager", fetchpriority: "high", decoding: "async", class: "relative w-full object-contain drop-shadow-2xl" %>
+        </div>
+      </div>
+
+      <div class="pointer-events-none absolute -left-[14%] top-[38%] z-30 hidden rounded-2xl border border-white/80 bg-white/90 p-3 shadow-2xl shadow-blue-200/60 backdrop-blur sm:-left-[12%] sm:top-[39%] sm:block">
+        <div class="flex items-center gap-3">
+          <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
+            <i class="fa-solid fa-bolt"></i>
+          </span>
+          <div>
+            <p class="text-[0.62rem] font-black uppercase tracking-[0.18em] text-slate-400">Launch Stack</p>
+            <p class="mt-0.5 text-sm font-black text-slate-950">Strategy + Build + Growth</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pointer-events-none absolute right-[7%] top-[27%] z-30 hidden rounded-2xl border border-white/80 bg-slate-950/90 p-3 text-white shadow-2xl shadow-slate-900/20 backdrop-blur md:block">
+        <p class="text-[0.62rem] font-black uppercase tracking-[0.18em] text-cyan-100">Optimized</p>
+        <p class="mt-1 text-2xl font-black">98<span class="text-sm text-cyan-200">%</span></p>
+      </div>
 
       <% [
         [ "Web Development", "fa-code", "left-[8%] top-[12%] sm:left-[14%] sm:top-[11%]", "bg-blue-50 text-blue-600", "hero-float" ],
-        [ "Digital Marketing", "fa-chart-line", "right-[4%] top-[10%] sm:right-[7%] sm:top-[6%]", "bg-blue-50 text-blue-600", "hero-float-soft hero-float-delay" ],
-        [ "Branding & Design", "fa-pen-nib", "right-[0%] top-[43%] sm:right-[2%]", "bg-indigo-50 text-indigo-600", "hero-float" ],
-        [ "Video Editing", "fa-clapperboard", "right-[11%] bottom-[13%] sm:right-[17%] sm:bottom-[11%]", "bg-purple-50 text-purple-600", "hero-float-soft" ],
-        [ "AI Automation", "fa-robot", "left-[38%] bottom-[5%] sm:left-[42%] sm:bottom-[4%]", "bg-blue-50 text-blue-600", "hero-float hero-float-delay" ],
-        [ "Growth Strategy", "fa-bullseye", "left-[1%] bottom-[24%] sm:left-[3%] sm:bottom-[22%]", "bg-emerald-50 text-emerald-600", "hero-float-soft hero-float-delay" ]
+        [ "Digital Marketing", "fa-chart-line", "right-[8%] top-[9%] sm:right-[12%] sm:top-[7%]", "bg-blue-50 text-blue-600", "hero-float-soft hero-float-delay" ],
+        [ "Branding & Design", "fa-pen-nib", "right-[6%] top-[45%] sm:right-[8%]", "bg-indigo-50 text-indigo-600", "hero-float" ],
+        [ "Video Editing", "fa-clapperboard", "right-[20%] bottom-[18%] sm:right-[28%] sm:bottom-[15%]", "bg-purple-50 text-purple-600", "hero-float-soft" ],
+        [ "AI Automation", "fa-robot", "left-[30%] bottom-[4%] sm:left-[34%] sm:bottom-[3%]", "bg-blue-50 text-blue-600", "hero-float hero-float-delay" ],
+        [ "Growth Strategy", "fa-bullseye", "left-[1%] bottom-[26%] sm:left-[4%] sm:bottom-[24%]", "bg-emerald-50 text-emerald-600", "hero-float-soft hero-float-delay" ]
       ].each do |label, icon, position, color, animation| %>
-        <div class="pointer-events-none absolute z-20 flex items-center gap-1.5 rounded-xl border border-slate-100 bg-white/95 px-2 py-1.5 text-[0.52rem] font-extrabold text-slate-800 shadow-xl shadow-slate-200/80 backdrop-blur transition-transform duration-300 sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2 sm:text-[0.65rem] md:gap-3 md:px-4 md:py-3 md:text-xs <%= position %> <%= animation %>">
+        <div class="pointer-events-none absolute z-20 flex items-center gap-1.5 rounded-xl border border-white/80 bg-white/95 px-2 py-1.5 text-[0.52rem] font-extrabold text-slate-800 shadow-xl shadow-slate-200/80 backdrop-blur transition-transform duration-300 sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2 sm:text-[0.65rem] md:gap-3 md:px-4 md:py-3 md:text-xs <%= position %> <%= animation %>">
           <span class="flex h-6 w-6 items-center justify-center rounded-lg text-[0.65rem] sm:h-7 sm:w-7 sm:rounded-xl md:h-9 md:w-9 md:text-base <%= color %>">
             <i class="fa-solid <%= icon %>"></i>
           </span>
@@ -108,7 +134,7 @@
   </div>
 </section>
 
-<div class="fixed inset-x-3 bottom-4 z-50 sm:inset-x-auto sm:right-6 sm:bottom-6" data-controller="floating-cta" data-floating-cta>
+<div class="pointer-events-none fixed inset-x-3 bottom-4 z-50 translate-y-4 opacity-0 transition duration-500 sm:inset-x-auto sm:right-6 sm:bottom-6" data-controller="floating-cta" data-floating-cta>
   <div class="relative overflow-hidden rounded-[1.35rem] border border-white/70 bg-white/90 p-2 shadow-[0_24px_70px_rgba(15,23,42,0.18)] ring-1 ring-slate-900/5 backdrop-blur-xl sm:w-[19rem]">
     <div class="pointer-events-none absolute -right-10 -top-12 h-28 w-28 rounded-full bg-blue-100 blur-2xl"></div>
     <div class="pointer-events-none absolute -bottom-12 -left-10 h-28 w-28 rounded-full bg-emerald-100 blur-2xl"></div>

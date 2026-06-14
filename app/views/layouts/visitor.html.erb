@@ -18,6 +18,8 @@
   </head>
 
   <body id="top" class="min-h-screen bg-white text-slate-950">
+    <%= render "shared/site_loader" %>
+
     <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
       <nav class="mx-auto flex max-w-[100rem] flex-wrap items-center justify-between gap-y-3 px-4 py-4 sm:px-6 lg:flex-nowrap lg:px-10">
         <%= link_to root_path, class: "flex shrink-0 items-center" do %>
