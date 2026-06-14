@@ -46,6 +46,8 @@ module Admin
       Task.create!(title: "Internal checklist", project: project, client_visible: false, due_date: Date.current)
       Invoice.create!(client: client, project: project, subtotal: 100, total: 100, due_date: 1.week.from_now)
       Lead.create!(name: "Portal enquiry", email: client_user.email, status: "Need Requirement", service_interest: "Website")
+      Quote.create!(client: client, status: "Draft", total_amount: 100)
+      Quote.create!(client: client, status: "Sent", total_amount: 200, validity_date: 1.week.from_now)
 
       sign_in client_user
       get dashboard_root_url
@@ -59,6 +61,9 @@ module Admin
       assert_select "body", { text: /Internal checklist/, count: 0 }
       assert_select "body", { text: /Money Overview/, count: 0 }
       assert_select "a[href='#{new_admin_project_path}']", count: 0
+      assert_select "body", text: /Quotes/
+      assert_match(/\b1\b/, response.body)
+      assert_select "body", { text: /\b2\b.*Quotes|Quotes.*\b2\b/, count: 0 }
     end
 
     test "role permissions scope direct resource urls" do
@@ -79,6 +84,13 @@ module Admin
       get admin_lead_url(own_lead)
       assert_response :success
       assert_select "body", text: /Contacted/
+      assert_select "body", { text: /Assigned person/, count: 0 }
+
+      get admin_project_url(project)
+      assert_response :success
+      assert_select "body", text: /Protected Project/
+      assert_select "body", { text: /Internal notes/, count: 0 }
+      assert_select "body", { text: /Project value/, count: 0 }
       assert_select "body", { text: /Assigned person/, count: 0 }
 
       get admin_projects_url

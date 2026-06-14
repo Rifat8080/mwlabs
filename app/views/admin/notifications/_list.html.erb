@@ -1,0 +1,15 @@
+<% if notifications.any? %>
+  <div class="divide-y divide-slate-100" data-notifications-list-items>
+    <% notifications.each do |n| %>
+      <%= render partial: "shared/notification_item", locals: { notification: n, dom_id: "admin_notification_#{n.id}", variant: :page } %>
+    <% end %>
+  </div>
+<% else %>
+  <div id="empty-admin-notification-state" class="flex flex-col items-center justify-center px-6 py-20 text-center">
+    <span class="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 text-slate-300 ring-1 ring-slate-100">
+      <i class="fa-solid fa-inbox text-3xl"></i>
+    </span>
+    <h2 class="text-xl font-black text-slate-900">No notifications yet</h2>
+    <p class="mt-2 max-w-sm text-sm font-medium leading-6 text-slate-500">Important updates from leads, quotes, projects, and client activity will appear here.</p>
+  </div>
+<% end %>

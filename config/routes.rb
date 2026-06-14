@@ -7,6 +7,12 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "dashboard#show"
 
+    resources :notifications, only: [ :index, :update ] do
+      collection do
+        patch :mark_all
+      end
+    end
+
     resources :users
     resources :leads
     resources :clients
@@ -20,12 +26,18 @@ Rails.application.routes.draw do
         get :pdf
       end
     end
-    resources :projects
+    resources :projects do
+      resources :tasks, only: [ :create, :update, :destroy ], controller: "project_tasks"
+    end
     resources :tasks
     resources :invoices
     resources :payments
     resources :expenses
-    resources :file_uploads, path: "files"
+    resources :file_uploads, path: "files" do
+      member do
+        get :download
+      end
+    end
     resources :reminders, path: "follow-ups"
   end
 

@@ -1,0 +1,115 @@
+<% visible_files = client_user? ? project.file_uploads.where(visibility: "Client Visible") : project.file_uploads %>
+<% files = visible_files.includes(:task, :client).order(created_at: :desc).to_a %>
+<% task_files = files.select { |file| file.task_id.present? } %>
+<% project_files = files.reject { |file| file.task_id.present? } %>
+
+<section id="project-files" class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 shadow-xl shadow-slate-200/70 backdrop-blur">
+  <div class="border-b border-slate-100 bg-[radial-gradient(circle_at_top_right,_#dbeafe,_transparent_24rem),#ffffff] p-5 lg:p-8">
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-blue-700 shadow-sm">
+          <i class="fa-solid fa-folder-open"></i>
+          Project Files
+        </div>
+        <h2 class="mt-3 text-2xl font-black tracking-tight text-slate-950 lg:text-3xl">Files for <%= project.display_name %></h2>
+        <p class="mt-2 max-w-3xl text-sm font-semibold leading-7 text-slate-600">
+          <% if client_user? %>
+            Download shared project assets, contracts, and delivery files from one place.
+          <% else %>
+            Upload and organize project assets by task or keep them at the project level.
+          <% end %>
+        </p>
+      </div>
+
+      <% if can_manage_resource?(FileUpload) %>
+        <%= link_to new_admin_file_upload_path(project_id: project.id, client_id: project.client_id), class: "inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" do %>
+          <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+          Upload file
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="mt-6 grid gap-3 sm:grid-cols-3">
+      <div class="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Total Files</p>
+        <p class="mt-2 text-2xl font-black text-slate-950"><%= files.size %></p>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Project Level</p>
+        <p class="mt-2 text-2xl font-black text-slate-950"><%= project_files.size %></p>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Task Files</p>
+        <p class="mt-2 text-2xl font-black text-slate-950"><%= task_files.size %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-6 p-4 sm:p-5 lg:p-6">
+    <% if files.any? %>
+      <% [ [ "Project Files", project_files ], [ "Task Files", task_files ] ].each do |section_title, section_files| %>
+        <% next if section_files.empty? %>
+        <div>
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-blue-600"><%= section_title %></p>
+          <div class="mt-3 space-y-3">
+            <% section_files.each do |file| %>
+              <article class="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 transition hover:border-blue-100 hover:bg-white">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div class="min-w-0">
+                    <div class="flex items-start gap-3">
+                      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                        <i class="fa-solid fa-file-lines"></i>
+                      </span>
+                      <div class="min-w-0">
+                        <p class="break-words text-sm font-black text-slate-950"><%= file.display_name %></p>
+                        <p class="mt-1 text-xs font-semibold text-slate-500">
+                          <%= file.category.presence || "Uncategorized" %>
+                          · <%= admin_file_size(file) %>
+                          <% if file.task.present? %>
+                            · Task: <%= file.task.display_name %>
+                          <% end %>
+                        </p>
+                        <% if file.note.present? %>
+                          <p class="mt-2 text-sm font-medium leading-6 text-slate-600"><%= file.note %></p>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex rounded-full px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ring-1 <%= admin_status_class(file.status) %>"><%= file.status %></span>
+                    <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] text-slate-600"><%= file.visibility %></span>
+                  </div>
+                </div>
+
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <%= link_to "View", admin_file_upload_path(file), class: "rounded-xl bg-slate-950 px-3 py-2 text-xs font-black text-white" %>
+                  <% if admin_file_download_allowed?(file) %>
+                    <%= link_to "Download", download_admin_file_upload_path(file), class: "rounded-xl border border-blue-100 bg-blue-50 px-3 py-2 text-xs font-black text-blue-700" %>
+                  <% end %>
+                  <% if can_manage_resource?(FileUpload) %>
+                    <%= link_to "Edit", edit_admin_file_upload_path(file), class: "rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700" %>
+                  <% end %>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="rounded-[1.25rem] border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
+        <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <i class="fa-solid fa-folder-open"></i>
+        </span>
+        <p class="mt-4 text-base font-black text-slate-900">No files uploaded yet</p>
+        <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Upload contracts, design assets, invoices, or delivery files for this project.</p>
+        <% if can_manage_resource?(FileUpload) %>
+          <%= link_to new_admin_file_upload_path(project_id: project.id, client_id: project.client_id), class: "mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-black text-white" do %>
+            <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+            Upload first file
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>

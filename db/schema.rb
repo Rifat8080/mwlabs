@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_11_074317) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_14_133000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -144,6 +144,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_11_074317) do
     t.datetime "updated_at", null: false
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["client_id"], name: "index_leads_on_client_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "action", null: false
+    t.string "recipient_type", null: false
+    t.string "notifiable_type"
+    t.string "actor_type"
+    t.jsonb "params", default: {}
+    t.datetime "read_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.string "level", default: "info", null: false
+    t.string "icon"
+    t.uuid "recipient_id", null: false
+    t.uuid "notifiable_id"
+    t.uuid "actor_id"
+    t.index ["level"], name: "index_notifications_on_level"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["read_at"], name: "index_notifications_on_read_at"
+    t.index ["recipient_type", "recipient_id", "read_at"], name: "index_notifications_on_recipient_and_read"
+    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

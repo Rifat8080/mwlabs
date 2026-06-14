@@ -120,8 +120,8 @@ module Admin
           title: "My Tasks",
           icon: "fa-list-check",
           count: assigned_tasks.where.not(status: "Done").count,
-          action: "Complete tasks and update status",
-          path: helpers.admin_tasks_path
+          action: "Open assigned projects and update task boards",
+          path: helpers.admin_projects_path
         }
       ]
       @today_tasks = assigned_tasks.where(due_date: ..Date.current).where.not(status: "Done").includes(:project).order(:due_date).limit(6)
@@ -143,7 +143,7 @@ module Admin
         FileUpload.none
       end
       client_invoices = client.present? ? Invoice.where(client: client) : Invoice.none
-      client_quotes = client.present? ? Quote.left_outer_joins(:lead).where(client: client).or(Quote.left_outer_joins(:lead).where(leads: { email: current_user.email })) : Quote.none
+      client_quotes = client_quote_scope
       client_enquiries = client_lead_scope
 
       @dashboard_label = "M&W Labs Client Portal"
@@ -179,8 +179,8 @@ module Admin
           title: "Shared Tasks",
           icon: "fa-list-check",
           count: client_tasks.where.not(status: "Done").count,
-          action: "See tasks visible to your team",
-          path: helpers.admin_tasks_path
+          action: "See client-visible tasks inside your projects",
+          path: helpers.admin_projects_path
         },
         {
           title: "Shared Files",

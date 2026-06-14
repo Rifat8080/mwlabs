@@ -162,7 +162,8 @@ class Quote < ApplicationRecord
         subject: self,
         user: user,
         action: kind == "staff_reply" ? "Quote reply posted" : "Quote change requested",
-        details: message.truncate(180)
+        details: message.truncate(180),
+        notify: !internal
       )
       schedule_negotiation_follow_up!(user)
     end

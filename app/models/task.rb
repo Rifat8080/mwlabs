@@ -13,9 +13,9 @@ class Task < ApplicationRecord
   validates :priority, inclusion: { in: PRIORITIES }
 
   after_create_commit :record_created_activity
-  after_save_commit :refresh_project_progress
+  after_save :refresh_project_progress
   after_update_commit :record_status_activity, if: :saved_change_to_status?
-  after_destroy_commit :refresh_project_progress
+  after_destroy :refresh_project_progress
 
   scope :overdue, -> { where.not(status: "Done").where(due_date: ...Date.current) }
   scope :due_today, -> { where.not(status: "Done").where(due_date: Date.current) }
@@ -48,10 +48,10 @@ class Task < ApplicationRecord
   end
 
   def record_created_activity
-    ActivityLog.record!(subject: project, action: "Task created", details: title)
+    ActivityLog.record!(subject: self, action: "Task created", details: title)
   end
 
   def record_status_activity
-    ActivityLog.record!(subject: project, action: "Task status changed", details: "#{title} moved to #{status}.")
+    ActivityLog.record!(subject: self, action: "Task status changed", details: "#{title} moved to #{status}.")
   end
 end

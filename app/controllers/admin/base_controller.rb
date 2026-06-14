@@ -6,7 +6,8 @@ module Admin
 
     helper_method :admin_user?, :team_member?, :client_user?, :current_client,
       :allowed_nav_sections, :can_access_resource?, :can_manage_resource?,
-      :can_send_quote?, :can_negotiate_quote?, :can_decide_quote?
+      :can_send_quote?, :can_negotiate_quote?, :can_decide_quote?,
+      :client_quote_scope
 
     private
 
@@ -27,6 +28,14 @@ module Admin
       return @current_client = nil if current_user.email.blank?
 
       @current_client = Client.find_by("LOWER(email) = ?", current_user.email.downcase)
+    end
+
+    def client_quote_scope
+      return Quote.none if current_client.blank?
+
+      Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, client: current_client).or(
+        Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, leads: { email: current_user.email })
+      )
     end
 
     def can_access_resource?(model)
@@ -62,7 +71,6 @@ module Admin
         ],
         "Projects" => [
           nav_item("Projects", helpers.admin_projects_path, "fa-diagram-project", Project),
-          nav_item("Tasks", helpers.admin_tasks_path, "fa-list-check", Task),
           nav_item("Files", helpers.admin_file_uploads_path, "fa-folder-open", FileUpload)
         ],
         "Finance" => [
@@ -75,7 +83,7 @@ module Admin
     end
 
     def nav_item(label, path, icon, model = nil)
-      return [ label, path, icon ] if model.blank? || can_access_resource?(model)
+      [ label, path, icon ] if model.blank? || can_access_resource?(model)
     end
 
     def can_send_quote?(quote)

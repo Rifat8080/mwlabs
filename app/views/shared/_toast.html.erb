@@ -1,0 +1,38 @@
+<% toast_message = local_assigns[:message] %>
+
+<div class="fixed bottom-4 right-4 z-50 max-w-md" data-controller="toast">
+  <div class="rounded-lg shadow-lg border <%= case type
+    when 'success' then 'bg-emerald-50 border-emerald-200'
+    when 'danger' then 'bg-rose-50 border-rose-200'
+    when 'warning' then 'bg-amber-50 border-amber-200'
+    else 'bg-blue-50 border-blue-200'
+  end %> p-4 flex items-start gap-3">
+    <div class="flex-shrink-0 pt-0.5">
+      <i class="fa-solid <%= case type
+        when 'success' then 'fa-check-circle text-emerald-500'
+        when 'danger' then 'fa-exclamation-circle text-rose-500'
+        when 'warning' then 'fa-info-circle text-amber-500'
+        else 'fa-info-circle text-blue-500'
+      end %>"></i>
+    </div>
+    <div class="flex-1">
+      <p class="font-semibold <%= case type
+        when 'success' then 'text-emerald-900'
+        when 'danger' then 'text-rose-900'
+        when 'warning' then 'text-amber-900'
+        else 'text-blue-900'
+      end %>"><%= title %></p>
+      <% if toast_message.present? %>
+        <p class="text-sm <%= case type
+          when 'success' then 'text-emerald-700'
+          when 'danger' then 'text-rose-700'
+          when 'warning' then 'text-amber-700'
+          else 'text-blue-700'
+        end %>"><%= toast_message %></p>
+      <% end %>
+    </div>
+    <button type="button" class="flex-shrink-0 text-slate-400 hover:text-slate-600" data-action="toast#close">
+      <i class="fa-solid fa-times"></i>
+    </button>
+  </div>
+</div>

@@ -4,7 +4,16 @@ class ActivityLog < ApplicationRecord
 
   validates :action, presence: true
 
-  def self.record!(subject:, action:, user: nil, details: nil)
-    create!(subject: subject, user: user, action: action, details: details)
+  def self.record!(subject:, action:, user: nil, details: nil, notify: true)
+    activity = create!(subject: subject, user: user, action: action, details: details)
+    if notify
+      begin
+        NotificationService.notify(notifiable: subject, action: action, actor: user, details: details)
+      rescue StandardError => e
+        Rails.logger.error("NotificationService failed: #{e.message}")
+        Rails.logger.error(e)
+      end
+    end
+    activity
   end
 end

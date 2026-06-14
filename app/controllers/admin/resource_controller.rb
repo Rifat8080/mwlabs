@@ -124,11 +124,7 @@ module Admin
       when "Lead"
         client_lead_scope
       when "Quote"
-        return resource_model.none if current_client.blank?
-
-        Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, client: current_client).or(
-          Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, leads: { email: current_user.email })
-        )
+        client_quote_scope
       when "Project"
         return resource_model.none if current_client.blank?
 
@@ -164,12 +160,14 @@ module Admin
 
     def visible_resource_columns
       return %i[ display_name service_interest status created_at ] if client_user? && resource_model == Lead
+      return %i[ name status priority deadline progress ] if client_user? && resource_model == Project
 
       resource_columns
     end
 
     def visible_resource_fields
       return resource_fields.select { |field| field[:name].in?(%i[ name email company_name source service_interest message status ]) } if client_user? && resource_model == Lead
+      return resource_fields.select { |field| field[:name].in?(%i[ name service_category start_date deadline status priority progress client_notes ]) } if client_user? && resource_model == Project
 
       resource_fields
     end

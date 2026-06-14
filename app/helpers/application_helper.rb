@@ -34,4 +34,41 @@ module ApplicationHelper
       "bg-amber-50 text-amber-700 ring-amber-200"
     end
   end
+
+  def render_toast(type: "info", title:, message: nil)
+    render "shared/toast", type: type, title: title, message: message
+  end
+
+  def admin_resource_icon(resource_model)
+    {
+      "Lead" => "fa-user-plus",
+      "Client" => "fa-address-book",
+      "Reminder" => "fa-bell",
+      "Service" => "fa-layer-group",
+      "Quote" => "fa-file-signature",
+      "Project" => "fa-diagram-project",
+      "FileUpload" => "fa-folder-open",
+      "Invoice" => "fa-file-invoice-dollar",
+      "Payment" => "fa-credit-card",
+      "Expense" => "fa-receipt",
+      "User" => "fa-users",
+      "Task" => "fa-list-check"
+    }.fetch(resource_model.name, "fa-layer-group")
+  end
+
+  def admin_resource_record_title(resource)
+    return "Record" if resource.blank?
+
+    resource.try(:display_name) || resource.try(:name) || resource.class.model_name.human
+  end
+
+  def admin_file_download_allowed?(file_upload)
+    file_upload.file.attached? && (!client_user? || file_upload.downloadable?)
+  end
+
+  def admin_file_size(file_upload)
+    return "No file" unless file_upload.file.attached?
+
+    number_to_human_size(file_upload.file_size)
+  end
 end

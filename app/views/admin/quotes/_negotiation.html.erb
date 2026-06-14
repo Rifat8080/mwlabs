@@ -1,7 +1,7 @@
 <% messages = @quote_messages || [] %>
 <% last_activity = quote.last_negotiation_activity_at %>
 
-<section id="quote-negotiation" class="overflow-hidden rounded-[1.5rem] border <%= quote.negotiation_open? ? 'border-amber-300 shadow-xl shadow-amber-100' : 'border-slate-200 shadow-sm' %> bg-white">
+<section id="quote-negotiation" class="overflow-hidden rounded-[1.75rem] border <%= quote.negotiation_open? ? 'border-amber-300 shadow-xl shadow-amber-100' : 'border-white shadow-xl shadow-slate-200/70' %> bg-white/90 backdrop-blur">
   <div class="border-b <%= quote.negotiation_open? ? 'border-amber-200 bg-[radial-gradient(circle_at_top_right,_#fde68a,_transparent_22rem),#fffbeb]' : 'border-slate-100 bg-[radial-gradient(circle_at_top_right,_#dbeafe,_transparent_22rem),#ffffff]' %> p-6 lg:p-8">
     <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
       <div>
