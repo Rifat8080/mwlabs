@@ -43,7 +43,7 @@ class Sitemap
   end
 
   def host
-    ENV.fetch("APP_HOST", request.host_with_port)
+    ENV.fetch("APP_HOST", "mwlabs.digital")
   end
 
   def static_entries

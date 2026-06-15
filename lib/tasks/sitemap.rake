@@ -9,7 +9,7 @@ namespace :sitemap do
     request = OpenStruct.new(
       ssl?: Rails.env.production?,
       scheme: Rails.env.production? ? "https" : "http",
-      host_with_port: ENV.fetch("APP_HOST", "localhost:3000")
+      host_with_port: ENV.fetch("APP_HOST", "mwlabs.digital")
     )
 
     urls = Sitemap.build(request)
