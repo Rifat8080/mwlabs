@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_14_133000) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_15_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -53,6 +53,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_14_133000) do
     t.datetime "updated_at", null: false
     t.index ["subject_type", "subject_id"], name: "index_activity_logs_on_subject"
     t.index ["user_id"], name: "index_activity_logs_on_user_id"
+  end
+
+  create_table "blog_posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.text "excerpt"
+    t.text "body", null: false
+    t.string "category", null: false
+    t.string "status", default: "Draft", null: false
+    t.uuid "author_id", null: false
+    t.datetime "published_at"
+    t.string "meta_title"
+    t.text "meta_description"
+    t.boolean "featured", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_blog_posts_on_author_id"
+    t.index ["category"], name: "index_blog_posts_on_category"
+    t.index ["published_at"], name: "index_blog_posts_on_published_at"
+    t.index ["slug"], name: "index_blog_posts_on_slug", unique: true
+    t.index ["status"], name: "index_blog_posts_on_status"
   end
 
   create_table "clients", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -152,7 +173,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_14_133000) do
     t.string "notifiable_type"
     t.string "actor_type"
     t.jsonb "params", default: {}
-    t.datetime "read_at", precision: nil
+    t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "url"
@@ -321,6 +342,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_14_133000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activity_logs", "users"
+  add_foreign_key "blog_posts", "users", column: "author_id"
   add_foreign_key "expenses", "clients"
   add_foreign_key "expenses", "projects"
   add_foreign_key "file_uploads", "clients"

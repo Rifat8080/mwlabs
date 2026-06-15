@@ -52,9 +52,6 @@ class PagesController < ApplicationController
   def pricing
   end
 
-  def blog
-  end
-
   def contact
     @lead = Lead.new(source: "Website Contact Form")
   end

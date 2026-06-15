@@ -51,6 +51,11 @@
               <p class="mt-1 break-all"><%= @resource.file.filename %> (<%= admin_file_size(@resource) %>)</p>
               <p class="mt-1 text-xs text-blue-700">Upload a new file below to replace it.</p>
             </div>
+          <% elsif @resource.is_a?(BlogPost) && @resource.cover_image.attached? %>
+            <div class="mt-2 overflow-hidden rounded-xl border border-blue-100 bg-blue-50">
+              <%= image_tag @resource.cover_image.variant(resize_to_limit: [ 480, 270 ]), class: "h-40 w-full object-cover", alt: "Current cover image" %>
+              <p class="px-4 py-3 text-sm font-semibold text-blue-900">Upload a new image below to replace the cover.</p>
+            </div>
           <% end %>
           <%= form.file_field field[:name], class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
         <% when :decimal %>

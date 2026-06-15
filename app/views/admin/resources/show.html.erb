@@ -82,6 +82,13 @@
           <%= link_to "Project Files", "#project-files", class: "inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-black text-white backdrop-blur transition hover:bg-white/15" %>
         <% end %>
 
+        <% if @resource.is_a?(BlogPost) && @resource.published? %>
+          <%= link_to blog_post_path(@resource.slug), target: "_blank", rel: "noopener", class: "inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-black text-slate-950 shadow-xl shadow-black/10 transition hover:bg-blue-50" do %>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            View live post
+          <% end %>
+        <% end %>
+
         <% if @resource.is_a?(FileUpload) %>
           <% if admin_file_download_allowed?(@resource) %>
             <%= link_to download_admin_file_upload_path(@resource), class: "inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-black text-slate-950 shadow-xl shadow-black/10 transition hover:bg-blue-50" do %>
@@ -117,6 +124,7 @@
       <dl class="mt-5 grid gap-4 sm:grid-cols-2">
         <% visible_resource_fields.each do |field| %>
           <% next if field[:type] == :quote_items %>
+          <% next if @resource.is_a?(BlogPost) && field[:name] == :body %>
           <% value = field_value(@resource, field) %>
           <div class="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 transition hover:border-blue-100 hover:bg-white">
             <dt class="text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-400"><%= admin_field_label(field) %></dt>
@@ -180,6 +188,15 @@
               <div class="flex justify-between gap-4"><span class="text-slate-300">Tax</span><strong><%= number_to_currency(@resource.tax) %></strong></div>
               <div class="flex justify-between gap-4 border-t border-white/10 pt-3 text-base"><span class="text-slate-300">Total</span><strong><%= number_to_currency(@resource.total_amount) %></strong></div>
             </div>
+          </div>
+        </section>
+      <% end %>
+
+      <% if @resource.is_a?(BlogPost) && @resource.cover_image.attached? %>
+        <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Cover Image</p>
+          <div class="mt-4 overflow-hidden rounded-2xl border border-slate-100">
+            <%= image_tag @resource.cover_image.variant(resize_to_limit: [ 960, 540 ]), class: "w-full object-cover", alt: @resource.title %>
           </div>
         </section>
       <% end %>
@@ -264,6 +281,18 @@
             </div>
           </article>
         <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if @resource.is_a?(BlogPost) %>
+    <section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 shadow-xl shadow-slate-200/70 backdrop-blur">
+      <div class="border-b border-slate-100 bg-slate-50/70 px-5 py-4 lg:px-6">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Article Content</p>
+        <h2 class="mt-2 text-xl font-black text-slate-950">Body Preview</h2>
+      </div>
+      <div class="prose prose-slate max-w-none p-5 text-sm font-medium leading-7 text-slate-700 lg:p-6">
+        <%= simple_format(sanitize(@resource.body)) %>
       </div>
     </section>
   <% end %>

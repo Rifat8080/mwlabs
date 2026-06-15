@@ -39,12 +39,14 @@ Rails.application.routes.draw do
       end
     end
     resources :reminders, path: "follow-ups"
+    resources :blog_posts, path: "blog"
   end
 
+  get "blog", to: "blog_posts#index", as: :blog
+  get "blog/:slug", to: "blog_posts#show", as: :blog_post
   get "about", to: "pages#about"
   get "work", to: "pages#work"
   get "pricing", to: "pages#pricing"
-  get "blog", to: "pages#blog"
   get "contact", to: "pages#contact"
   post "leads", to: "leads#create"
   get "team", to: "pages#team"

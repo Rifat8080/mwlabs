@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :activity_logs, dependent: :nullify
   has_many :reminders, dependent: :destroy
   has_many :notifications, as: :recipient, dependent: :destroy
+  has_many :blog_posts, foreign_key: :author_id, dependent: :nullify, inverse_of: :author
 
   validates :role, inclusion: { in: ROLES }
   validates :status, inclusion: { in: STATUSES }

@@ -24,7 +24,7 @@ module ApplicationHelper
 
   def admin_status_class(status)
     case status.to_s
-    when "Won", "Accepted", "Paid", "Done", "Completed", "Delivered", "Active", "Approved"
+    when "Won", "Accepted", "Paid", "Done", "Completed", "Delivered", "Active", "Approved", "Published"
       "bg-emerald-50 text-emerald-700 ring-emerald-200"
     when "Lost", "Rejected", "Cancelled", "Overdue"
       "bg-rose-50 text-rose-700 ring-rose-200"
@@ -52,7 +52,8 @@ module ApplicationHelper
       "Payment" => "fa-credit-card",
       "Expense" => "fa-receipt",
       "User" => "fa-users",
-      "Task" => "fa-list-check"
+      "Task" => "fa-list-check",
+      "BlogPost" => "fa-newspaper"
     }.fetch(resource_model.name, "fa-layer-group")
   end
 

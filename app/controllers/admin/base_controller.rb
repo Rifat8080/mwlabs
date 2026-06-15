@@ -42,7 +42,7 @@ module Admin
       return true if admin_user?
 
       if team_member?
-        model.in?([ Lead, Quote, Project, Task, FileUpload, Reminder ])
+        model.in?([ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost ])
       elsif client_user?
         model.in?([ Lead, Quote, Project, Task, Invoice, FileUpload ])
       else
@@ -54,7 +54,7 @@ module Admin
       return true if admin_user?
       return false if client_user?
 
-      team_member? && model.in?([ Lead, Quote, Project, Task, FileUpload, Reminder ])
+      team_member? && model.in?([ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost ])
     end
 
     def allowed_nav_sections
@@ -68,6 +68,9 @@ module Admin
         "Sales" => [
           nav_item("Services", helpers.admin_services_path, "fa-layer-group", Service),
           nav_item("Quotes", helpers.admin_quotes_path, "fa-file-signature", Quote)
+        ],
+        "Content" => [
+          nav_item("Blog", helpers.admin_blog_posts_path, "fa-newspaper", BlogPost)
         ],
         "Projects" => [
           nav_item("Projects", helpers.admin_projects_path, "fa-diagram-project", Project),
