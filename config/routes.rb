@@ -42,7 +42,8 @@ Rails.application.routes.draw do
     resources :blog_posts, path: "blog"
   end
 
-  get "sitemap.xml", to: "sitemap#show", defaults: { format: :xml }, as: :sitemap
+  get "sitemap.xml", to: "sitemap#show", defaults: { format: :xml }, format: false, as: :sitemap
+  get "sitemap", to: redirect("/sitemap.xml")
   get "robots.txt", to: "robots#show", as: :robots
 
   get "blog", to: "blog_posts#index", as: :blog

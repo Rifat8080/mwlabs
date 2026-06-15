@@ -35,6 +35,12 @@ class SitemapControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "draft-seo-article"
   end
 
+  test "plain sitemap path redirects to canonical xml sitemap" do
+    get "/sitemap"
+
+    assert_redirected_to "/sitemap.xml"
+  end
+
   test "robots.txt points to sitemap and blocks private areas" do
     get robots_url
 
