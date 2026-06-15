@@ -1,0 +1,51 @@
+<% content_for :title, "#{@service[:title]} | Mwlabs" %>
+
+<%= render "pages/shared/hero",
+  eyebrow: @service[:eyebrow],
+  title: @service[:title],
+  description: @service[:summary] %>
+
+<section class="bg-white py-14 sm:py-16">
+  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:px-12 2xl:px-16">
+    <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-white">
+        <i class="fa-solid <%= @service[:icon] %> text-2xl"></i>
+      </div>
+      <h2 class="mt-6 text-2xl font-black text-slate-950">What You Get</h2>
+      <ul class="mt-5 space-y-3 text-sm font-semibold text-slate-600">
+        <% [ "Strategy and planning aligned to your goals", "Modern design and development best practices", "Performance tracking and optimization support", "Dedicated communication throughout the project" ].each do |item| %>
+          <li class="flex items-start gap-3"><i class="fa-solid fa-check mt-1 text-blue-600"></i><span><%= item %></span></li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-black text-slate-950 sm:text-3xl">Built for Growth</h2>
+      <p class="mt-5 text-sm font-semibold leading-8 text-slate-600 sm:text-base">
+        <%= @service[:summary] %> Our team combines strategy, design and execution to deliver solutions that look great and perform even better.
+      </p>
+      <p class="mt-4 text-sm font-semibold leading-8 text-slate-600 sm:text-base">
+        Whether you're launching something new or improving an existing system, we'll help you move faster with clarity and confidence.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <%= link_to "Get a Free Strategy Call", contact_path, class: "inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700" %>
+        <%= link_to "View Our Work", work_path, class: "inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 hover:bg-blue-50" %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-50 py-14 sm:py-16">
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <h2 class="text-2xl font-black text-slate-950">More Services</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% PagesHelper::SERVICE_LINKS.reject { |_, slug| slug == params[:slug] }.each do |label, slug| %>
+        <%= link_to service_path(slug), class: "rounded-xl border border-slate-200 bg-white p-5 text-sm font-extrabold text-slate-700 shadow-sm transition hover:border-blue-100 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-100" do %>
+          <%= label %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%= render "pages/shared/cta" %>

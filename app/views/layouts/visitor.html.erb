@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "M&W Labs | Digital solutions that drive real growth" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.svg?v=20260610" type="image/svg+xml">
+    <link rel="shortcut icon" href="/favicon.ico?v=20260610">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body id="top" class="min-h-screen bg-white text-slate-950">
+    <%= render "shared/site_loader" %>
+
+    <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
+      <nav class="mx-auto flex max-w-[100rem] flex-wrap items-center justify-between gap-y-3 px-4 py-4 sm:px-6 lg:flex-nowrap lg:px-10">
+        <%= link_to root_path, class: "flex shrink-0 items-center" do %>
+          <%= tag.img src: "/images/mwlogo-navbar-cropped.png", alt: "M&W Labs", class: "h-11 w-auto object-contain md:h-14" %>
+        <% end %>
+
+        <button data-collapse-toggle="visitor-navbar-menu" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-200 lg:hidden" aria-controls="visitor-navbar-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>
+
+        <div id="visitor-navbar-menu" class="order-last hidden w-full rounded-2xl border border-slate-100 bg-white p-4 shadow-xl shadow-slate-200/60 lg:order-none lg:flex lg:w-auto lg:items-center lg:justify-between lg:gap-8 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+          <div class="flex flex-col gap-1 text-sm font-bold text-slate-900 lg:flex-row lg:items-center lg:gap-8">
+            <%= link_to "Home", root_path, class: home_nav_link_classes %>
+
+            <div>
+              <button id="services-dropdown-button" data-dropdown-toggle="services-dropdown" class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-3 text-slate-900 hover:bg-blue-50 hover:text-blue-600 lg:rounded-none lg:px-1 lg:py-4 lg:hover:bg-transparent" type="button">
+                Services
+                <svg class="h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+              </button>
+              <div id="services-dropdown" class="z-50 hidden w-56 divide-y divide-slate-100 rounded-xl border border-slate-100 bg-white shadow-xl">
+                <ul class="py-2 text-sm font-semibold text-slate-700" aria-labelledby="services-dropdown-button">
+                  <% PagesHelper::SERVICE_LINKS.first(3).each do |label, slug| %>
+                    <li><%= link_to label, service_path(slug), class: "block px-4 py-3 hover:bg-blue-50 hover:text-blue-700" %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+
+            <% PagesHelper::NAV_LINKS.each do |label, path_helper| %>
+              <%= link_to label, send(path_helper), class: nav_link_classes(send(path_helper)) %>
+            <% end %>
+          </div>
+
+          <div class="mt-4 flex flex-col gap-3 border-t border-slate-100 pt-4 lg:mt-0 lg:flex-row lg:items-center lg:border-t-0 lg:pt-0">
+            <% if user_signed_in? %>
+              <%= link_to dashboard_root_path, class: "inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 lg:w-auto" do %>
+                Dashboard
+                <svg class="ms-2 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h10m0 0-4-4m4 4-4 4"/>
+                </svg>
+              <% end %>
+            <% else %>
+              <%= link_to "Login", new_user_session_path, class: "inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-blue-50 hover:text-blue-700 lg:w-auto" %>
+              <%= link_to contact_path, class: "inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 lg:w-auto" do %>
+                Get a Free Strategy Call
+                <svg class="ms-2 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.5 5.5c.7 4.1 5.9 9.3 10 10l2.4-2.4-3.4-2.2-1.2 1.2c-1.9-.8-3.6-2.5-4.4-4.4l1.2-1.2-2.2-3.4L2.5 5.5Z"/>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <% if flash.any? %>
+        <div class="mx-auto max-w-[100rem] px-4 pt-4 sm:px-6 lg:px-10">
+          <%= render "shared/flash" %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer class="border-t border-slate-100 bg-white">
+      <div class="mx-auto max-w-[104rem] px-4 py-9 sm:px-6 lg:px-12 2xl:px-16">
+        <div class="grid gap-9 lg:grid-cols-[1.35fr_0.88fr_0.88fr_0.88fr_1.55fr] lg:gap-0">
+          <div class="lg:pr-10">
+            <%= link_to root_path, class: "inline-flex items-center" do %>
+              <%= tag.img src: "/images/mwlogo-navbar-cropped.png", alt: "M&W Labs", class: "h-11 w-auto object-contain md:h-14" %>
+            <% end %>
+
+            <p class="mt-4 max-w-xs text-sm font-semibold leading-7 text-slate-600">
+              From code to campaigns — we build digital growth systems that help businesses launch, grow and scale with confidence.
+            </p>
+
+            <div class="mt-5 flex items-center gap-3">
+              <% [
+                [ "fa-facebook-f", "Facebook", "bg-blue-600", "https://www.facebook.com/info.mwlabs/" ],
+                [ "fa-instagram", "Instagram", "bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400", "https://www.instagram.com/info.mwlabs?igsh=MXFlYm9tbmNzanF5ZA==" ],
+                [ "fa-linkedin-in", "LinkedIn", "bg-blue-700", "https://www.linkedin.com/company/mwlabs" ],
+                [ "fa-youtube", "YouTube", "bg-red-600", "https://youtube.com/@mw_labs" ],
+                [ "fa-whatsapp", "WhatsApp", "bg-emerald-500", "https://wa.me/8801704014210" ]
+              ].each do |icon, label, color, url| %>
+                <a href="<%= url %>" class="flex h-8 w-8 items-center justify-center rounded-full text-sm text-white shadow-sm transition hover:-translate-y-1 <%= color %>" aria-label="<%= label %>">
+                  <i class="fa-brands <%= icon %>"></i>
+                </a>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="lg:border-l lg:border-slate-100 lg:pl-9">
+            <h2 class="text-sm font-black text-slate-950">Services</h2>
+            <ul class="mt-5 space-y-2.5 text-sm font-semibold text-slate-600">
+              <% PagesHelper::SERVICE_LINKS.each do |label, slug| %>
+                <li><%= link_to label, service_path(slug), class: "transition hover:text-blue-600" %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="lg:border-l lg:border-slate-100 lg:pl-9">
+            <h2 class="text-sm font-black text-slate-950">Company</h2>
+            <ul class="mt-5 space-y-2.5 text-sm font-semibold text-slate-600">
+              <% PagesHelper::COMPANY_LINKS.each do |label, path_helper| %>
+                <li><%= link_to label, send(path_helper), class: "transition hover:text-blue-600" %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="lg:border-l lg:border-slate-100 lg:pl-9">
+            <h2 class="text-sm font-black text-slate-950">Resources</h2>
+            <ul class="mt-5 space-y-2.5 text-sm font-semibold text-slate-600">
+              <% PagesHelper::RESOURCE_LINKS.each do |label, path_helper| %>
+                <li><%= link_to label, send(path_helper), class: "transition hover:text-blue-600" %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="relative overflow-hidden lg:border-l lg:border-slate-100 lg:pl-9">
+            <div class="absolute inset-y-0 right-0 hidden w-64 bg-[radial-gradient(circle,_#dbeafe_1px,_transparent_1.4px)] [background-size:13px_13px] opacity-55 lg:block"></div>
+            <div class="absolute right-8 top-7 hidden h-24 w-36 rounded-[50%] bg-slate-100/60 blur-xl lg:block"></div>
+            <div class="absolute right-20 top-20 hidden h-16 w-28 rounded-[50%] bg-slate-100/50 blur-xl lg:block"></div>
+            <div class="relative z-10">
+              <h2 class="text-sm font-black text-slate-950">Contact Us</h2>
+              <ul class="mt-5 space-y-4 text-sm font-semibold leading-6 text-slate-600">
+                <li class="flex gap-3.5">
+                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
+                    <i class="fa-solid fa-phone text-xs"></i>
+                  </span>
+                  <a href="tel:+8801704014210" class="transition hover:text-blue-600">+8801704014210</a>
+                </li>
+                <li class="flex gap-3.5">
+                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
+                    <i class="fa-solid fa-envelope text-xs"></i>
+                  </span>
+                  <a href="mailto:info.mwlabs@gmail.com" class="transition hover:text-blue-600">info.mwlabs@gmail.com</a>
+                </li>
+                <li class="flex gap-3.5">
+                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 shadow-sm shadow-blue-100">
+                    <i class="fa-solid fa-location-dot text-xs"></i>
+                  </span>
+                  <span>Demra,<br>Dhaka, Bangladesh</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-100">
+        <div class="mx-auto flex max-w-[104rem] flex-col gap-4 px-4 py-5 text-sm font-semibold text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-12 2xl:px-16">
+          <p>© <%= Time.current.year %> M&W Labs. All rights reserved.</p>
+          <a href="#top" class="inline-flex items-center font-extrabold text-blue-600 transition hover:text-blue-700">
+            Back to top
+            <i class="fa-solid fa-arrow-up ms-2 text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

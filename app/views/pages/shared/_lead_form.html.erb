@@ -1,0 +1,76 @@
+<% lead = local_assigns.fetch(:lead, Lead.new(source: local_assigns.fetch(:source, "Website Contact Form"))) %>
+<% source = local_assigns.fetch(:source, lead.source.presence || "Website Contact Form") %>
+<% compact = local_assigns.fetch(:compact, false) %>
+<% title = local_assigns.fetch(:title, "Request an MVP review, growth report, or quote") %>
+<% description = local_assigns.fetch(:description, "Tell us whether you want to apply for an MVP partnership, request a growth report, or discuss a project quote. The more details you share, the sharper our recommendation will be.") %>
+<% button_label = local_assigns.fetch(:button_label, "Send Request") %>
+<% offer_options = [ "Free MVP Build", "Free Marketing Report" ] + Service::CATEGORIES %>
+<% field_class = "block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+<% label_class = "mb-2 block text-sm font-black text-slate-700" %>
+<% honeypot_id = "website_#{source.parameterize}" %>
+
+<%= form_with model: lead, url: leads_path, class: "rounded-[2rem] border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/70 sm:p-7 #{compact ? "lg:p-7" : "lg:p-8"}" do |form| %>
+  <div class="mb-6 border-b border-slate-100 pb-6">
+    <div class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-700">
+      Project Enquiry
+      <i class="fa-solid fa-paper-plane text-[0.65rem]"></i>
+    </div>
+    <h2 class="mt-3 text-2xl font-black leading-tight text-slate-950"><%= title %></h2>
+    <p class="mt-2 text-sm font-semibold leading-7 text-slate-600"><%= description %></p>
+  </div>
+
+  <%= form.hidden_field :source, value: source %>
+  <div class="hidden" aria-hidden="true">
+    <label for="<%= honeypot_id %>">Website</label>
+    <input id="<%= honeypot_id %>" name="website" type="text" tabindex="-1" autocomplete="off">
+  </div>
+
+  <% if lead.errors.any? %>
+    <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-700">
+      <p class="font-black">Please fix the following:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <% lead.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-5 <%= compact ? "md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2" : "sm:grid-cols-2" %>">
+    <div>
+      <%= form.label :name, "Name", class: label_class %>
+      <%= form.text_field :name, required: true, autocomplete: "name", class: field_class, placeholder: "Your name" %>
+    </div>
+    <div>
+      <%= form.label :email, "Email", class: label_class %>
+      <%= form.email_field :email, required: true, autocomplete: "email", class: field_class, placeholder: "you@company.com" %>
+    </div>
+    <div>
+      <%= form.label :phone, "Phone / WhatsApp", class: label_class %>
+      <%= form.telephone_field :phone, autocomplete: "tel", class: field_class, placeholder: "+880..." %>
+    </div>
+    <div>
+      <%= form.label :company_name, "Company / Brand", class: label_class %>
+      <%= form.text_field :company_name, autocomplete: "organization", class: field_class, placeholder: "Company or brand" %>
+    </div>
+
+    <div>
+      <%= form.label :service_interest, "Service Interest", class: label_class %>
+      <%= form.select :service_interest, options_for_select(offer_options, lead.service_interest), { include_blank: "Select a service or offer" }, class: field_class %>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <%= form.label :message, compact ? "What do you want to build or grow?" : "Project Details", class: label_class %>
+    <%= form.text_area :message, rows: compact ? 4 : 5, required: true, class: field_class, placeholder: "Tell us about your idea, audience, timeline, required features, current marketing, or what you want us to review." %>
+  </div>
+
+  <button type="submit" class="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700 sm:w-auto">
+    <%= button_label %>
+    <i class="fa-solid fa-paper-plane ms-3 text-xs"></i>
+  </button>
+
+  <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">
+    By sending this request, you agree that M&W Labs can contact you about your enquiry. A client account will be prepared using your email for future updates.
+  </p>
+<% end %>

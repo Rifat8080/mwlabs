@@ -1,0 +1,15 @@
+<% if resource.errors.any? %>
+  <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-rose-800">
+    <div class="flex items-start gap-3">
+      <i class="fa-solid fa-triangle-exclamation mt-1"></i>
+      <div>
+        <p class="text-sm font-black">Please review the details below.</p>
+        <ul class="mt-2 space-y-1 text-sm font-semibold leading-6">
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,22 @@
+M&W LABS NOTIFICATION
+<%= "="*50 %>
+
+Hi <%= current_user&.display_name || 'there' %>,
+
+Action: <%= @action %>
+
+<% if @details.present? %>
+Details:
+<%= @details %>
+<% end %>
+
+<% if @notifiable.present? %>
+Regarding: <%= @notifiable.try(:display_name) || @notifiable.class.name %>
+<% end %>
+
+You received this notification because you're involved in this activity.
+You can manage your notification preferences in your dashboard settings.
+
+<%= "="*50 %>
+© 2026 M&W Labs. All rights reserved.
+Agency Operations Platform

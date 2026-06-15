@@ -1,0 +1,55 @@
+<% content_for :title, "Create Account | M&W Labs" %>
+
+<%= render "devise/shared/auth_panel",
+  title: "Create your client portal account.",
+  description: "Start a professional workspace for project updates, quote reviews, files, invoices, reports, and future collaboration with M&W Labs.",
+  eyebrow: "Client Portal Access",
+  form_title: "Create your account",
+  form_description: "Use your real details so our team can connect your enquiries and future projects correctly." do %>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5" }) do |form| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <%= form.label :name, "Full name", class: "mb-2 block text-sm font-black text-slate-700" %>
+        <%= form.text_field :name, autofocus: true, autocomplete: "name", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "Your name" %>
+      </div>
+
+      <div>
+        <%= form.label :phone, "Phone / WhatsApp", class: "mb-2 block text-sm font-black text-slate-700" %>
+        <%= form.telephone_field :phone, autocomplete: "tel", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "+880..." %>
+      </div>
+    </div>
+
+    <div>
+      <%= form.label :email, class: "mb-2 block text-sm font-black text-slate-700" %>
+      <%= form.email_field :email, autocomplete: "email", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "you@company.com" %>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <%= form.label :password, class: "mb-2 block text-sm font-black text-slate-700" %>
+        <%= form.password_field :password, autocomplete: "new-password", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "#{@minimum_password_length || 6}+ characters" %>
+      </div>
+
+      <div>
+        <%= form.label :password_confirmation, "Confirm password", class: "mb-2 block text-sm font-black text-slate-700" %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-50", placeholder: "Repeat password" %>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+      <p class="text-xs font-semibold leading-6 text-slate-500">
+        New public accounts are created as client accounts. Admin/team permissions are managed internally by M&W Labs.
+      </p>
+    </div>
+
+    <%= form.submit "Create Account", class: "w-full rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700" %>
+  <% end %>
+
+  <div class="mt-6 rounded-2xl border border-blue-100 bg-blue-50 p-4 text-center">
+    <p class="text-sm font-semibold text-slate-700">Already have access?</p>
+    <%= link_to "Login to your account", new_session_path(resource_name), class: "mt-1 inline-flex text-sm font-black text-blue-700 hover:text-blue-800" %>
+  </div>
+<% end %>

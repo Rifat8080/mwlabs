@@ -1,0 +1,56 @@
+<section class="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_34rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] py-14 sm:py-20">
+  <div class="absolute left-8 top-20 -z-10 h-80 w-80 rounded-full bg-blue-100/70 blur-3xl"></div>
+  <div class="absolute right-0 bottom-10 -z-10 h-[28rem] w-[28rem] rounded-full bg-cyan-100/60 blur-3xl"></div>
+
+  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-12 2xl:px-16">
+    <div class="space-y-7">
+      <%= link_to root_path, class: "inline-flex items-center" do %>
+        <%= tag.img src: "/images/logo.svg", alt: "M&W Labs", class: "h-16 w-auto object-contain" %>
+      <% end %>
+
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-700 shadow-sm">
+          M&W Labs Client Portal
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-600">+</span>
+        </div>
+        <h1 class="mt-6 max-w-2xl text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl">
+          <%= title %>
+        </h1>
+        <p class="mt-5 max-w-xl text-base font-semibold leading-8 text-slate-600">
+          <%= description %>
+        </p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <% [
+          [ "fa-diagram-project", "Project clarity", "Track work, files, and status." ],
+          [ "fa-file-invoice-dollar", "Finance view", "See invoices and payment updates." ],
+          [ "fa-chart-line", "Growth support", "Access reports and next steps." ]
+        ].each do |icon, heading, body| %>
+          <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+              <i class="fa-solid <%= icon %>"></i>
+            </span>
+            <p class="mt-4 text-sm font-black text-slate-950"><%= heading %></p>
+            <p class="mt-1 text-xs font-semibold leading-5 text-slate-500"><%= body %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div class="absolute -inset-4 -z-10 rounded-[2rem] bg-blue-100/50 blur-2xl"></div>
+      <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl shadow-slate-200/80">
+        <div class="border-b border-slate-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_24rem),#ffffff] p-6 sm:p-8">
+          <p class="text-sm font-extrabold uppercase tracking-[0.22em] text-blue-600"><%= eyebrow %></p>
+          <h2 class="mt-2 text-2xl font-black text-slate-950"><%= form_title %></h2>
+          <p class="mt-2 text-sm font-semibold leading-7 text-slate-600"><%= form_description %></p>
+        </div>
+
+        <div class="p-6 sm:p-8">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

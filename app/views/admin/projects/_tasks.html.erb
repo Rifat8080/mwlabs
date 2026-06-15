@@ -1,0 +1,196 @@
+<% visible_tasks = client_user? ? project.tasks.where(client_visible: true) : project.tasks %>
+<% tasks = visible_tasks.includes(:assigned_to).order(:due_date, :created_at).to_a %>
+<% open_tasks = tasks.reject { |task| task.status == "Done" } %>
+<% overdue_tasks = open_tasks.select { |task| task.due_date.present? && task.due_date < Date.current } %>
+<% due_this_week = open_tasks.select { |task| task.due_date.present? && task.due_date <= 7.days.from_now.to_date } %>
+<% completion = tasks.any? ? ((tasks.count { |task| task.status == "Done" }.to_f / tasks.size) * 100).round : project.progress %>
+
+<section id="project-tasks" class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 shadow-xl shadow-slate-200/70 backdrop-blur">
+  <div class="border-b border-slate-100 bg-[radial-gradient(circle_at_top_right,_#dbeafe,_transparent_24rem),#ffffff] p-5 lg:p-8">
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-blue-700 shadow-sm">
+          <i class="fa-solid fa-list-check"></i>
+          Project Tasks
+        </div>
+        <h2 class="mt-3 text-2xl font-black tracking-tight text-slate-950 lg:text-3xl">Delivery work for <%= project.display_name %></h2>
+        <p class="mt-2 max-w-3xl text-sm font-semibold leading-7 text-slate-600">
+          <% if client_user? %>
+            Track the client-visible milestones M&W Labs has shared for this project.
+          <% else %>
+            Manage the project task board from one place. Tasks created here stay attached to this project automatically.
+          <% end %>
+        </p>
+      </div>
+
+      <% if can_manage_resource?(Task) %>
+        <a href="#new-project-task" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 hover:-translate-y-0.5 hover:bg-blue-700">
+          Add project task
+        </a>
+      <% end %>
+    </div>
+
+    <div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Progress</p>
+        <p class="mt-2 text-2xl font-black text-slate-950"><%= completion %>%</p>
+        <div class="mt-3 h-2 rounded-full bg-slate-100">
+          <div class="h-2 rounded-full bg-blue-600" style="width: <%= completion %>%"></div>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Open Tasks</p>
+        <p class="mt-2 text-2xl font-black text-slate-950"><%= open_tasks.size %></p>
+      </div>
+      <div class="rounded-2xl border <%= overdue_tasks.any? ? 'border-rose-200 bg-rose-50' : 'border-white/70 bg-white/90' %> p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Overdue</p>
+        <p class="mt-2 text-2xl font-black <%= overdue_tasks.any? ? 'text-rose-700' : 'text-slate-950' %>"><%= overdue_tasks.size %></p>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Due This Week</p>
+        <p class="mt-2 text-2xl font-black text-slate-950"><%= due_this_week.size %></p>
+      </div>
+    </div>
+  </div>
+
+  <% if can_manage_resource?(Task) %>
+    <div id="new-project-task" class="border-b border-slate-100 bg-slate-50/80 p-4 sm:p-5 lg:p-6">
+      <div class="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h3 class="text-base font-black text-slate-950">Add a task to this project</h3>
+          <p class="text-sm font-semibold text-slate-500">No page reload needed. New tasks appear on the board instantly.</p>
+        </div>
+      </div>
+
+      <%= form_with model: [ :admin, project, Task.new ], class: "grid gap-3 rounded-[1.25rem] border border-slate-200 bg-white p-4 shadow-sm lg:grid-cols-12" do |form| %>
+        <div class="lg:col-span-3">
+          <%= form.label :title, "Task title", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+          <%= form.text_field :title, required: true, placeholder: "Example: Build homepage wireframe", class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+        </div>
+        <div class="lg:col-span-2">
+          <%= form.label :assigned_to_id, "Owner", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+          <%= form.select :assigned_to_id, options_for_select(User.order(:email).map { |user| [ user.display_name, user.id ] }), { include_blank: "Unassigned" }, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+        </div>
+        <div class="lg:col-span-2">
+          <%= form.label :due_date, "Due date", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+          <%= form.date_field :due_date, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+        </div>
+        <div class="lg:col-span-2">
+          <%= form.label :priority, "Priority", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+          <%= form.select :priority, Task::PRIORITIES, {}, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+        </div>
+        <div class="lg:col-span-2">
+          <%= form.label :status, "Status", class: "block text-xs font-black uppercase tracking-[0.14em] text-slate-500" %>
+          <%= form.select :status, Task::STATUSES, {}, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800" %>
+        </div>
+        <div class="flex items-end lg:col-span-1">
+          <%= form.submit "Add", class: "w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700" %>
+        </div>
+        <div class="lg:col-span-12">
+          <%= form.text_area :description, rows: 2, placeholder: "Task notes, scope, or acceptance criteria...", class: "block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+        </div>
+        <label class="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-600 lg:col-span-12">
+          <%= form.check_box :client_visible, class: "h-4 w-4 rounded border-slate-300 text-blue-600" %>
+          Visible to client
+        </label>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="bg-white p-4 sm:p-5 lg:p-6">
+    <div class="overflow-x-auto pb-2">
+      <div class="grid min-w-[72rem] gap-4 xl:min-w-0 xl:grid-cols-5">
+        <% Task::STATUSES.each do |status| %>
+          <% lane_tasks = tasks.select { |task| task.status == status } %>
+          <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/80 p-3 shadow-sm">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-white/95 px-3 py-3 shadow-sm backdrop-blur">
+              <div>
+                <h3 class="text-sm font-black text-slate-950"><%= status %></h3>
+                <p class="mt-0.5 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-400">Delivery lane</p>
+              </div>
+              <span class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-700"><%= lane_tasks.size %></span>
+            </div>
+
+            <div class="mt-3 space-y-3">
+              <% lane_tasks.each do |task| %>
+                <% overdue = task.due_date.present? && task.due_date < Date.current && task.status != "Done" %>
+                <article class="rounded-2xl border <%= overdue ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-white' %> p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <p class="break-words text-sm font-black text-slate-950"><%= task.title %></p>
+                      <p class="mt-1 text-xs font-semibold text-slate-500">
+                        <i class="fa-solid fa-user-check mr-1 text-slate-300"></i>
+                        <%= task.assigned_to&.display_name || "Unassigned" %>
+                      </p>
+                    </div>
+                    <span class="shrink-0 rounded-full px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] ring-1 <%= admin_status_class(task.priority) %>"><%= task.priority %></span>
+                  </div>
+
+                  <div class="mt-3 flex flex-wrap gap-2 text-[0.7rem] font-black uppercase tracking-[0.12em]">
+                    <% if task.due_date.present? %>
+                      <span class="rounded-full <%= overdue ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600' %> px-2.5 py-1">
+                        <i class="fa-solid fa-calendar-day mr-1"></i>
+                        <%= task.due_date.to_fs(:short) %>
+                      </span>
+                    <% else %>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 text-slate-500">No due date</span>
+                    <% end %>
+
+                    <% if task.client_visible? %>
+                      <span class="rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">Client visible</span>
+                    <% else %>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 text-slate-500">Internal</span>
+                    <% end %>
+                  </div>
+
+                  <% if task.description.present? %>
+                    <p class="mt-3 text-xs font-medium leading-5 text-slate-600"><%= task.description %></p>
+                  <% end %>
+
+                  <% task_files = client_user? ? task.file_uploads.where(visibility: "Client Visible") : task.file_uploads %>
+                  <% if task_files.any? %>
+                    <div class="mt-3 space-y-2">
+                      <p class="text-[0.65rem] font-black uppercase tracking-[0.12em] text-slate-400">Task files</p>
+                      <% task_files.each do |file| %>
+                        <div class="flex flex-wrap items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2">
+                          <span class="truncate text-xs font-bold text-slate-700"><%= file.display_name %></span>
+                          <%= link_to "View", admin_file_upload_path(file), class: "rounded-lg bg-white px-2 py-1 text-[0.65rem] font-black text-slate-700 ring-1 ring-slate-200" %>
+                          <% if admin_file_download_allowed?(file) %>
+                            <%= link_to "Download", download_admin_file_upload_path(file), class: "rounded-lg bg-blue-50 px-2 py-1 text-[0.65rem] font-black text-blue-700" %>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <% if can_manage_resource?(Task) %>
+                    <div class="mt-4 space-y-2">
+                      <%= form_with model: [ :admin, project, task ], method: :patch, class: "flex gap-2" do |form| %>
+                        <%= form.select :status, Task::STATUSES, {}, class: "min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700" %>
+                        <%= form.submit "Move", class: "rounded-lg bg-slate-900 px-3 py-2 text-xs font-black text-white hover:bg-slate-700" %>
+                      <% end %>
+                      <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+                        <% unless task.status == "Done" %>
+                          <%= button_to "Mark done", admin_project_task_path(project, task), method: :patch, params: { task: { status: "Done" } }, class: "w-full rounded-lg bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700 hover:bg-emerald-100" %>
+                        <% end %>
+                        <%= link_to "Upload file", new_admin_file_upload_path(project_id: project.id, task_id: task.id, client_id: project.client_id), class: "w-full rounded-lg bg-blue-50 px-3 py-2 text-center text-xs font-black text-blue-700 hover:bg-blue-100" %>
+                        <%= button_to "Remove", admin_project_task_path(project, task), method: :delete, form: { data: { turbo_confirm: "Remove this task from the project?" } }, class: "w-full rounded-lg bg-rose-50 px-3 py-2 text-xs font-black text-rose-700 hover:bg-rose-100" %>
+                      </div>
+                    </div>
+                  <% end %>
+                </article>
+              <% end %>
+
+              <% if lane_tasks.empty? %>
+                <div class="rounded-2xl border border-dashed border-slate-200 bg-white p-5 text-center">
+                  <i class="fa-regular fa-circle-check text-lg text-slate-300"></i>
+                  <p class="mt-2 text-xs font-bold text-slate-400">No <%= status.downcase %> tasks</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

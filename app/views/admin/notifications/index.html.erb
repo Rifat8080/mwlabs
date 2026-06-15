@@ -1,0 +1,61 @@
+<% total_count = current_user.notifications.count %>
+<% unread_count = current_user.notifications.unread.count %>
+<% read_count = total_count - unread_count %>
+
+<div class="space-y-8">
+  <section class="relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-xl shadow-blue-100/50">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(37,99,235,0.14),_transparent_24rem),linear-gradient(135deg,_rgba(248,250,252,0.96),_rgba(255,255,255,0.86))]"></div>
+    <div class="relative grid gap-6 p-6 lg:grid-cols-[1fr_auto] lg:items-center lg:p-8">
+      <div>
+        <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-blue-700">
+          <span class="h-2 w-2 rounded-full bg-blue-600"></span>
+          Activity Center
+        </div>
+        <h1 class="text-3xl font-black tracking-tight text-slate-950 md:text-4xl">Notifications</h1>
+        <p class="mt-2 max-w-2xl text-sm font-medium leading-6 text-slate-500">
+          Track client activity, project updates, lead changes, and quote events in one focused workspace.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 sm:min-w-[28rem]">
+        <div class="rounded-2xl border border-slate-100 bg-white/85 p-4 shadow-sm backdrop-blur">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Total</p>
+          <p class="mt-2 text-2xl font-black text-slate-950"><%= total_count %></p>
+        </div>
+        <div class="rounded-2xl border border-blue-100 bg-blue-50/80 p-4 shadow-sm backdrop-blur">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-blue-500">Unread</p>
+          <p class="mt-2 text-2xl font-black text-blue-700"><%= unread_count %></p>
+        </div>
+        <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4 shadow-sm backdrop-blur">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-emerald-600">Read</p>
+          <p class="mt-2 text-2xl font-black text-emerald-700"><%= read_count %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="overflow-hidden rounded-[1.75rem] border border-slate-100 bg-white shadow-xl shadow-slate-200/60">
+    <div class="flex flex-col gap-4 border-b border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:items-center sm:justify-between lg:px-6">
+      <div>
+        <h2 class="text-lg font-black text-slate-950">Recent activity</h2>
+        <p class="mt-1 text-sm font-medium text-slate-500">Showing the latest <%= pluralize(@notifications.size, "notification") %>.</p>
+      </div>
+
+      <% if unread_count.positive? %>
+        <%= button_to mark_all_admin_notifications_path, method: :patch, class: "inline-flex items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-600 px-4 py-2.5 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700", form: { data: { turbo: true } } do %>
+          <i class="fa-solid fa-check-double"></i>
+          Mark all read
+        <% end %>
+      <% else %>
+        <span class="inline-flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-sm font-black text-emerald-700">
+          <i class="fa-solid fa-circle-check"></i>
+          All caught up
+        </span>
+      <% end %>
+    </div>
+
+    <div id="admin-notifications-list" data-controller="live-notifications">
+      <%= render partial: "admin/notifications/list", locals: { notifications: @notifications } %>
+    </div>
+  </section>
+</div>
