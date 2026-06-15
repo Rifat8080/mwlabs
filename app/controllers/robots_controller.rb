@@ -10,6 +10,12 @@ class RobotsController < ApplicationController
     host = ENV.fetch("APP_HOST", request.host_with_port)
     protocol = request.ssl? || Rails.env.production? ? "https" : request.scheme
 
+    sitemap_file = if File.exist?(Rails.root.join("public", "sitemap.xml.gz"))
+      "sitemap.xml.gz"
+    else
+      "sitemap.xml"
+    end
+
     <<~ROBOTS
       User-agent: *
       Allow: /
@@ -18,7 +24,7 @@ class RobotsController < ApplicationController
       Disallow: /dashboard
       Disallow: /users/
 
-      Sitemap: #{protocol}://#{host}/sitemap.xml
+      Sitemap: #{protocol}://#{host}/#{sitemap_file}
     ROBOTS
   end
 end
