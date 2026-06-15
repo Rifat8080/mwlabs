@@ -21,10 +21,12 @@ class SitemapControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "sitemap returns xml with public pages and published blog posts" do
-    get sitemap_url(format: :xml)
+    get "/sitemap.xml", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
     assert_response :success
     assert_equal "application/xml", response.media_type
+    assert_match(/\A<\?xml/, response.body.strip)
+    assert_no_match(/<html/i, response.body)
     assert_includes response.body, root_url
     assert_includes response.body, about_url
     assert_includes response.body, blog_url

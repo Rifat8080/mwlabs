@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  allow_browser versions: :modern, unless: :crawler_asset_request?
 
   layout "visitor"
 
@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def crawler_asset_request?
+    request.path.in?(%w[/sitemap.xml /robots.txt])
+  end
 
   def handle_access_denied
     if user_signed_in?

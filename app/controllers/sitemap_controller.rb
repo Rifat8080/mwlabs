@@ -5,8 +5,6 @@ class SitemapController < ApplicationController
     @urls = Sitemap.build(request)
     expires_in 1.hour, public: true
 
-    respond_to do |format|
-      format.xml
-    end
+    render formats: :xml, content_type: "application/xml"
   end
 end
