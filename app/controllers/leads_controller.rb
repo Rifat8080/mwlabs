@@ -3,6 +3,7 @@ class LeadsController < ApplicationController
 
   def create
     @lead = Lead.new(lead_params.merge(source: lead_source))
+    authorize! :create, @lead
 
     if spam_submission?
       redirect_to contact_path, notice: "Thanks. We received your request and will get back to you shortly."

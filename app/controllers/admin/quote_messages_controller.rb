@@ -27,31 +27,14 @@ module Admin
     end
 
     def authorize_negotiation!
+      authorize! :read, @quote
       return if can_negotiate_quote?(@quote)
 
       redirect_to admin_quote_path(@quote), alert: "This quote is not open for negotiation."
     end
 
     def quote_scope
-      return Quote.all if admin_user?
-      return team_member_quote_scope if team_member?
-      return client_quote_scope if client_user?
-
-      Quote.none
-    end
-
-    def team_member_quote_scope
-      Quote.left_outer_joins(:lead, :projects).where(leads: { assigned_to_id: current_user.id }).or(
-        Quote.left_outer_joins(:lead, :projects).where(projects: { assigned_to_id: current_user.id })
-      ).distinct
-    end
-
-    def client_quote_scope
-      return Quote.none if current_client.blank?
-
-      Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES).where(client: current_client).or(
-        Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, leads: { email: current_user.email })
-      )
+      current_ability.resource_scope(Quote)
     end
 
     def message_kind

@@ -11,6 +11,7 @@ class BlogPostsController < ApplicationController
 
   def show
     @post = BlogPost.published.find_by!(slug: params[:slug])
+    authorize! :read, @post
     @related_posts = BlogPost.published
       .where.not(id: @post.id)
       .where(category: @post.category)

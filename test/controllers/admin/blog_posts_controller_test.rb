@@ -8,7 +8,7 @@ module Admin
       @client_user = users(:client)
     end
 
-    test "admin can create blog post" do
+    test "admin can create blog post with cover image" do
       sign_in @admin
 
       assert_difference -> { BlogPost.count }, 1 do
@@ -19,7 +19,8 @@ module Admin
             category: "Growth Strategy",
             status: "Published",
             excerpt: "A short summary.",
-            featured: true
+            featured: true,
+            cover_image: uploaded_image
           }
         }
       end
@@ -30,6 +31,32 @@ module Admin
       assert_equal @admin, post.author
       assert_equal "new-growth-article", post.slug
       assert post.published_at.present?
+      assert post.cover_image.attached?
+    end
+
+    test "admin can update blog post cover image" do
+      sign_in @admin
+      post = BlogPost.create!(
+        title: "Article To Update",
+        body: "Published body content.",
+        category: "Web Development",
+        status: "Draft",
+        author: @admin
+      )
+
+      patch admin_blog_post_url(post), params: {
+        blog_post: {
+          title: post.title,
+          body: post.body,
+          category: post.category,
+          status: "Published",
+          cover_image: uploaded_image("updated-cover.png")
+        }
+      }
+
+      assert_redirected_to admin_blog_post_url(post)
+      assert post.reload.cover_image.attached?
+      assert_equal "updated-cover.png", post.cover_image.filename.to_s
     end
 
     test "team member can access blog admin" do
@@ -66,6 +93,12 @@ module Admin
 
       assert_response :success
       assert_select "a[href='#{blog_post_path(post.slug)}']", text: /View live post/
+    end
+
+    private
+
+    def uploaded_image(filename = "cover.png")
+      Rack::Test::UploadedFile.new(StringIO.new("fake image"), "image/png", original_filename: filename)
     end
   end
 end

@@ -24,6 +24,7 @@ module Admin
     def create
       @resource = resource_model.new(resource_params)
       prepare_resource
+      authorize! :manage, @resource
 
       if @resource.save
         record_activity("Created")
@@ -38,10 +39,6 @@ module Admin
 
     def prepare_resource
       @resource.author ||= current_user
-    end
-
-    def team_member_scope
-      BlogPost.all
     end
   end
 end

@@ -6,6 +6,7 @@ module Admin
 
     def create
       task = @project.tasks.new(task_params)
+      authorize! :manage, task
 
       if task.save
         respond_to_task_change("Task added to #{@project.display_name}.")
@@ -15,6 +16,8 @@ module Admin
     end
 
     def update
+      authorize! :manage, @task
+
       if @task.update(task_params)
         respond_to_task_change("Task updated.")
       else
@@ -23,6 +26,7 @@ module Admin
     end
 
     def destroy
+      authorize! :manage, @task
       @task.destroy
       respond_to_task_change("Task removed from #{@project.display_name}.")
     end
@@ -38,15 +42,11 @@ module Admin
     end
 
     def project_scope
-      return Project.all if admin_user?
-      return Project.where(assigned_to: current_user) if team_member?
-      return Project.where(client: current_client) if client_user? && current_client.present?
-
-      Project.none
+      current_ability.resource_scope(Project)
     end
 
     def authorize_project_task_management!
-      return if can_manage_resource?(Task)
+      return if can_manage_resource?(Task) && can?(:manage, @project)
 
       redirect_to admin_project_path(@project), alert: "You can view project tasks, but you cannot make changes."
     end

@@ -33,6 +33,7 @@ module Admin
     def send_quote
       authorize_resource_management!
       @resource = resource_scope.find(params[:id])
+      authorize! :manage, @resource
 
       if @resource.quote_items.empty?
         redirect_to admin_quote_path(@resource), alert: "Add at least one line item before sending the quote."
@@ -47,6 +48,7 @@ module Admin
 
     def pdf
       @resource = resource_scope.find(params[:id])
+      authorize! :read, @resource
       pdf_data = ::Quotes::PdfRenderer.new(@resource).render
 
       send_data pdf_data,
@@ -57,6 +59,7 @@ module Admin
 
     def accept
       @resource = resource_scope.find(params[:id])
+      authorize! :read, @resource
       unless can_decide_quote?(@resource)
         redirect_to admin_quote_path(@resource), alert: "You cannot accept this quote."
         return
@@ -70,6 +73,7 @@ module Admin
 
     def reject
       @resource = resource_scope.find(params[:id])
+      authorize! :read, @resource
       unless can_decide_quote?(@resource)
         redirect_to admin_quote_path(@resource), alert: "You cannot reject this quote."
         return

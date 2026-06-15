@@ -71,11 +71,7 @@ module Admin
     protected
 
     def resource_scope
-      return resource_model.all if admin_user?
-      return team_member_scope if team_member?
-      return client_scope if client_user?
-
-      resource_model.none
+      current_ability.resource_scope(resource_model)
     end
 
     private
@@ -83,7 +79,7 @@ module Admin
     def authorize_resource_access!
       return if can_access_resource?(resource_model)
 
-      redirect_to dashboard_root_path, alert: "You do not have access to that area."
+      raise CanCan::AccessDenied
     end
 
     def authorize_resource_management!
@@ -94,65 +90,11 @@ module Admin
 
     def set_resource
       @resource = resource_scope.find(params[:id])
+      authorize! authorization_action, @resource
     end
 
-    def team_member_scope
-      case resource_model.name
-      when "Lead"
-        Lead.where(assigned_to: current_user)
-      when "Quote"
-        Quote.left_outer_joins(:lead, :projects).where(leads: { assigned_to_id: current_user.id }).or(
-          Quote.left_outer_joins(:lead, :projects).where(projects: { assigned_to_id: current_user.id })
-        ).distinct
-      when "Project"
-        Project.where(assigned_to: current_user)
-      when "Task"
-        Task.where(assigned_to: current_user)
-      when "FileUpload"
-        FileUpload.left_outer_joins(:project, :task).where(projects: { assigned_to_id: current_user.id }).or(
-          FileUpload.left_outer_joins(:project, :task).where(tasks: { assigned_to_id: current_user.id })
-        ).distinct
-      when "Reminder"
-        Reminder.where(user: current_user)
-      else
-        resource_model.none
-      end
-    end
-
-    def client_scope
-      case resource_model.name
-      when "Lead"
-        client_lead_scope
-      when "Quote"
-        client_quote_scope
-      when "Project"
-        return resource_model.none if current_client.blank?
-
-        Project.where(client: current_client)
-      when "Task"
-        return resource_model.none if current_client.blank?
-
-        Task.joins(:project).where(projects: { client_id: current_client.id }, client_visible: true)
-      when "Invoice"
-        return resource_model.none if current_client.blank?
-
-        Invoice.where(client: current_client)
-      when "FileUpload"
-        return resource_model.none if current_client.blank?
-
-        FileUpload.left_outer_joins(:project).where(client: current_client, visibility: "Client Visible").or(
-          FileUpload.left_outer_joins(:project).where(projects: { client_id: current_client.id }, visibility: "Client Visible")
-        )
-      else
-        resource_model.none
-      end
-    end
-
-    def client_lead_scope
-      email_scope = Lead.where("LOWER(email) = ?", current_user.email.downcase)
-      return email_scope if current_client.blank?
-
-      Lead.where(client: current_client).or(email_scope)
+    def authorization_action
+      action_name.in?(%w[index show download pdf]) ? :read : :manage
     end
 
     def prepare_resource

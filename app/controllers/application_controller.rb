@@ -4,7 +4,21 @@ class ApplicationController < ActionController::Base
 
   layout "visitor"
 
+  rescue_from CanCan::AccessDenied, with: :handle_access_denied
+
+  def current_ability
+    @current_ability ||= Ability.new(current_user)
+  end
+
   private
+
+  def handle_access_denied
+    if user_signed_in?
+      redirect_to dashboard_root_path, alert: "You do not have access to that area."
+    else
+      redirect_to new_user_session_path, alert: "Please sign in to continue."
+    end
+  end
 
   def after_sign_in_path_for(_resource)
     dashboard_root_path

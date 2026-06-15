@@ -31,30 +31,15 @@ module Admin
     end
 
     def client_quote_scope
-      return Quote.none if current_client.blank?
-
-      Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, client: current_client).or(
-        Quote.left_outer_joins(:lead).where(status: Quote::CLIENT_VISIBLE_STATUSES, leads: { email: current_user.email })
-      )
+      current_ability.resource_scope(Quote)
     end
 
     def can_access_resource?(model)
-      return true if admin_user?
-
-      if team_member?
-        model.in?([ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost ])
-      elsif client_user?
-        model.in?([ Lead, Quote, Project, Task, Invoice, FileUpload ])
-      else
-        false
-      end
+      current_ability.accessible_resource?(model)
     end
 
     def can_manage_resource?(model)
-      return true if admin_user?
-      return false if client_user?
-
-      team_member? && model.in?([ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost ])
+      current_ability.manageable_resource?(model)
     end
 
     def allowed_nav_sections
@@ -90,19 +75,15 @@ module Admin
     end
 
     def can_send_quote?(quote)
-      can_manage_resource?(Quote) && quote.is_a?(Quote) && !quote.accepted? && quote.status.in?(%w[Draft Sent Viewed Revised])
+      current_ability.can_send_quote?(quote)
     end
 
     def can_negotiate_quote?(quote)
-      return false unless quote.is_a?(Quote) && quote.negotiable?
-
-      admin_user? || team_member? || quote.accessible_to_client?(current_user)
+      current_ability.can_negotiate_quote?(quote)
     end
 
     def can_decide_quote?(quote)
-      return false unless quote.is_a?(Quote) && quote.negotiable?
-
-      admin_user? || team_member? || quote.accessible_to_client?(current_user)
+      current_ability.can_decide_quote?(quote)
     end
   end
 end

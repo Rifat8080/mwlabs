@@ -2,10 +2,12 @@ module Admin
   class NotificationsController < Admin::BaseController
     def index
       @notifications = current_user.notifications.recent.limit(50)
+      authorize! :read, current_user.notifications.build
     end
 
     def update
       @notification = current_user.notifications.find(params[:id])
+      authorize! :manage, @notification
       @notification.mark_as_read!
       broadcast_unread_count
 
@@ -32,6 +34,7 @@ module Admin
     end
 
     def mark_all
+      authorize! :manage, current_user.notifications.build
       current_user.notifications.unread.find_each(&:mark_as_read!)
       broadcast_unread_count
 
