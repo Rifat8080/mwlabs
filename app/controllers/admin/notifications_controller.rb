@@ -60,11 +60,9 @@ module Admin
     end
 
     def broadcast_unread_count
-      Admin::NotificationsChannel.broadcast_to(
-        current_user,
-        type: "unread_count_changed",
-        unread_count: current_user.notifications.unread.count
-      )
+      NotificationBroadcaster.unread_count_changed(current_user)
+    rescue StandardError => e
+      Rails.logger.error("Notification broadcast failed: #{e.message}")
     end
 
     def notification_destination(path)

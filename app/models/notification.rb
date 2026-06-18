@@ -35,7 +35,7 @@ class Notification < ApplicationRecord
   def broadcast_created
     return unless recipient.is_a?(User)
 
-    Admin::NotificationsChannel.broadcast_to(
+    NotificationBroadcaster.broadcast(
       recipient,
       type: "notification_created",
       dropdown_html: ApplicationController.render(

@@ -2,7 +2,8 @@ module Admin
   class NotificationsChannel < ApplicationCable::Channel
     def subscribed
       return unless current_user
-      stream_for current_user
+
+      stream_from NotificationBroadcaster.stream_name(current_user)
       transmit({
         type: "subscribed",
         message: "Connected to notifications",
