@@ -125,6 +125,16 @@
     animation: hero-sheen 6.5s ease-in-out infinite;
   }
 
+  .blog-article-body p + p {
+    margin-top: 1.5rem;
+  }
+
+  .blog-article-body p:first-child {
+    font-size: 1.125rem;
+    line-height: 1.9;
+    color: rgb(51 65 85);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .site-loader-mark,
     .site-loader-ring,
