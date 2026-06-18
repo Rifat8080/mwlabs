@@ -16,7 +16,9 @@
     <link rel="shortcut icon" href="/favicon.ico?v=20260610">
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trix@2.1.13/dist/trix.css">
     <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "admin_editor" %>
   </head>
 
   <body class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(219,234,254,0.9),_transparent_34rem),radial-gradient(circle_at_bottom_right,_rgba(224,242,254,0.7),_transparent_30rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_46%,_#eef6ff_100%)] text-slate-950 antialiased" data-controller="live-notifications admin-sidebar">

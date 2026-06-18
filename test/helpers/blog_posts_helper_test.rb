@@ -6,13 +6,14 @@ class BlogPostsHelperTest < ActionView::TestCase
 
   setup do
     @author = users(:admin)
-    @post = BlogPost.create!(
+    @category = create_blog_category!
+    @post = create_blog_post_for_tests!(
       title: "Cover Image Post",
       body: "Body content for the blog post.",
-      category: "Web Development",
       status: "Published",
       published_at: 1.day.ago,
-      author: @author
+      author: @author,
+      blog_category: @category
     )
     @post.cover_image.attach(
       io: StringIO.new("fake image bytes"),

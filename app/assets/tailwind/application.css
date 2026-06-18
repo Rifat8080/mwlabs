@@ -129,10 +129,99 @@
     margin-top: 1.5rem;
   }
 
-  .blog-article-body p:first-child {
-    font-size: 1.125rem;
-    line-height: 1.9;
+  .trix-content h1 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: rgb(15 23 42);
+  }
+
+  .trix-content h2 {
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: rgb(15 23 42);
+  }
+
+  .trix-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: rgb(30 41 59);
+  }
+
+  .trix-content p,
+  .trix-content div {
+    margin-bottom: 1rem;
+  }
+
+  .trix-content a {
+    color: rgb(37 99 235);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .trix-content a:hover {
+    color: rgb(29 78 216);
+  }
+
+  .trix-content ul,
+  .trix-content ol {
+    margin: 1rem 0 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .trix-content ul {
+    list-style: disc;
+  }
+
+  .trix-content ol {
+    list-style: decimal;
+  }
+
+  .trix-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .trix-content blockquote {
+    margin: 1.5rem 0;
+    border-left: 4px solid rgb(191 219 254);
+    padding: 0.75rem 0 0.75rem 1rem;
     color: rgb(51 65 85);
+    font-style: italic;
+    background: rgb(248 250 252);
+    border-radius: 0 0.75rem 0.75rem 0;
+  }
+
+  .trix-content img {
+    margin: 1.5rem 0;
+    width: 100%;
+    border-radius: 1rem;
+  }
+
+  .trix-content pre {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    border-radius: 0.75rem;
+    background: rgb(15 23 42);
+    padding: 1rem;
+    color: rgb(226 232 240);
+    font-size: 0.9rem;
+  }
+
+  trix-toolbar .trix-button-group {
+    margin-bottom: 0;
+  }
+
+  trix-editor {
+    border: 0;
+    min-height: 22rem;
   }
 
   @media (prefers-reduced-motion: reduce) {

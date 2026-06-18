@@ -67,19 +67,14 @@ class AbilityTest < ActiveSupport::TestCase
   end
 
   test "guests can create leads and read only published blog posts" do
-    published = BlogPost.create!(
+    published = create_blog_post_for_tests!(
       title: "Published Insight",
-      body: "Published body",
-      category: "Web Development",
       status: "Published",
       published_at: 1.day.ago,
       author: @admin
     )
-    draft = BlogPost.create!(
+    draft = create_blog_post_for_tests!(
       title: "Draft Insight",
-      body: "Draft body",
-      category: "Web Development",
-      status: "Draft",
       author: @admin
     )
     ability = Ability.new(nil)

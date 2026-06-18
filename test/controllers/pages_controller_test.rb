@@ -2,14 +2,12 @@ require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
   test "shows the public landing page" do
-    author = users(:admin)
-    BlogPost.create!(
+    create_blog_post_for_tests!(
       title: "Landing Page Blog Feature",
       body: "Published body for the landing page blog section.",
-      category: "Web Development",
       status: "Published",
       published_at: 1.day.ago,
-      author: author
+      author: users(:admin)
     )
 
     get root_url

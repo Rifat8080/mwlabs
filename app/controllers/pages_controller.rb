@@ -42,10 +42,10 @@ class PagesController < ApplicationController
 
   def home
     @recent_blog_posts = BlogPost.published
-      .includes(:author, cover_image_attachment: :blob)
+      .includes(:author, :blog_category, cover_image_attachment: :blob)
       .order(published_at: :desc)
       .limit(3)
-    @blog_categories = BlogPost.published_categories
+    @blog_categories = BlogCategory.with_published_posts.ordered
   end
 
   def about

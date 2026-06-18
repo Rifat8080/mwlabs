@@ -3,6 +3,7 @@ require "test_helper"
 class BlogPostsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @author = users(:admin)
+    @category = BlogCategory.create!(name: "Web Development", position: 0)
     @published = create_blog_post!(
       title: "How to Build a High-Converting Landing Page",
       status: "Published",
@@ -25,32 +26,34 @@ class BlogPostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: @draft.title, count: 0
   end
 
-  test "index filters by category from published posts" do
+  test "index filters by category slug from published posts" do
+    marketing_category = BlogCategory.create!(name: "Custom Growth Category", position: 1)
     marketing = create_blog_post!(
       title: "Marketing Channels for SaaS",
-      category: "Custom Growth Category",
+      blog_category: marketing_category,
       status: "Published",
       published_at: 1.day.ago
     )
 
-    get blog_url(category: "Custom Growth Category")
+    get blog_url(category: marketing_category.slug)
 
     assert_response :success
     assert_select "h2", text: marketing.title
-    assert_select "a[href='#{blog_path(category: "Custom Growth Category")}']"
+    assert_select "a[href='#{blog_path(category: marketing_category.slug)}']"
   end
 
   test "index shows only categories with published posts" do
+    hidden_category = BlogCategory.create!(name: "Hidden Draft Category", position: 2)
     create_blog_post!(
       title: "Draft Category Post",
-      category: "Hidden Draft Category",
+      blog_category: hidden_category,
       status: "Draft"
     )
 
     get blog_url
 
     assert_response :success
-    assert_select "a[href='#{blog_path(category: "Hidden Draft Category")}']", count: 0
+    assert_select "a[href='#{blog_path(category: hidden_category.slug)}']", count: 0
   end
 
   test "show resolves published post by slug" do
@@ -59,6 +62,7 @@ class BlogPostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", text: @published.title
     assert_select "meta[name='description']"
+    assert_select ".trix-content"
   end
 
   test "show returns not found for draft posts" do
@@ -73,7 +77,7 @@ class BlogPostsControllerTest < ActionDispatch::IntegrationTest
     BlogPost.create!({
       title: "Sample Post",
       body: "Sample body with enough words for testing.",
-      category: "Web Development",
+      blog_category: @category,
       status: "Draft",
       author: @author
     }.merge(attrs))

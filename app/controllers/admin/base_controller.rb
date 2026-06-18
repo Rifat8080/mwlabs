@@ -55,7 +55,8 @@ module Admin
           nav_item("Quotes", helpers.admin_quotes_path, "fa-file-signature", Quote)
         ],
         "Content" => [
-          nav_item("Blog", helpers.admin_blog_posts_path, "fa-newspaper", BlogPost)
+          nav_item("Blog", helpers.admin_blog_posts_path, "fa-newspaper", BlogPost),
+          nav_item("Blog Categories", helpers.admin_blog_categories_path, "fa-tags", BlogCategory)
         ],
         "Projects" => [
           nav_item("Projects", helpers.admin_projects_path, "fa-diagram-project", Project),

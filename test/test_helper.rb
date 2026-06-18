@@ -11,6 +11,25 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    def create_blog_category!(attrs = {})
+      name = attrs[:name] || "Web Development"
+      BlogCategory.find_or_create_by!(name: name) do |category|
+        category.position = attrs[:position] || 0
+        category.slug = name.parameterize
+      end
+    end
+
+    def create_blog_post_for_tests!(attrs = {})
+      author = attrs.delete(:author) || users(:admin)
+      category = attrs.delete(:blog_category) || create_blog_category!
+      BlogPost.create!({
+        title: "Sample Post",
+        body: "Sample body with enough words for testing.",
+        blog_category: category,
+        status: "Draft",
+        author: author
+      }.merge(attrs))
+    end
   end
 end
 

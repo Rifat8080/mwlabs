@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_15_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_18_163100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
+
+  create_table "action_text_rich_texts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.uuid "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
@@ -55,12 +65,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_15_140000) do
     t.index ["user_id"], name: "index_activity_logs_on_user_id"
   end
 
+  create_table "blog_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_blog_categories_on_name", unique: true
+    t.index ["position"], name: "index_blog_categories_on_position"
+    t.index ["slug"], name: "index_blog_categories_on_slug", unique: true
+  end
+
   create_table "blog_posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "slug", null: false
     t.text "excerpt"
-    t.text "body", null: false
-    t.string "category", null: false
     t.string "status", default: "Draft", null: false
     t.uuid "author_id", null: false
     t.datetime "published_at"
@@ -69,8 +89,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_15_140000) do
     t.boolean "featured", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "blog_category_id", null: false
     t.index ["author_id"], name: "index_blog_posts_on_author_id"
-    t.index ["category"], name: "index_blog_posts_on_category"
+    t.index ["blog_category_id"], name: "index_blog_posts_on_blog_category_id"
     t.index ["published_at"], name: "index_blog_posts_on_published_at"
     t.index ["slug"], name: "index_blog_posts_on_slug", unique: true
     t.index ["status"], name: "index_blog_posts_on_status"
@@ -342,6 +363,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_15_140000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activity_logs", "users"
+  add_foreign_key "blog_posts", "blog_categories"
   add_foreign_key "blog_posts", "users", column: "author_id"
   add_foreign_key "expenses", "clients"
   add_foreign_key "expenses", "projects"

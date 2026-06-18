@@ -6,6 +6,8 @@ module Admin
       @admin = users(:admin)
       @team_member = users(:team_member)
       @client_user = users(:client)
+      @category = BlogCategory.create!(name: "Growth Strategy", position: 0)
+      @web_category = BlogCategory.create!(name: "Web Development", position: 1)
     end
 
     test "admin can create blog post with cover image" do
@@ -15,8 +17,8 @@ module Admin
         post admin_blog_posts_url, params: {
           blog_post: {
             title: "New Growth Article",
-            body: "Detailed article body for the public blog.",
-            category: "Growth Strategy",
+            body: "<div>Detailed article body for the public blog.</div>",
+            blog_category_id: @category.id,
             status: "Published",
             excerpt: "A short summary.",
             featured: true,
@@ -32,6 +34,7 @@ module Admin
       assert_equal "new-growth-article", post.slug
       assert post.published_at.present?
       assert post.cover_image.attached?
+      assert_includes post.body.to_s, "Detailed article body"
     end
 
     test "admin can update blog post cover image" do
@@ -39,7 +42,7 @@ module Admin
       post = BlogPost.create!(
         title: "Article To Update",
         body: "Published body content.",
-        category: "Web Development",
+        blog_category: @web_category,
         status: "Draft",
         author: @admin
       )
@@ -47,8 +50,8 @@ module Admin
       patch admin_blog_post_url(post), params: {
         blog_post: {
           title: post.title,
-          body: post.body,
-          category: post.category,
+          body: post.body.to_s,
+          blog_category_id: post.blog_category_id,
           status: "Published",
           cover_image: uploaded_image("updated-cover.png")
         }
@@ -83,7 +86,7 @@ module Admin
       post = BlogPost.create!(
         title: "Published Article",
         body: "Published body content.",
-        category: "Web Development",
+        blog_category: @web_category,
         status: "Published",
         published_at: 1.day.ago,
         author: @admin

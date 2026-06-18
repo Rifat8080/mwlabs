@@ -3,6 +3,7 @@ require "test_helper"
 class BlogPostTest < ActiveSupport::TestCase
   setup do
     @author = users(:admin)
+    @category = BlogCategory.create!(name: "Web Development", position: 0)
   end
 
   test "generates unique slug from title" do
@@ -32,7 +33,7 @@ class BlogPostTest < ActiveSupport::TestCase
     post = BlogPost.new(
       title: "Launch Guide",
       body: "Content",
-      category: "Web Development",
+      blog_category: @category,
       status: "Published",
       author: @author
     )
@@ -41,12 +42,15 @@ class BlogPostTest < ActiveSupport::TestCase
     assert post.published_at.present?
   end
 
-  test "published categories come from live posts only" do
-    create_post!(title: "Live Post", category: "Custom Category", status: "Published", published_at: 1.day.ago)
-    create_post!(title: "Draft Post", category: "Hidden Category", status: "Draft")
+  test "filters by category slug" do
+    marketing = BlogCategory.create!(name: "Custom Growth Category", position: 3)
+    matching = create_post!(title: "Marketing Post", blog_category: marketing, status: "Published", published_at: 1.day.ago)
+    create_post!(title: "Other Post", status: "Published", published_at: 1.day.ago)
 
-    assert_includes BlogPost.published_categories, "Custom Category"
-    assert_not_includes BlogPost.published_categories, "Hidden Category"
+    results = BlogPost.published.by_category(marketing.slug)
+
+    assert_includes results, matching
+    assert_equal 1, results.count
   end
 
   private
@@ -55,7 +59,7 @@ class BlogPostTest < ActiveSupport::TestCase
     BlogPost.create!({
       title: "Sample Post",
       body: "Sample body with enough words for testing.",
-      category: "Web Development",
+      blog_category: @category,
       status: "Draft",
       author: @author
     }.merge(attrs))

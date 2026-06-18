@@ -3,19 +3,16 @@ require "test_helper"
 class SitemapControllerTest < ActionDispatch::IntegrationTest
   setup do
     @author = users(:admin)
-    @published = BlogPost.create!(
+    @published = create_blog_post_for_tests!(
       title: "Published SEO Article",
       body: "Published body for sitemap testing.",
-      category: "Web Development",
       status: "Published",
       published_at: 2.days.ago,
       author: @author
     )
-    BlogPost.create!(
+    create_blog_post_for_tests!(
       title: "Draft SEO Article",
       body: "Draft body for sitemap testing.",
-      category: "Web Development",
-      status: "Draft",
       author: @author
     )
   end

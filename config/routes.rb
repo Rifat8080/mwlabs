@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       end
     end
     resources :reminders, path: "follow-ups"
+    resources :blog_categories, path: "blog-categories"
     resources :blog_posts, path: "blog"
   end
 

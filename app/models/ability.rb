@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
 
-  STAFF_MODELS = [ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost ].freeze
+  STAFF_MODELS = [ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost, BlogCategory ].freeze
   CLIENT_PORTAL_MODELS = [ Lead, Quote, Project, Task, Invoice, FileUpload ].freeze
 
   attr_reader :user
@@ -37,6 +37,7 @@ class Ability
   def manageable_resource?(model)
     return true if admin?
     return false if client?
+    return false if model == BlogCategory
 
     team_member? && model.in?(STAFF_MODELS)
   end
@@ -147,6 +148,8 @@ class Ability
       Reminder.where(user: user)
     when "BlogPost"
       BlogPost.all
+    when "BlogCategory"
+      BlogCategory.all
     else
       model.none
     end
