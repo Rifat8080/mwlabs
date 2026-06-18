@@ -25,19 +25,32 @@ class BlogPostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: @draft.title, count: 0
   end
 
-  test "index filters by category" do
+  test "index filters by category from published posts" do
     marketing = create_blog_post!(
       title: "Marketing Channels for SaaS",
-      category: "Digital Marketing",
+      category: "Custom Growth Category",
       status: "Published",
       published_at: 1.day.ago
     )
 
-    get blog_url(category: "Digital Marketing")
+    get blog_url(category: "Custom Growth Category")
 
     assert_response :success
     assert_select "h2", text: marketing.title
-    assert_select "h2", text: @published.title, count: 0
+    assert_select "a[href='#{blog_path(category: "Custom Growth Category")}']"
+  end
+
+  test "index shows only categories with published posts" do
+    create_blog_post!(
+      title: "Draft Category Post",
+      category: "Hidden Draft Category",
+      status: "Draft"
+    )
+
+    get blog_url
+
+    assert_response :success
+    assert_select "a[href='#{blog_path(category: "Hidden Draft Category")}']", count: 0
   end
 
   test "show resolves published post by slug" do

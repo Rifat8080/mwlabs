@@ -5,6 +5,15 @@ module Admin
       authorize! :read, current_user.notifications.build
     end
 
+    def open
+      @notification = current_user.notifications.find(params[:id])
+      authorize! :manage, @notification
+      @notification.mark_as_read!
+      broadcast_unread_count
+
+      redirect_to notification_destination(@notification.url), allow_other_host: false
+    end
+
     def update
       @notification = current_user.notifications.find(params[:id])
       authorize! :manage, @notification
@@ -15,19 +24,11 @@ module Admin
 
       respond_to do |format|
         format.html do
-          if safe_admin_return_path?(return_to)
-            redirect_to return_to, notice: "Notification marked as read"
-          else
-            redirect_back fallback_location: admin_notifications_path, notice: "Notification marked as read"
-          end
+          redirect_to notification_destination(return_to || @notification.url), notice: "Notification marked as read"
         end
         format.turbo_stream do
-          if safe_admin_return_path?(return_to)
-            redirect_to return_to, notice: "Notification marked as read"
-          else
-            flash.now[:notice] = "Notification marked as read"
-            render turbo_stream: notification_streams
-          end
+          flash.now[:notice] = "Notification marked as read"
+          render turbo_stream: notification_streams
         end
         format.json { head :no_content }
       end
@@ -66,11 +67,26 @@ module Admin
       )
     end
 
-    def safe_admin_return_path?(path)
-      return false if path.blank?
+    def notification_destination(path)
+      normalized = normalize_return_path(path)
+      safe_admin_return_path?(normalized) ? normalized : admin_notifications_path
+    end
 
-      safe_path = url_from(path)
-      safe_path.present? && safe_path.start_with?("/admin")
+    def safe_admin_return_path?(path)
+      normalized = normalize_return_path(path)
+      normalized.present? && normalized.start_with?("/admin")
+    end
+
+    def normalize_return_path(path)
+      return if path.blank?
+      return path if path.start_with?("/")
+
+      uri = URI.parse(path.to_s)
+      return uri.path if uri.path.present? && (uri.host.blank? || uri.host == request.host)
+
+      nil
+    rescue URI::InvalidURIError
+      nil
     end
   end
 end

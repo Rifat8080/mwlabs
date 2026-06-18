@@ -8,6 +8,10 @@ Rails.application.routes.draw do
     root to: "dashboard#show"
 
     resources :notifications, only: [ :index, :update ] do
+      member do
+        get :open
+      end
+
       collection do
         patch :mark_all
       end

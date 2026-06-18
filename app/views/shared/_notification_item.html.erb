@@ -55,7 +55,7 @@ end %>
           <% if notification.notifiable.present? %>
             <div class="mt-4">
               <% if notification.url.present? %>
-                <%= link_to notification.notifiable.try(:display_name) || notification.notifiable.class.name, notification.url, class: "inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700" %>
+                <%= link_to notification.notifiable.try(:display_name) || notification.notifiable.class.name, open_admin_notification_path(notification), class: "inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700" %>
               <% else %>
                 <span class="inline-flex items-center rounded-xl bg-slate-50 px-3 py-2 text-sm font-bold text-slate-500"><%= notification.notifiable.try(:display_name) || notification.notifiable.class.name %></span>
               <% end %>
@@ -72,7 +72,7 @@ end %>
           </button>
         <% end %>
         <% if notification.url.present? %>
-          <%= button_to admin_notification_path(notification, return_to: notification.url), method: :patch, class: "inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-3 py-2 text-xs font-black text-white shadow-lg shadow-slate-900/10 transition hover:bg-blue-700", title: "Go to item and mark read", form: { data: { turbo: true } } do %>
+          <%= link_to open_admin_notification_path(notification), class: "inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-3 py-2 text-xs font-black text-white shadow-lg shadow-slate-900/10 transition hover:bg-blue-700", title: "Go to item and mark read" do %>
             Open
             <i class="fa-solid fa-arrow-right text-xs"></i>
           <% end %>
@@ -97,7 +97,7 @@ end %>
           <% if notification.notifiable.present? %>
             <div class="mt-2">
               <% if notification.url.present? %>
-                <%= link_to notification.notifiable.try(:display_name) || notification.notifiable.class.name, notification.url, class: 'inline-flex text-sm text-blue-600 hover:text-blue-700 hover:underline' %>
+                <%= link_to notification.notifiable.try(:display_name) || notification.notifiable.class.name, open_admin_notification_path(notification), class: 'inline-flex text-sm text-blue-600 hover:text-blue-700 hover:underline' %>
               <% else %>
                 <span class="text-sm text-slate-500"><%= notification.notifiable.try(:display_name) || notification.notifiable.class.name %></span>
               <% end %>
@@ -117,7 +117,7 @@ end %>
             </button>
           <% end %>
           <% if notification.url.present? %>
-            <%= button_to admin_notification_path(notification, return_to: notification.url), method: :patch, class: "p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition", title: "Go to item and mark read", form: { data: { turbo: true } } do %>
+            <%= link_to open_admin_notification_path(notification), class: "p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition", title: "Go to item and mark read" do %>
               <i class="fa-solid fa-arrow-right text-sm"></i>
             <% end %>
           <% end %>

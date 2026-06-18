@@ -41,6 +41,11 @@ class PagesController < ApplicationController
   }.freeze
 
   def home
+    @recent_blog_posts = BlogPost.published
+      .includes(:author, cover_image_attachment: :blob)
+      .order(published_at: :desc)
+      .limit(3)
+    @blog_categories = BlogPost.published_categories
   end
 
   def about

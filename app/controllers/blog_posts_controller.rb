@@ -2,11 +2,12 @@ class BlogPostsController < ApplicationController
   layout "visitor"
 
   def index
-    @posts = BlogPost.published.includes(:author).order(published_at: :desc)
+    @posts = BlogPost.published.includes(:author, cover_image_attachment: :blob).order(published_at: :desc)
     @selected_category = params[:category].presence
     @posts = @posts.by_category(@selected_category) if @selected_category
-    @featured_post = BlogPost.published.featured.order(published_at: :desc).first || @posts.first
-    @categories = BlogPost::CATEGORIES
+    @featured_post = BlogPost.published.featured.includes(:author, cover_image_attachment: :blob).order(published_at: :desc).first
+    @featured_post ||= @posts.first
+    @categories = BlogPost.published_categories
   end
 
   def show

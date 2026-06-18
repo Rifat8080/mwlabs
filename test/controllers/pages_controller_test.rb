@@ -2,6 +2,16 @@ require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
   test "shows the public landing page" do
+    author = users(:admin)
+    BlogPost.create!(
+      title: "Landing Page Blog Feature",
+      body: "Published body for the landing page blog section.",
+      category: "Web Development",
+      status: "Published",
+      published_at: 1.day.ago,
+      author: author
+    )
+
     get root_url
 
     assert_response :success
@@ -33,6 +43,9 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href='#{contact_path}']"
     assert_select "a[href='#{new_user_session_path}']", text: "Login"
     assert_select "a[href='#{new_user_registration_path}']", count: 0
+    assert_select "h2", text: /Fresh strategies from the M&W Labs blog/
+    assert_select "h2", text: /Landing Page Blog Feature/
+    assert_select "a[href='#{blog_path}']", text: /View all articles/
   end
 
   test "shows visitor pages" do

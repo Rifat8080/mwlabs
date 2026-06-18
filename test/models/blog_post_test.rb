@@ -41,6 +41,14 @@ class BlogPostTest < ActiveSupport::TestCase
     assert post.published_at.present?
   end
 
+  test "published categories come from live posts only" do
+    create_post!(title: "Live Post", category: "Custom Category", status: "Published", published_at: 1.day.ago)
+    create_post!(title: "Draft Post", category: "Hidden Category", status: "Draft")
+
+    assert_includes BlogPost.published_categories, "Custom Category"
+    assert_not_includes BlogPost.published_categories, "Hidden Category"
+  end
+
   private
 
   def create_post!(attrs = {})

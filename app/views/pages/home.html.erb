@@ -573,6 +573,42 @@
   </div>
 </section>
 
+<% if @recent_blog_posts.present? %>
+  <section class="bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_28rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] py-14 sm:py-20">
+    <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Latest Insights</p>
+          <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">Fresh strategies from the M&W Labs blog</h2>
+          <p class="mt-4 max-w-2xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">
+            Practical guidance on web development, marketing, branding, automation, and growth from the team behind your projects.
+          </p>
+        </div>
+        <%= link_to blog_path, class: "inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-6 py-3.5 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100" do %>
+          View all articles
+          <i class="fa-solid fa-arrow-right ms-3 text-xs"></i>
+        <% end %>
+      </div>
+
+      <% if @blog_categories.any? %>
+        <div class="mt-8 flex flex-wrap gap-2">
+          <% @blog_categories.first(6).each do |category| %>
+            <%= link_to blog_path(category: category), class: "inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-black text-slate-700 ring-1 ring-slate-200 transition hover:bg-blue-50 hover:text-blue-700 hover:ring-blue-200" do %>
+              <%= category %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <% @recent_blog_posts.each do |post| %>
+          <%= render "blog_posts/card", post: post %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
 <section class="bg-white pb-16 sm:pb-20" data-testimonials-section>
   <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
     <div>

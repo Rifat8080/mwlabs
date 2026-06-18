@@ -1,5 +1,5 @@
 class BlogPost < ApplicationRecord
-  CATEGORIES = [
+  DEFAULT_CATEGORIES = [
     "Web Development",
     "Digital Marketing",
     "Branding & Design",
@@ -18,22 +18,29 @@ class BlogPost < ApplicationRecord
 
   validates :title, :body, :category, :status, :slug, presence: true
   validates :slug, uniqueness: true
-  validates :category, inclusion: { in: CATEGORIES }
   validates :status, inclusion: { in: STATUSES }
   validates :author, presence: true
 
   scope :published, -> {
-    where(status: "Published").where(published_at: ..Time.current)
+    where(status: "Published").where(published_at: ..Time.zone.now)
   }
   scope :featured, -> { where(featured: true) }
   scope :by_category, ->(category) { category.present? ? where(category: category) : all }
+
+  def self.category_options
+    (DEFAULT_CATEGORIES + distinct.where.not(category: [ nil, "" ]).pluck(:category)).uniq.sort
+  end
+
+  def self.published_categories
+    published.distinct.order(:category).pluck(:category)
+  end
 
   def display_name
     title
   end
 
   def published?
-    status == "Published" && published_at.present? && published_at <= Time.current
+    status == "Published" && published_at.present? && published_at <= Time.zone.now
   end
 
   def read_time_minutes
@@ -71,6 +78,6 @@ class BlogPost < ApplicationRecord
   def sync_published_at
     return unless status == "Published"
 
-    self.published_at ||= Time.current
+    self.published_at ||= Time.zone.now
   end
 end

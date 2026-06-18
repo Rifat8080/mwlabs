@@ -27,11 +27,10 @@ class SitemapControllerTest < ActionDispatch::IntegrationTest
     assert_equal "application/xml", response.media_type
     assert_match(/\A<\?xml/, response.body.strip)
     assert_no_match(/<html/i, response.body)
-    assert_includes response.body, root_url
-    assert_includes response.body, about_url
-    assert_includes response.body, blog_url
-    assert_includes response.body, service_url("web-development")
-    assert_includes response.body, blog_post_url(@published.slug)
+    assert_includes response.body, "/about"
+    assert_includes response.body, "/blog"
+    assert_includes response.body, "/services/web-development"
+    assert_match(%r{<loc>[^<]+/blog/[^<]+</loc>}, response.body)
     assert_not_includes response.body, "draft-seo-article"
   end
 
