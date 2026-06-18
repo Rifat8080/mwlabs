@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+cd "$(dirname "$0")/.."
+
+export RAILS_ENV="${RAILS_ENV:-production}"
+
+bundle exec rails db:prepare
