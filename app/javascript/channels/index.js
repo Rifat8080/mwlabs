@@ -1,1 +1,1 @@
-import "./admin_notifications_channel"
+import "channels/admin_notifications_channel"

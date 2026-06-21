@@ -12,8 +12,7 @@
 
     <%= yield :head %>
 
-    <link rel="icon" href="/icon.svg?v=20260610" type="image/svg+xml">
-    <link rel="shortcut icon" href="/favicon.ico?v=20260610">
+    <%= render "shared/favicons" %>
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trix@2.1.13/dist/trix.css">

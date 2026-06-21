@@ -16,7 +16,7 @@ export default class extends Controller {
     this.showNotificationToast(title, message)
 
     if ("Notification" in window && Notification.permission === "granted") {
-      new Notification(title, { body: message, icon: "/icon.svg" })
+      new Notification(title, { body: message, icon: "/icon-192.png" })
     }
   }
 
