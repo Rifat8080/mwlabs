@@ -58,7 +58,17 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "example.com") }
+  app_host = ENV.fetch("APP_HOST", "www.mwlabs.digital")
+  config.action_mailer.default_url_options = { host: app_host, protocol: "https" }
+
+  # Action Cable (Solid Cable). Nginx must proxy WebSocket upgrades on /cable.
+  config.action_cable.mount_path = "/cable"
+  config.action_cable.url = "wss://#{app_host}/cable"
+  config.action_cable.allowed_request_origins = [
+    "https://#{app_host}",
+    "https://mwlabs.digital",
+    "https://www.mwlabs.digital"
+  ]
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {

@@ -9,7 +9,12 @@ module ApplicationCable
     private
 
     def find_verified_user
-      env["warden"].user || reject_unauthorized_connection
+      env["warden"].user || user_from_session || reject_unauthorized_connection
+    end
+
+    def user_from_session
+      user_id = request.session.dig("warden.user.user.key", 0, 0)
+      User.find_by(id: user_id) if user_id.present?
     end
   end
 end
