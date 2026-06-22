@@ -53,6 +53,18 @@ class BlogPostTest < ActiveSupport::TestCase
     assert_equal 1, results.count
   end
 
+  test "rejects cover images larger than 25 MB" do
+    post = create_post!
+    post.cover_image.attach(
+      io: StringIO.new("x" * (BlogPost::COVER_IMAGE_MAX_SIZE + 1)),
+      filename: "large.png",
+      content_type: "image/png"
+    )
+
+    assert_not post.valid?
+    assert_includes post.errors[:cover_image], "must be smaller than 25 MB"
+  end
+
   private
 
   def create_post!(attrs = {})

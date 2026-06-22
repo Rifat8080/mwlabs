@@ -1,14 +1,21 @@
 <% content_for :title, "#{@post.seo_title} | Mwlabs" %>
 <% content_for :head do %>
   <meta name="description" content="<%= @post.seo_description %>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
   <% if @post.cover_image.attached? %>
     <link rel="preload" as="image" href="<%= blog_cover_url(@post) %>">
   <% end %>
 <% end %>
 
-<article class="bg-white">
+<article class="bg-white" data-controller="reading-progress">
+  <div class="fixed left-0 top-0 z-[60] h-1 w-full bg-slate-100">
+    <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-500 transition-[width] duration-150 ease-out" data-reading-progress-target="bar"></div>
+  </div>
+
   <% if @post.cover_image.attached? %>
-    <section class="relative isolate min-h-[28rem] overflow-hidden bg-slate-950 sm:min-h-[32rem] lg:min-h-[36rem]">
+    <section class="relative isolate min-h-[24rem] overflow-hidden bg-slate-950 sm:min-h-[30rem] lg:min-h-[34rem]">
       <div class="absolute inset-0">
         <%= blog_cover_image @post,
           class: "h-full w-full object-cover",
@@ -16,18 +23,18 @@
           loading: "eager",
           fetchpriority: "high",
           "aria-hidden": "true" %>
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-900/30"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(37,99,235,0.35),_transparent_40%)]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-900/35"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(37,99,235,0.35),_transparent_42%)]"></div>
       </div>
 
-      <div class="relative mx-auto flex min-h-[28rem] max-w-4xl flex-col justify-end px-4 pb-16 pt-10 sm:min-h-[32rem] sm:px-6 sm:pb-20 sm:pt-14 lg:min-h-[36rem] lg:px-8">
-        <%= link_to blog_path, class: "inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20" do %>
+      <div class="relative mx-auto flex min-h-[24rem] max-w-4xl flex-col justify-end px-4 pb-14 pt-10 sm:min-h-[30rem] sm:px-6 sm:pb-16 sm:pt-14 lg:min-h-[34rem] lg:px-8">
+        <%= link_to blog_path, class: "inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20" do %>
           <i class="fa-solid fa-arrow-left text-xs"></i>
           Back to blog
         <% end %>
 
         <p class="mt-8 text-xs font-extrabold uppercase tracking-[0.2em] text-blue-200"><%= @post.category %></p>
-        <h1 class="mt-4 max-w-3xl text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-[3.4rem] lg:leading-[1.05]"><%= @post.title %></h1>
+        <h1 class="mt-4 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.25rem]"><%= @post.title %></h1>
 
         <% if @post.excerpt.present? %>
           <p class="mt-5 max-w-2xl text-base font-medium leading-8 text-slate-200 sm:text-lg"><%= @post.excerpt %></p>
@@ -73,28 +80,31 @@
     </section>
   <% end %>
 
-  <section class="relative z-10 <%= @post.cover_image.attached? ? "-mt-10 sm:-mt-12" : "" %>">
+  <section class="relative z-10 <%= @post.cover_image.attached? ? "-mt-8 sm:-mt-10" : "" %>">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-      <div class="<%= @post.cover_image.attached? ? "rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-200/60 sm:p-10 lg:p-12" : "py-10 sm:py-12" %>">
-        <div class="blog-article-body trix-content text-[1.05rem] font-medium leading-8 text-slate-700">
+      <div class="<%= @post.cover_image.attached? ? "rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-200/60 sm:p-10 lg:p-12" : "py-10 sm:py-12" %>" data-reading-progress-target="article">
+        <div class="blog-article-body trix-content">
           <%= @post.body %>
         </div>
 
-        <div class="mt-10 flex flex-col gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <div class="flex items-center gap-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-sm font-black text-white shadow-lg shadow-blue-600/20">
-              <%= @post.author.display_name.to_s.split.map { |part| part[0] }.join.first(2).upcase %>
+        <div class="mt-12 rounded-[1.5rem] border border-slate-100 bg-slate-50/80 p-6 sm:p-8">
+          <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-4">
+              <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-base font-black text-white shadow-lg shadow-blue-600/20">
+                <%= @post.author.display_name.to_s.split.map { |part| part[0] }.join.first(2).upcase %>
+              </div>
+              <div>
+                <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">Written by</p>
+                <p class="text-lg font-black text-slate-950"><%= @post.author.display_name %></p>
+                <p class="mt-1 text-sm font-medium text-slate-500"><%= @post.read_time_minutes %> minute read · <%= @post.published_at.to_date.to_fs(:long) %></p>
+              </div>
             </div>
-            <div>
-              <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">Written by</p>
-              <p class="text-base font-black text-slate-950"><%= @post.author.display_name %></p>
-            </div>
-          </div>
 
-          <%= link_to blog_path(category: @post.category_slug), class: "inline-flex w-fit items-center gap-2 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-extrabold text-blue-700 transition hover:bg-blue-100" do %>
-            More in <%= @post.category %>
-            <i class="fa-solid fa-arrow-right text-xs"></i>
-          <% end %>
+            <%= link_to blog_path(category: @post.category_slug), class: "inline-flex w-fit items-center gap-2 rounded-xl border border-blue-100 bg-white px-4 py-3 text-sm font-extrabold text-blue-700 shadow-sm transition hover:bg-blue-50" do %>
+              More in <%= @post.category %>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

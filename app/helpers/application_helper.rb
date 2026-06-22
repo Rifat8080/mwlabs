@@ -72,4 +72,20 @@ module ApplicationHelper
 
     number_to_human_size(file_upload.file_size)
   end
+
+  def admin_cover_image_preview(attachment, resize: [ 480, 270 ], **options)
+    return unless attachment.attached?
+
+    options = options.reverse_merge(alt: "Cover image preview")
+
+    if resize.present?
+      begin
+        return image_tag attachment.variant(resize_to_limit: resize), **options
+      rescue StandardError
+        # Fall back to the original blob when variants are unavailable.
+      end
+    end
+
+    image_tag rails_blob_path(attachment, only_path: true), **options
+  end
 end

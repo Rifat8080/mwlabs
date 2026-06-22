@@ -196,7 +196,7 @@
         <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
           <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Cover Image</p>
           <div class="mt-4 overflow-hidden rounded-2xl border border-slate-100">
-            <%= image_tag @resource.cover_image.variant(resize_to_limit: [ 960, 540 ]), class: "w-full object-cover", alt: @resource.title %>
+            <%= admin_cover_image_preview @resource.cover_image, resize: [ 960, 540 ], class: "w-full object-cover", alt: @resource.title %>
           </div>
         </section>
       <% end %>

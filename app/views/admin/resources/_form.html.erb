@@ -1,6 +1,6 @@
 <% quote_form = resource_fields.any? { |field| field[:type] == :quote_items } %>
 <% file_form = resource_fields.any? { |field| field[:type] == :file } %>
-<%= form_with model: [ :admin, @resource ], class: "space-y-6", multipart: file_form, data: (quote_form ? { controller: "quote-calculator" } : {}) do |form| %>
+<%= form_with model: [ :admin, @resource ], class: "space-y-6", multipart: file_form, html: (file_form ? { data: { turbo: false } } : {}), data: (quote_form ? { controller: "quote-calculator" } : {}) do |form| %>
   <% if @resource.errors.any? %>
     <div class="rounded-2xl border-2 border-rose-200 bg-rose-50 p-5 text-sm text-rose-700 shadow-lg shadow-rose-100">
       <div class="flex gap-3">
@@ -38,8 +38,8 @@
         <% when :textarea %>
           <%= form.text_area field[:name], rows: 5, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
         <% when :rich_text %>
-          <div class="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-50">
-            <%= form.rich_text_area field[:name], class: "trix-content min-h-[22rem] px-4 py-3 text-sm font-medium text-slate-900" %>
+          <div class="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-50 admin-rich-text">
+            <%= form.rich_text_area field[:name], class: "trix-content min-h-[28rem] px-4 py-3 text-sm font-medium text-slate-900" %>
           </div>
         <% when :select %>
           <%= form.select field[:name], options_for_select(field_options(field), @resource.public_send(field[:name])), { include_blank: "Select" }, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
@@ -49,19 +49,43 @@
             <span class="text-sm font-semibold text-slate-700">Yes</span>
           </div>
         <% when :file %>
-          <% if @resource.is_a?(FileUpload) && @resource.file.attached? %>
+          <% if @resource.is_a?(BlogPost) && field[:name] == :cover_image %>
+            <div class="mt-2 space-y-3" data-controller="cover-image-upload" data-cover-image-upload-max-size-value="<%= BlogPost::COVER_IMAGE_MAX_SIZE %>">
+              <% if @resource.cover_image.attached? %>
+                <div class="overflow-hidden rounded-xl border border-blue-100 bg-blue-50">
+                  <%= admin_cover_image_preview @resource.cover_image, class: "h-40 w-full object-cover", alt: "Current cover image" %>
+                  <p class="px-4 py-3 text-sm font-semibold text-blue-900">
+                    Current cover: <%= @resource.cover_image.filename %> (<%= number_to_human_size(@resource.cover_image.byte_size) %>)
+                  </p>
+                </div>
+              <% end %>
+
+              <%= hidden_field_tag "blog_post[cover_image_upload_requested]", "0", data: { cover_image_upload_target: "requested" } %>
+              <%= form.file_field field[:name],
+                accept: "image/png,image/jpeg,image/gif,image/webp",
+                class: "block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100",
+                data: { cover_image_upload_target: "input", action: "change->cover-image-upload#select" } %>
+
+              <div class="hidden rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700" data-cover-image-upload-target="error" role="alert"></div>
+
+              <div class="hidden overflow-hidden rounded-xl border border-emerald-200 bg-emerald-50" data-cover-image-upload-target="preview">
+                <%= tag.img src: "", class: "h-40 w-full object-cover", alt: "Selected cover preview", data: { cover_image_upload_target: "previewImage" } %>
+                <div class="px-4 py-3 text-sm font-semibold text-emerald-900">
+                  <p>New cover selected: <span data-cover-image-upload-target="previewName"></span></p>
+                  <p class="mt-1 text-xs text-emerald-700"><span data-cover-image-upload-target="previewSize"></span></p>
+                </div>
+              </div>
+            </div>
+          <% elsif @resource.is_a?(FileUpload) && @resource.file.attached? %>
             <div class="mt-2 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-900">
               <p class="font-black">Current file</p>
               <p class="mt-1 break-all"><%= @resource.file.filename %> (<%= admin_file_size(@resource) %>)</p>
               <p class="mt-1 text-xs text-blue-700">Upload a new file below to replace it.</p>
             </div>
-          <% elsif @resource.is_a?(BlogPost) && @resource.cover_image.attached? %>
-            <div class="mt-2 overflow-hidden rounded-xl border border-blue-100 bg-blue-50">
-              <%= image_tag @resource.cover_image.variant(resize_to_limit: [ 480, 270 ]), class: "h-40 w-full object-cover", alt: "Current cover image" %>
-              <p class="px-4 py-3 text-sm font-semibold text-blue-900">Upload a new image below to replace the cover.</p>
-            </div>
           <% end %>
+          <% unless @resource.is_a?(BlogPost) && field[:name] == :cover_image %>
           <%= form.file_field field[:name], class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
+          <% end %>
         <% when :decimal %>
           <% calculator_target = field[:name] == :discount ? "discount" : field[:name] == :tax ? "tax" : nil %>
           <%= form.number_field field[:name], step: 0.01, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50", data: { quote_calculator_target: calculator_target, action: calculator_target ? "input->quote-calculator#calculate" : nil }.compact %>

@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   layout "visitor"
 
   rescue_from CanCan::AccessDenied, with: :handle_access_denied
+  rescue_from ActionController::ParameterMissing, with: :handle_upload_payload_error
+  rescue_from ActionController::BadRequest, with: :handle_upload_payload_error
 
   def current_ability
     @current_ability ||= Ability.new(current_user)
@@ -22,6 +24,13 @@ class ApplicationController < ActionController::Base
     else
       redirect_to new_user_session_path, alert: "Please sign in to continue."
     end
+  end
+
+  def handle_upload_payload_error(exception)
+    Rails.logger.warn("Upload payload error: #{exception.class} #{exception.message}")
+
+    message = "The upload was too large or incomplete. Images must be 25 MB or smaller."
+    redirect_back fallback_location: dashboard_root_path, alert: message
   end
 
   def after_sign_in_path_for(_resource)

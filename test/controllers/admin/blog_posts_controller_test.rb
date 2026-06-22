@@ -53,6 +53,7 @@ module Admin
           body: post.body.to_s,
           blog_category_id: post.blog_category_id,
           status: "Published",
+          cover_image_upload_requested: "1",
           cover_image: uploaded_image("updated-cover.png")
         }
       }
@@ -60,6 +61,56 @@ module Admin
       assert_redirected_to admin_blog_post_url(post)
       assert post.reload.cover_image.attached?
       assert_equal "updated-cover.png", post.cover_image.filename.to_s
+    end
+
+    test "admin sees error when cover image upload fails" do
+      sign_in @admin
+      post = BlogPost.create!(
+        title: "Upload Failure Post",
+        body: "Published body content.",
+        blog_category: @web_category,
+        status: "Draft",
+        author: @admin
+      )
+
+      patch admin_blog_post_url(post), params: {
+        blog_post: {
+          title: post.title,
+          body: post.body.to_s,
+          blog_category_id: post.blog_category_id,
+          status: post.status,
+          cover_image_upload_requested: "1"
+        }
+      }
+
+      assert_response :unprocessable_entity
+      assert_select "li", text: /cover image could not be uploaded/i
+      assert_not post.reload.cover_image.attached?
+    end
+
+    test "admin sees error when cover image exceeds size limit" do
+      sign_in @admin
+      post = BlogPost.create!(
+        title: "Oversized Cover Post",
+        body: "Published body content.",
+        blog_category: @web_category,
+        status: "Draft",
+        author: @admin
+      )
+
+      patch admin_blog_post_url(post), params: {
+        blog_post: {
+          title: post.title,
+          body: post.body.to_s,
+          blog_category_id: post.blog_category_id,
+          status: post.status,
+          cover_image_upload_requested: "1",
+          cover_image: oversized_image
+        }
+      }
+
+      assert_response :unprocessable_entity
+      assert_select "li", text: /must be smaller than 25 MB/i
     end
 
     test "team member can access blog admin" do
@@ -102,6 +153,14 @@ module Admin
 
     def uploaded_image(filename = "cover.png")
       Rack::Test::UploadedFile.new(StringIO.new("fake image"), "image/png", original_filename: filename)
+    end
+
+    def oversized_image
+      Rack::Test::UploadedFile.new(
+        StringIO.new("x" * (BlogPost::COVER_IMAGE_MAX_SIZE + 1)),
+        "image/png",
+        original_filename: "too-large.png"
+      )
     end
   end
 end

@@ -1,5 +1,7 @@
 class BlogPost < ApplicationRecord
   STATUSES = [ "Draft", "Published", "Archived" ].freeze
+  COVER_IMAGE_MAX_SIZE = 25.megabytes
+  COVER_IMAGE_CONTENT_TYPES = %w[image/png image/jpeg image/jpg image/gif image/webp].freeze
 
   belongs_to :author, class_name: "User"
   belongs_to :blog_category
@@ -15,6 +17,7 @@ class BlogPost < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates :author, :blog_category, presence: true
   validates :body, presence: true
+  validate :acceptable_cover_image
 
   scope :published, -> {
     where(status: "Published").where(published_at: ..Time.zone.now)
@@ -49,6 +52,18 @@ class BlogPost < ApplicationRecord
 
   def seo_description
     meta_description.presence || excerpt.presence || body.to_plain_text.truncate(160)
+  end
+
+  def acceptable_cover_image
+    return unless cover_image.attached?
+
+    unless cover_image.content_type.in?(COVER_IMAGE_CONTENT_TYPES)
+      errors.add(:cover_image, "must be a PNG, JPG, GIF, or WebP image")
+    end
+
+    if cover_image.byte_size > COVER_IMAGE_MAX_SIZE
+      errors.add(:cover_image, "must be smaller than #{ActiveSupport::NumberHelper.number_to_human_size(COVER_IMAGE_MAX_SIZE)}")
+    end
   end
 
   private
