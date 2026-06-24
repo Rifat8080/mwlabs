@@ -1,7 +1,7 @@
 class Lead < ApplicationRecord
   SOURCES = [
-    "Website Contact Form", "Landing Page", "Quotation Form", "Facebook", "Google Ads", "WhatsApp",
-    "Referral", "Cold Email", "LinkedIn", "Manual Entry"
+    "Website Contact Form", "AI Receptionist", "Landing Page", "Quotation Form", "Facebook", "Messenger",
+    "Google Ads", "WhatsApp", "Referral", "Cold Email", "LinkedIn", "Manual Entry"
   ].freeze
   STATUSES = [
     "New", "Contacted", "Need Requirement", "Quote Preparing", "Quote Sent",
@@ -14,6 +14,7 @@ class Lead < ApplicationRecord
   has_many :quotes, dependent: :nullify
   has_many :activity_logs, as: :subject, dependent: :destroy
   has_many :reminders, as: :remindable, dependent: :destroy
+  has_many :ai_receptionist_conversations, dependent: :nullify
 
   validates :name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true

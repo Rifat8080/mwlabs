@@ -36,6 +36,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: /We Don’t Just Deliver Services/
     assert_select "footer", text: /From code to campaigns/
     assert_select "footer", text: /Back to top/
+    assert_select "[data-controller='ai-receptionist']"
+    assert_select "button", text: /AI Reception/
     assert_select ".fa-code"
     assert_select "a[href='#{about_path}']"
     assert_select "a[href='#{contact_path}']"

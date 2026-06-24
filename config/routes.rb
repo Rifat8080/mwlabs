@@ -58,6 +58,9 @@ Rails.application.routes.draw do
   get "pricing", to: "pages#pricing"
   get "contact", to: "pages#contact"
   post "leads", to: "leads#create"
+  namespace :ai_receptionist, path: "ai-receptionist" do
+    post "messages", to: "messages#create"
+  end
   get "team", to: "pages#team"
   get "careers", to: "pages#careers"
   get "testimonials", to: "pages#testimonials"

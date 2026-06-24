@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_18_163100) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_24_094500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -63,6 +63,45 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_18_163100) do
     t.datetime "updated_at", null: false
     t.index ["subject_type", "subject_id"], name: "index_activity_logs_on_subject"
     t.index ["user_id"], name: "index_activity_logs_on_user_id"
+  end
+
+  create_table "ai_receptionist_conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "channel", default: "website", null: false
+    t.string "external_id"
+    t.string "visitor_token", null: false
+    t.uuid "lead_id"
+    t.string "status", default: "open", null: false
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.string "company_name"
+    t.string "service_interest"
+    t.decimal "budget", precision: 12, scale: 2
+    t.string "urgency"
+    t.text "summary"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "last_message_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "country"
+    t.index ["channel", "external_id"], name: "index_ai_receptionist_conversations_on_channel_external", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["country"], name: "index_ai_receptionist_conversations_on_country"
+    t.index ["last_message_at"], name: "index_ai_receptionist_conversations_on_last_message_at"
+    t.index ["lead_id"], name: "index_ai_receptionist_conversations_on_lead_id"
+    t.index ["status"], name: "index_ai_receptionist_conversations_on_status"
+    t.index ["visitor_token"], name: "index_ai_receptionist_conversations_on_visitor_token", unique: true
+  end
+
+  create_table "ai_receptionist_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "ai_receptionist_conversation_id", null: false
+    t.string "role", null: false
+    t.text "content", null: false
+    t.string "llm_model"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ai_receptionist_conversation_id", "created_at"], name: "index_ai_receptionist_messages_on_conversation_created"
+    t.index ["ai_receptionist_conversation_id"], name: "idx_on_ai_receptionist_conversation_id_4dced30684"
   end
 
   create_table "blog_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -363,6 +402,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_18_163100) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activity_logs", "users"
+  add_foreign_key "ai_receptionist_conversations", "leads"
+  add_foreign_key "ai_receptionist_messages", "ai_receptionist_conversations"
   add_foreign_key "blog_posts", "blog_categories"
   add_foreign_key "blog_posts", "users", column: "author_id"
   add_foreign_key "expenses", "clients"
