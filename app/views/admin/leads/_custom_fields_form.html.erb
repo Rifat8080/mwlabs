@@ -1,3 +1,4 @@
+<% if Lead.custom_fields_supported? %>
 <% param_prefix = "#{resource_model.model_name.param_key}[custom_fields]" %>
 <% fields = @resource.custom_fields.presence || [ { "label" => "", "value" => "" } ] %>
 
@@ -59,3 +60,6 @@
     </div>
   </template>
 </div>
+<% else %>
+  <%= render "admin/leads/custom_fields_migration_notice" %>
+<% end %>

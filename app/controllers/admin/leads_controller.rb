@@ -45,7 +45,11 @@ module Admin
     private
 
     def resource_params
-      params.require(:lead).permit(*permitted_fields, custom_fields: [ :label, :value ])
+      if Lead.custom_fields_supported?
+        params.require(:lead).permit(*permitted_fields, custom_fields: [ :label, :value ])
+      else
+        params.require(:lead).permit(*permitted_fields)
+      end
     end
   end
 end

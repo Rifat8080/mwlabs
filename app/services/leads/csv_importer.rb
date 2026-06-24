@@ -71,6 +71,10 @@ module Leads
       plan = build_column_plan(table.headers)
       custom_columns = plan.filter_map { |column| column[:header] if column[:target] == :custom_field }
 
+      if custom_columns.any? && !Lead.custom_fields_supported?
+        return failure("This CSV has extra columns (#{custom_columns.join(', ')}) but custom fields are not enabled yet. Run bin/rails db:migrate on the server, then retry the import.")
+      end
+
       imported_count = 0
       failed_count = 0
       skipped_count = 0

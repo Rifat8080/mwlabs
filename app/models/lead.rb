@@ -30,6 +30,22 @@ class Lead < ApplicationRecord
   scope :followups_due, -> { where.not(follow_up_date: nil).where(follow_up_date: ..Date.current) }
   scope :new_this_month, -> { where(created_at: Time.current.beginning_of_month..) }
 
+  def self.custom_fields_supported?
+    column_names.include?("custom_fields")
+  end
+
+  def custom_fields
+    return [] unless self.class.custom_fields_supported?
+
+    read_attribute(:custom_fields).presence || []
+  end
+
+  def custom_fields=(value)
+    return unless self.class.custom_fields_supported?
+
+    write_attribute(:custom_fields, value)
+  end
+
   def display_name
     company_name.present? ? "#{name} (#{company_name})" : name
   end
@@ -76,6 +92,8 @@ class Lead < ApplicationRecord
   end
 
   def add_custom_field!(label:, value:)
+    return false unless self.class.custom_fields_supported?
+
     normalized_label = label.to_s.strip
     normalized_value = value.to_s.strip
     return false if normalized_label.blank? && normalized_value.blank?
@@ -84,6 +102,8 @@ class Lead < ApplicationRecord
   end
 
   def remove_custom_field_at!(index)
+    return false unless self.class.custom_fields_supported?
+
     fields = custom_fields.dup
     return false unless index.between?(0, fields.length - 1)
 
@@ -94,7 +114,9 @@ class Lead < ApplicationRecord
   private
 
   def normalize_custom_fields
-    entries = case custom_fields
+    return unless self.class.custom_fields_supported?
+
+    entries = case read_attribute(:custom_fields)
     when ActionController::Parameters, Hash
       custom_fields.values
     else

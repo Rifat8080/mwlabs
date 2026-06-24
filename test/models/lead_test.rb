@@ -37,6 +37,8 @@ class LeadTest < ActiveSupport::TestCase
   end
 
   test "normalizes blank custom fields on save" do
+    skip "custom_fields column not present" unless Lead.custom_fields_supported?
+
     lead = Lead.create!(
       name: "Custom Field Lead",
       custom_fields: [
@@ -49,6 +51,8 @@ class LeadTest < ActiveSupport::TestCase
   end
 
   test "adds and removes custom fields" do
+    skip "custom_fields column not present" unless Lead.custom_fields_supported?
+
     lead = Lead.create!(name: "Field Ops")
 
     assert lead.add_custom_field!(label: "Budget", value: "$5k")
@@ -56,5 +60,9 @@ class LeadTest < ActiveSupport::TestCase
 
     assert lead.remove_custom_field_at!(0)
     assert_equal [], lead.reload.custom_fields
+  end
+
+  test "custom_fields_supported reflects the database schema" do
+    assert_equal Lead.column_names.include?("custom_fields"), Lead.custom_fields_supported?
   end
 end

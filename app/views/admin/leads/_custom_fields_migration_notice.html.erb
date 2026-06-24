@@ -1,0 +1,15 @@
+<div class="overflow-hidden rounded-[1.75rem] border border-amber-200 bg-amber-50 shadow-lg shadow-amber-100/50">
+  <div class="flex gap-4 p-5 lg:p-6">
+    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </span>
+    <div>
+      <p class="text-xs font-black uppercase tracking-[0.16em] text-amber-700">Database update required</p>
+      <h2 class="mt-2 text-lg font-black text-slate-950">Custom fields are not enabled yet</h2>
+      <p class="mt-2 text-sm font-semibold leading-7 text-amber-900">
+        Lead forms, CSV import extras, and custom field panels need the latest migration applied on this server.
+        Run <code class="rounded bg-white px-2 py-1 text-xs font-black text-slate-800">bin/rails db:migrate</code> in the app directory, then restart the app.
+      </p>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,8 @@ module Admin
     before_action :authorize_lead_management!
 
     def create
+      return respond_to_missing_custom_fields_column unless Lead.custom_fields_supported?
+
       if @lead.add_custom_field!(label: custom_field_params[:label], value: custom_field_params[:value])
         respond_to_change("Custom field added.")
       else
@@ -12,6 +14,8 @@ module Admin
     end
 
     def destroy
+      return respond_to_missing_custom_fields_column unless Lead.custom_fields_supported?
+
       if @lead.remove_custom_field_at!(params[:index].to_i)
         respond_to_change("Custom field removed.")
       else
@@ -61,6 +65,18 @@ module Admin
         turbo_stream.update("flash", partial: "shared/flash"),
         turbo_stream.replace("lead-custom-fields", partial: "admin/leads/custom_fields_panel", locals: { lead: @lead.reload })
       ]
+    end
+
+    def respond_to_missing_custom_fields_column
+      message = "Custom fields are unavailable until database migrations are applied. Run bin/rails db:migrate on the server."
+
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:alert] = message
+          render turbo_stream: turbo_stream.update("flash", partial: "shared/flash"), status: :unprocessable_entity
+        end
+        format.html { redirect_to admin_lead_path(@lead), alert: message }
+      end
     end
   end
 end
