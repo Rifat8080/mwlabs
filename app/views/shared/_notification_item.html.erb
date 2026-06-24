@@ -81,25 +81,25 @@ end %>
     </div>
   </div>
 <% else %>
-  <div id="<%= item_id %>" data-controller="notification" class="border-l-4 <%= border_class %> bg-white p-4 transition hover:bg-slate-50 flex items-start gap-4 <%= 'opacity-75' if notification.read_at.present? %>">
+  <div id="<%= item_id %>" data-controller="notification" class="border-l-4 <%= border_class %> bg-white p-4 transition hover:bg-slate-50 flex items-start gap-3 sm:gap-4 <%= 'opacity-75' if notification.read_at.present? %>">
     <div class="flex-shrink-0 pt-0.5">
       <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg <%= notification.badge_class %>">
         <i class="fa-solid <%= notification.icon_class %> text-lg"></i>
       </span>
     </div>
-    <div class="flex-1 min-w-0">
+    <div class="min-w-0 flex-1">
       <div class="flex items-start justify-between gap-2">
-        <div class="flex-1">
-          <p class="font-semibold text-slate-900"><%= notification.action %></p>
+        <div class="min-w-0 flex-1">
+          <p class="break-words font-semibold text-slate-900"><%= notification.action %></p>
           <% if notification.params["details"].present? %>
-            <p class="text-sm text-slate-600 mt-1"><%= sanitize(notification.params["details"]) %></p>
+            <p class="mt-1 break-words text-sm text-slate-600"><%= sanitize(notification.params["details"]) %></p>
           <% end %>
           <% if notification.notifiable.present? %>
-            <div class="mt-2">
+            <div class="mt-2 min-w-0">
               <% if notification.url.present? %>
-                <%= link_to notification.notifiable.try(:display_name) || notification.notifiable.class.name, open_admin_notification_path(notification), class: 'inline-flex text-sm text-blue-600 hover:text-blue-700 hover:underline' %>
+                <%= link_to notification.notifiable.try(:display_name) || notification.notifiable.class.name, open_admin_notification_path(notification), class: 'inline-block max-w-full break-words text-sm text-blue-600 hover:text-blue-700 hover:underline' %>
               <% else %>
-                <span class="text-sm text-slate-500"><%= notification.notifiable.try(:display_name) || notification.notifiable.class.name %></span>
+                <span class="break-words text-sm text-slate-500"><%= notification.notifiable.try(:display_name) || notification.notifiable.class.name %></span>
               <% end %>
             </div>
           <% end %>

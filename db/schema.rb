@@ -194,7 +194,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_18_163100) do
     t.string "notifiable_type"
     t.string "actor_type"
     t.jsonb "params", default: {}
-    t.datetime "read_at"
+    t.datetime "read_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "url"
