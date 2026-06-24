@@ -1,0 +1,7 @@
+<% content_for :title, @seo_page[:title] %>
+<% content_for :head do %>
+  <meta name="description" content="<%= @seo_page[:description] %>">
+  <link rel="canonical" href="<%= seo_landing_url(@seo_page[:slug]) %>">
+<% end %>
+
+<%= render "pages/shared/landing_page", seo_page: @seo_page, lead_source: @seo_page[:lead_source] %>

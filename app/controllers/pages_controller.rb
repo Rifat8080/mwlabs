@@ -41,10 +41,15 @@ class PagesController < ApplicationController
   }.freeze
 
   def home
-    @recent_blog_posts = BlogPost.published
-      .includes(:author, :blog_category, cover_image_attachment: :blob)
-      .order(published_at: :desc)
-      .limit(3)
+    @recent_blog_posts = load_recent_blog_posts
+    @blog_categories = BlogCategory.with_published_posts.ordered
+  end
+
+  def seo_landing
+    @seo_page = SeoLandingPages.find(params[:slug])
+    raise ActionController::RoutingError, "Not Found" if @seo_page.blank?
+
+    @recent_blog_posts = load_recent_blog_posts
     @blog_categories = BlogCategory.with_published_posts.ordered
   end
 
@@ -86,5 +91,14 @@ class PagesController < ApplicationController
     @service = SERVICES.fetch(params[:slug])
   rescue KeyError
     raise ActionController::RoutingError, "Not Found"
+  end
+
+  private
+
+  def load_recent_blog_posts
+    BlogPost.published
+      .includes(:author, :blog_category, cover_image_attachment: :blob)
+      .order(published_at: :desc)
+      .limit(3)
   end
 end

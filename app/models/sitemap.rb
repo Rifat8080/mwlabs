@@ -25,7 +25,7 @@ class Sitemap
   end
 
   def build
-    static_entries + service_entries + blog_entries
+    static_entries + service_entries + seo_landing_entries + blog_entries
   end
 
   private
@@ -55,6 +55,16 @@ class Sitemap
   def service_entries
     PagesController::SERVICES.keys.map do |slug|
       entry_for(routes.service_path(slug), changefreq: "monthly", priority: "0.8")
+    end
+  end
+
+  def seo_landing_entries
+    SeoLandingPages.all.map do |page|
+      entry_for(
+        routes.seo_landing_path(page[:slug]),
+        changefreq: "monthly",
+        priority: "0.7"
+      )
     end
   end
 

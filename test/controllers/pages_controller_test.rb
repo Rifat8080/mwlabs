@@ -99,6 +99,33 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "shows seo landing pages with keyword metadata and landing page content" do
+    get seo_landing_url("web-development-agency")
+
+    assert_response :success
+    assert_select "title", text: "Web Development Agency | M&W Labs"
+    assert_select "meta[name='description']"
+    assert_match /web development agency/i, response.body
+    assert_select "link[rel='canonical'][href=?]", seo_landing_url("web-development-agency")
+    assert_select "h1", text: /Web Development Agency/
+    assert_select "h2", text: /web development agency/
+    assert_select "body", text: /trusted web development agency/
+    assert_select "form input[name='lead[source]'][value='SEO Landing: web development agency']"
+  end
+
+  test "shows seo landing page for rails keyword" do
+    get seo_landing_url("ruby-on-rails-development-agency")
+
+    assert_response :success
+    assert_select "title", text: "Ruby On Rails Development Agency | M&W Labs"
+  end
+
+  test "returns not found for unknown seo landing page" do
+    get seo_landing_url("unknown-keyword-page")
+
+    assert_response :not_found
+  end
+
   test "contact form captures complete lead information" do
     assert_difference("Lead.count", 1) do
       assert_difference("User.where(role: 'client').count", 1) do

@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   get "privacy", to: "pages#privacy"
   get "terms", to: "pages#terms"
   get "services/:slug", to: "pages#service", as: :service
+  get "solutions/:slug", to: "pages#seo_landing", as: :seo_landing
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

@@ -27,6 +27,7 @@ class SitemapControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "/about"
     assert_includes response.body, "/blog"
     assert_includes response.body, "/services/web-development"
+    assert_includes response.body, "/solutions/web-development-agency"
     assert_match(%r{<loc>[^<]+/blog/[^<]+</loc>}, response.body)
     assert_not_includes response.body, "draft-seo-article"
   end
