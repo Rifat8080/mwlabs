@@ -63,6 +63,30 @@ module AiReceptionist
       assert_equal "AI & Automation", result.conversation.service_interest
     end
 
+    test "fallback receptionist treats flexible / flex as urgency not a name" do
+      conversation = ConversationHandler.call(
+        visitor_token: "visitor-token-7",
+        message: "Hi, my name is Sam. I need video, budget 67 and my email is sam@example.com.",
+        model_client: FailingModelClient.new
+      )
+
+      assert_equal "Sam", conversation.conversation.name
+      assert_equal "Video Editing & Content", conversation.conversation.service_interest
+      assert_equal BigDecimal("67"), conversation.conversation.budget
+      assert_nil conversation.conversation.urgency
+
+      response = ConversationHandler.call(
+        visitor_token: "visitor-token-7",
+        message: "felx",
+        model_client: FailingModelClient.new
+      )
+
+      assert_equal "Low", response.conversation.urgency
+      assert_equal "Sam", response.conversation.name
+      assert_match(/Perfect, Sam|Got it, Sam/i, response.reply)
+      assert_no_match(/What is your name\?|share your name/i, response.reply)
+    end
+
     test "fallback receptionist understands short follow up answers" do
       greeting = ConversationHandler.call(
         visitor_token: "visitor-token-3",

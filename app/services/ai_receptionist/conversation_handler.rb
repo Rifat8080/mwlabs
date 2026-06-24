@@ -62,7 +62,11 @@ module AiReceptionist
       append_extra_detail(conversation) if complete_before_message && extra_detail_message?
 
       lead = LeadSync.new(conversation: conversation, latest_message: message, updates: updates).call
-      response = Responder.new(conversation: conversation.reload, model_client: model_client).call
+      response = Responder.new(
+        conversation: conversation.reload,
+        model_client: model_client,
+        complete_before_message: complete_before_message
+      ).call
       assistant_message = conversation.ai_receptionist_messages.create!(
         role: "assistant",
         content: response.content,

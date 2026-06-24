@@ -6,9 +6,10 @@ module AiReceptionist
       end
     end
 
-    def initialize(conversation:, model_client: LocalModelClient.new)
+    def initialize(conversation:, model_client: LocalModelClient.new, complete_before_message: false)
       @conversation = conversation
       @model_client = model_client
+      @complete_before_message = complete_before_message
     end
 
     def call
@@ -21,7 +22,7 @@ module AiReceptionist
 
     private
 
-    attr_reader :conversation, :model_client
+    attr_reader :conversation, :model_client, :complete_before_message
 
     def prompt_messages
       [
@@ -57,7 +58,7 @@ module AiReceptionist
       return returning_visitor_reply if greeting_message?
       return affirmation_reply if affirmation_message?
       return closing_reply if closing_message? && conversation.missing_lead_fields.none?
-      return additional_detail_reply if conversation.missing_lead_fields.none? && detail_message?
+      return additional_detail_reply if complete_before_message && conversation.missing_lead_fields.none? && detail_message?
       return completion_reply if conversation.missing_lead_fields.none?
 
       acknowledgement = captured_acknowledgement

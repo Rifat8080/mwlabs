@@ -17,8 +17,8 @@ module AiReceptionist
 
     URGENCY_KEYWORDS = {
       "Urgent" => %w[urgent asap immediately emergency today tomorrow],
-      "High" => [ "soon", "this week", "next week", "fast", "quickly" ],
-      "Low" => [ "no rush", "not urgent", "later", "future" ],
+      "High" => [ "soon", "this week", "this month", "next week", "fast", "quickly" ],
+      "Low" => [ "no rush", "not urgent", "later", "future", "flexible", "flex" ],
       "Normal" => %w[normal standard]
     }.freeze
 
@@ -102,8 +102,17 @@ module AiReceptionist
 
     def extract_urgency
       URGENCY_KEYWORDS.find do |_urgency, keywords|
-        keywords.any? { |keyword| downcased_message.include?(keyword) }
+        keywords.any? { |keyword| urgency_keyword_present?(keyword) }
       end&.first
+    end
+
+    def urgency_keyword_present?(keyword)
+      return true if downcased_message.match?(/\b#{Regexp.escape(keyword)}\b/)
+      return false if keyword.include?(" ")
+
+      downcased_message.scan(/\b[[:alpha:]]+\b/).any? do |token|
+        token[0] == keyword[0] && one_edit_distance?(token, keyword)
+      end
     end
 
     def clean_person_name(candidate)
@@ -114,8 +123,63 @@ module AiReceptionist
       return if cleaned.downcase.in?(%w[i me we us])
       return if cleaned.split.size > 4
       return if SERVICE_KEYWORDS.values.flatten.any? { |keyword| cleaned.downcase.include?(keyword) }
+      return if urgency_keyword?(cleaned)
 
       cleaned.titleize
+    end
+
+    def urgency_keyword?(phrase)
+      normalized = phrase.to_s.downcase
+      URGENCY_KEYWORDS.values.flatten.any? do |keyword|
+        keyword = keyword.downcase
+        next true if normalized == keyword
+        next false if normalized[0] != keyword[0]
+
+        one_edit_distance?(normalized, keyword)
+      end
+    end
+
+    def one_edit_distance?(a, b)
+      return false if a == b
+      return false if a[0] != b[0]
+      return false if (a.length - b.length).abs > 1
+
+      if a.length == b.length
+        diffs = a.chars.zip(b.chars).count { |x, y| x != y }
+        return true if diffs == 1
+        return transposition?(a, b) if diffs == 2
+        return false
+      end
+
+      shorter, longer = a.length < b.length ? [ a, b ] : [ b, a ]
+      i = 0
+      j = 0
+      diffs = 0
+
+      while i < shorter.length && j < longer.length
+        if shorter[i] == longer[j]
+          i += 1
+          j += 1
+        else
+          diffs += 1
+          return false if diffs > 1
+          j += 1
+        end
+      end
+
+      diffs + (j < longer.length ? 1 : 0) == 1
+    end
+
+    def transposition?(a, b)
+      return false if a.length != b.length
+
+      diffs = a.chars.zip(b.chars).each_with_index.filter_map do |(x, y), index|
+        index if x != y
+      end
+      return false unless diffs.size == 2
+
+      i, j = diffs
+      a[i] == b[j] && a[j] == b[i]
     end
 
     def contextual_name
