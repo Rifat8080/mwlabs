@@ -87,7 +87,69 @@ module AiReceptionist
       assert_no_match(/What is your name\?|share your name/i, response.reply)
     end
 
-    test "fallback receptionist understands short follow up answers" do
+    test "starting a new request keeps contact info and asks only for missing details" do
+      result = ConversationHandler.call(
+        visitor_token: "visitor-token-9",
+        message: "Hi, my name is Noor. My email is noor@example.com and I need marketing, budget 7890, urgent.",
+        model_client: FailingModelClient.new
+      )
+
+      assert_equal "Noor", result.conversation.name
+      assert_equal "noor@example.com", result.conversation.email
+      assert_equal "Digital Marketing", result.conversation.service_interest
+      assert_equal "Urgent", result.conversation.urgency
+
+      next_result = ConversationHandler.call(
+        visitor_token: "visitor-token-9",
+        message: "start new",
+        model_client: FailingModelClient.new
+      )
+
+      assert next_result.started_new?
+      assert_equal "Noor", next_result.conversation.name
+      assert_equal "noor@example.com", next_result.conversation.email
+      assert_nil next_result.conversation.service_interest
+      assert_nil next_result.conversation.budget
+      assert_nil next_result.conversation.urgency
+      assert_match(/service do you need help with/i, next_result.reply)
+      assert_no_match(/best WhatsApp number or email/i, next_result.reply)
+    end
+
+    test "restart phrase in uppercase does not get captured as a visitor name" do
+      result = ConversationHandler.call(
+        visitor_token: "visitor-token-13",
+        message: "START NEW",
+        model_client: FailingModelClient.new
+      )
+
+      assert result.started_new?
+      assert_nil result.conversation.name
+      assert_match(/service do you need help with/i, result.reply)
+    end
+
+    test "same as before uses saved contact details" do
+      initial = ConversationHandler.call(
+        visitor_token: "visitor-token-12",
+        message: "Hi, my name is Ray. My email is ray@example.com. I need website, budget 2000, urgent.",
+        model_client: FailingModelClient.new
+      )
+
+      assert_equal "Ray", initial.conversation.name
+      assert_equal "ray@example.com", initial.conversation.email
+
+      result = ConversationHandler.call(
+        visitor_token: "visitor-token-12",
+        message: "same as before",
+        model_client: FailingModelClient.new
+      )
+
+      assert_equal "Ray", result.conversation.name
+      assert_equal "ray@example.com", result.conversation.email
+      assert_match(/same contact details/i, result.reply)
+      assert_no_match(/What is the best WhatsApp number or email/i, result.reply)
+    end
+
+    test "fallback receptionist handles local phone number and asks for country confirmation" do
       greeting = ConversationHandler.call(
         visitor_token: "visitor-token-3",
         message: "hi",
@@ -101,8 +163,18 @@ module AiReceptionist
         model_client: FailingModelClient.new
       )
       assert_equal "Mahadi", contact.conversation.name
-      assert_equal "+8801944998080", contact.conversation.phone
-      assert_match(/What service/i, contact.reply)
+      assert_equal "01944998080", contact.conversation.phone
+      assert_nil contact.conversation.country
+      assert_match(/Which country should I use for that phone number\?/i, contact.reply)
+
+      country = ConversationHandler.call(
+        visitor_token: "visitor-token-3",
+        message: "Bangladesh",
+        model_client: FailingModelClient.new
+      )
+      assert_equal "Bangladesh", country.conversation.country
+      assert_equal "+8801944998080", country.conversation.phone
+      assert_match(/What service/i, country.reply)
 
       scope = ConversationHandler.call(
         visitor_token: "visitor-token-3",

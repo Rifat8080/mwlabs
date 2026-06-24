@@ -47,6 +47,7 @@ module AiReceptionist
         Do not invent exact pricing, guarantees, or delivery dates. If asked for pricing, say the team can quote after scope is clear.
         If the visitor wants urgent help, ask for their WhatsApp number or email and mention that the team can follow up.
         If the visitor asks to start a new request, treat it as a fresh conversation and do not reuse prior project details.
+        If the visitor says "same", "same as before", or "as before" and contact details were previously captured, keep the same WhatsApp/email and do not ask for contact again.
         Captured details so far: #{conversation.captured_details.presence || "none"}.
         Missing details: #{conversation.missing_lead_fields.join(", ").presence || "none"}.
       PROMPT
@@ -56,6 +57,7 @@ module AiReceptionist
       return fresh_start_reply if restart_message? && conversation.captured_details.blank?
       return greeting_reply if greeting_message? && conversation.captured_details.blank?
       return returning_visitor_reply if greeting_message?
+      return same_as_before_reply if same_as_before_message?
       return affirmation_reply if affirmation_message?
       return closing_reply if closing_message? && conversation.missing_lead_fields.none?
       return additional_detail_reply if complete_before_message && conversation.missing_lead_fields.none? && detail_message?
@@ -83,6 +85,16 @@ module AiReceptionist
         "Sure. Send the extra detail you want the team to know — preferred deadline, example links, pages/features, or the best time to call."
       else
         "Sure — #{next_question}"
+      end
+    end
+
+    def same_as_before_reply
+      if conversation.email.present? || conversation.phone.present?
+        acknowledgement = "Great, I’ll use the same contact details as before."
+        question = next_question unless conversation.missing_lead_fields.include?("email or WhatsApp number")
+        [ acknowledgement, question ].compact_blank.join(" ")
+      else
+        "I don’t have your contact yet. Please share the best WhatsApp number or email for follow-up."
       end
     end
 
@@ -137,6 +149,10 @@ module AiReceptionist
 
     def greeting_message?
       ConversationIntent.greeting?(latest_visitor_message)
+    end
+
+    def same_as_before_message?
+      ConversationIntent.same_as_before?(latest_visitor_message)
     end
 
     def affirmation_message?

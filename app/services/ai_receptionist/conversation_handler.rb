@@ -117,8 +117,17 @@ module AiReceptionist
     end
 
     def start_new_conversation_from(conversation)
+      preserved_contact = {
+        lead: conversation.lead,
+        name: conversation.name,
+        email: conversation.email,
+        phone: conversation.phone,
+        country: conversation.country,
+        company_name: conversation.company_name
+      }.compact
+
       if external_id.present?
-        conversation.update!(reset_attributes)
+        conversation.update!(reset_attributes.merge(preserved_contact))
         return conversation
       end
 
@@ -126,7 +135,8 @@ module AiReceptionist
       AiReceptionistConversation.create!(
         channel: channel,
         visitor_token: SecureRandom.uuid,
-        metadata: conversation.metadata.merge(conversation_metadata)
+        metadata: conversation.metadata.merge(conversation_metadata),
+        **preserved_contact
       )
     end
 

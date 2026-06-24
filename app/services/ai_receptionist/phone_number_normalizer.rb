@@ -253,8 +253,9 @@ module AiReceptionist
 
         dial_code = dial_code_for(country)
         return normalize_with_country(digits, dial_code) if dial_code.present?
+        return digits if country.blank?
 
-        normalize_bangladesh_default(digits) || raw_phone
+        digits
       end
 
       def extract_country(text)
@@ -292,14 +293,6 @@ module AiReceptionist
         return if national_number.blank?
 
         "+#{dial_code}#{national_number}"
-      end
-
-      def normalize_bangladesh_default(digits)
-        return "+#{digits}" if digits.start_with?("880")
-        return "+880#{digits.delete_prefix('0')}" if digits.start_with?("01") && digits.length == 11
-        return "+880#{digits}" if digits.start_with?("1") && digits.length == 10
-
-        nil
       end
 
       def normalize_key(value)

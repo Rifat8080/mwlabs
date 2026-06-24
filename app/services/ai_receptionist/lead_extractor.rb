@@ -19,7 +19,7 @@ module AiReceptionist
       "Urgent" => %w[urgent asap immediately emergency today tomorrow],
       "High" => [ "soon", "this week", "this month", "next week", "fast", "quickly" ],
       "Low" => [ "no rush", "not urgent", "later", "future", "flexible", "flex" ],
-      "Normal" => %w[normal standard]
+      "Normal" => [ "normal", "standard", "not sure" ]
     }.freeze
 
     def initialize(conversation:, message:)
@@ -65,6 +65,8 @@ module AiReceptionist
     end
 
     def extract_name
+      return if ConversationIntent.control?(message)
+
       candidate = message[/\b(?:my name is|i am|i'm|this is)\s+([a-z][a-z\s.'-]{1,60})/i, 1]
       clean_person_name(candidate) || contextual_name
     end
@@ -185,6 +187,7 @@ module AiReceptionist
     def contextual_name
       return if conversation.name.present?
       return if greeting_only?
+      return if ConversationIntent.control?(message)
 
       candidate = message.split(/[,،]|(?:\s+and\s+)/i).find do |part|
         cleaned = part.gsub(/[+৳$]?\d[\d\s().-]*/, "").squish
