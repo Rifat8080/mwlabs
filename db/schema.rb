@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_24_094500) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_24_130618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -223,6 +223,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_24_094500) do
     t.uuid "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "custom_fields", default: [], null: false
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["client_id"], name: "index_leads_on_client_id"
   end
@@ -233,7 +234,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_24_094500) do
     t.string "notifiable_type"
     t.string "actor_type"
     t.jsonb "params", default: {}
-    t.datetime "read_at", precision: nil
+    t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "url"

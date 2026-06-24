@@ -100,6 +100,10 @@
     <% end %>
   </div>
 
+  <% if @resource.is_a?(Lead) %>
+    <%= render "admin/leads/custom_fields_form" %>
+  <% end %>
+
   <% if quote_form %>
     <div class="overflow-hidden rounded-[1.75rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_26rem),#f8fbff] shadow-xl shadow-blue-100/50">
       <div class="border-b border-blue-100/80 bg-white/60 px-5 py-4 lg:px-6">

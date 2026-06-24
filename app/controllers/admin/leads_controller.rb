@@ -24,5 +24,28 @@ module Admin
       ],
       includes: %i[ assigned_to client ]
     )
+
+    def import
+      @import_result = nil
+      render "admin/leads/import"
+    end
+
+    def process_import
+      @import_result = Leads::CsvImporter.new(file: params[:file], importer: current_user).call
+
+      if @import_result.success? && @import_result.failed_count.zero?
+        redirect_to admin_leads_path, notice: @import_result.summary_message
+      else
+        flash.now[:alert] = @import_result.fatal_error if @import_result.fatal_error.present?
+        flash.now[:notice] = @import_result.summary_message unless @import_result.fatal_error.present?
+        render "admin/leads/import", status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def resource_params
+      params.require(:lead).permit(*permitted_fields, custom_fields: [ :label, :value ])
+    end
   end
 end

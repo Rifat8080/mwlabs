@@ -20,6 +20,8 @@ class Lead < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :status, inclusion: { in: STATUSES }
 
+  before_validation :normalize_custom_fields
+
   after_create_commit :record_created_activity
   after_save_commit :sync_follow_up_reminder, if: :saved_change_to_follow_up_date?
   after_save :sync_client_from_status, if: :saved_change_to_status?
@@ -73,7 +75,40 @@ class Lead < ApplicationRecord
     created_client
   end
 
+  def add_custom_field!(label:, value:)
+    normalized_label = label.to_s.strip
+    normalized_value = value.to_s.strip
+    return false if normalized_label.blank? && normalized_value.blank?
+
+    update!(custom_fields: custom_fields + [ { "label" => normalized_label, "value" => normalized_value } ])
+  end
+
+  def remove_custom_field_at!(index)
+    fields = custom_fields.dup
+    return false unless index.between?(0, fields.length - 1)
+
+    fields.delete_at(index)
+    update!(custom_fields: fields)
+  end
+
   private
+
+  def normalize_custom_fields
+    entries = case custom_fields
+    when ActionController::Parameters, Hash
+      custom_fields.values
+    else
+      Array(custom_fields)
+    end
+
+    self.custom_fields = entries.filter_map do |field|
+      label = field["label"].to_s.strip
+      value = field["value"].to_s.strip
+      next if label.blank? && value.blank?
+
+      { "label" => label, "value" => value }
+    end
+  end
 
   def sync_client_from_status
     case status

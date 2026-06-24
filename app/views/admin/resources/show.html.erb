@@ -231,6 +231,10 @@
     <%= render "admin/projects/files", project: @resource %>
   <% end %>
 
+  <% if @resource.is_a?(Lead) %>
+    <%= render "admin/leads/custom_fields_panel", lead: @resource %>
+  <% end %>
+
   <% if @resource.is_a?(Quote) && @resource.quote_items.any? %>
     <section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 shadow-xl shadow-slate-200/70 backdrop-blur">
       <div class="border-b border-slate-100 bg-slate-50/70 px-5 py-4 lg:px-6">

@@ -18,7 +18,14 @@ Rails.application.routes.draw do
     end
 
     resources :users
-    resources :leads
+    resources :leads do
+      collection do
+        get :import
+        post :import, action: :process_import
+      end
+
+      resources :custom_fields, only: [ :create, :destroy ], controller: "lead_custom_fields", param: :index
+    end
     resources :clients
     resources :services
     resources :quotes do

@@ -1,0 +1,128 @@
+<% content_for :title, "Import Leads | M&W Labs Control Center" %>
+
+<div class="mx-auto w-full max-w-5xl space-y-6">
+  <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]"></div>
+    <div class="relative">
+      <%= link_to admin_leads_path, class: "inline-flex items-center gap-2 text-sm font-black text-cyan-100 transition hover:text-white" do %>
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+        Back to Leads
+      <% end %>
+      <div class="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.2em] text-cyan-100 backdrop-blur">
+        <i class="fa-solid fa-file-csv"></i>
+        CSV Import
+      </div>
+      <h1 class="mt-5 text-4xl font-black tracking-tight md:text-5xl">Import leads from CSV</h1>
+      <p class="mt-3 max-w-3xl text-sm font-semibold leading-7 text-slate-300">
+        Upload a spreadsheet export and every column will be preserved. Known CRM fields are mapped automatically and any extra columns become custom fields on each lead.
+      </p>
+    </div>
+  </section>
+
+  <section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+    <div class="mb-6">
+      <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Upload</p>
+      <h2 class="mt-2 text-xl font-black text-slate-950">Choose a CSV file</h2>
+      <p class="mt-1 text-sm font-semibold text-slate-500">The first row must contain column headers. UTF-8 and Excel-exported CSV files are supported.</p>
+    </div>
+
+    <%= form_with url: import_admin_leads_path, method: :post, multipart: true, class: "space-y-5" do |form| %>
+      <label class="block rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-6 transition hover:border-blue-200 hover:bg-blue-50/40">
+        <span class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">CSV file</span>
+        <%= form.file_field :file, accept: ".csv,text/csv", required: true, class: "mt-3 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
+      </label>
+
+      <div class="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 text-sm font-semibold leading-7 text-slate-600">
+        <p class="font-black text-slate-900">How columns are handled</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5">
+          <li>Standard headers like <strong>name</strong>, <strong>email</strong>, <strong>phone</strong>, <strong>company</strong>, <strong>status</strong>, and <strong>follow up date</strong> map to CRM fields.</li>
+          <li>Any column that does not match an existing field is saved as a custom field using the original header name.</li>
+          <li>Invalid status, source, or urgency values are kept in custom fields so no cell data is lost.</li>
+          <li>Rows without a name will use company, email, or another imported value to create the lead.</li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <%= link_to admin_leads_path, class: "inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-700 shadow-sm transition hover:bg-slate-50" do %>
+          <i class="fa-solid fa-xmark text-xs"></i>
+          Cancel
+        <% end %>
+        <%= form.submit "Import leads", class: "rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </section>
+
+  <% if @import_result.present? %>
+    <section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+      <div class="mb-5">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Import summary</p>
+        <h2 class="mt-2 text-xl font-black text-slate-950">Processing results</h2>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
+          <p class="text-xs font-black uppercase tracking-[0.14em] text-emerald-700">Imported</p>
+          <p class="mt-2 text-3xl font-black text-emerald-900"><%= @import_result.imported_count %></p>
+        </div>
+        <div class="rounded-2xl border border-rose-100 bg-rose-50 p-4">
+          <p class="text-xs font-black uppercase tracking-[0.14em] text-rose-700">Failed rows</p>
+          <p class="mt-2 text-3xl font-black text-rose-900"><%= @import_result.failed_count %></p>
+        </div>
+        <div class="rounded-2xl border border-violet-100 bg-violet-50 p-4">
+          <p class="text-xs font-black uppercase tracking-[0.14em] text-violet-700">Custom columns</p>
+          <p class="mt-2 text-3xl font-black text-violet-900"><%= @import_result.custom_columns.size %></p>
+        </div>
+      </div>
+
+      <% if @import_result.column_mapping.any? %>
+        <div class="mt-6">
+          <h3 class="text-sm font-black text-slate-950">Column mapping</h3>
+          <div class="mt-3 overflow-hidden rounded-2xl border border-slate-100">
+            <table class="min-w-full divide-y divide-slate-100 text-sm">
+              <thead class="bg-slate-50/80">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">CSV column</th>
+                  <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Saved as</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <% @import_result.column_mapping.each do |header, target| %>
+                  <tr>
+                    <td class="px-4 py-3 font-semibold text-slate-800"><%= header %></td>
+                    <td class="px-4 py-3">
+                      <% if target == "custom_field" %>
+                        <span class="inline-flex rounded-full bg-violet-50 px-2.5 py-1 text-xs font-black text-violet-700 ring-1 ring-violet-100">Custom field</span>
+                      <% else %>
+                        <span class="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-black text-blue-700 ring-1 ring-blue-100"><%= target.humanize %></span>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @import_result.custom_columns.any? %>
+        <div class="mt-6 rounded-2xl border border-violet-100 bg-violet-50/70 p-4">
+          <p class="text-sm font-black text-violet-900">Custom columns created from your file</p>
+          <p class="mt-2 text-sm font-semibold text-violet-800"><%= @import_result.custom_columns.join(", ") %></p>
+        </div>
+      <% end %>
+
+      <% if @import_result.row_errors.any? %>
+        <div class="mt-6">
+          <h3 class="text-sm font-black text-rose-900">Rows that could not be imported</h3>
+          <div class="mt-3 space-y-2">
+            <% @import_result.row_errors.each do |error| %>
+              <div class="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
+                Row <%= error[:row] %>: <%= error[:message] %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+</div>

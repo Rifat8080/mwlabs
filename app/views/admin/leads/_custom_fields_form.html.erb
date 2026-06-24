@@ -1,0 +1,61 @@
+<% param_prefix = "#{resource_model.model_name.param_key}[custom_fields]" %>
+<% fields = @resource.custom_fields.presence || [ { "label" => "", "value" => "" } ] %>
+
+<div class="overflow-hidden rounded-[1.75rem] border border-violet-100 bg-[radial-gradient(circle_at_top_right,_#f5f3ff,_transparent_26rem),#faf5ff] shadow-xl shadow-violet-100/50" data-controller="dynamic-fields" data-dynamic-fields-param-prefix-value="<%= param_prefix %>">
+  <div class="border-b border-violet-100/80 bg-white/60 px-5 py-4 lg:px-6">
+    <p class="text-xs font-black uppercase tracking-[0.18em] text-violet-600">Extra Details</p>
+    <h2 class="mt-2 text-xl font-black text-slate-950">Custom Fields</h2>
+    <p class="mt-1 text-sm font-medium text-slate-600">Add extra lead details such as industry, referral notes, or qualification data. Add or remove rows instantly without reloading.</p>
+  </div>
+
+  <div class="space-y-4 p-4 lg:p-6" data-dynamic-fields-target="container">
+    <% fields.each_with_index do |field, index| %>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-100 hover:shadow-xl hover:shadow-violet-100/50" data-dynamic-fields-row>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+          <div>
+            <label class="block text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Field label</label>
+            <input type="text" name="<%= param_prefix %>[<%= index %>][label]" value="<%= field["label"] %>" placeholder="Example: Industry" data-field-name="label" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold focus:border-violet-300 focus:outline-none focus:ring-4 focus:ring-violet-50">
+          </div>
+          <div>
+            <label class="block text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Value</label>
+            <input type="text" name="<%= param_prefix %>[<%= index %>][value]" value="<%= field["value"] %>" placeholder="Example: SaaS startup" data-field-name="value" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold focus:border-violet-300 focus:outline-none focus:ring-4 focus:ring-violet-50">
+          </div>
+          <div class="flex items-end">
+            <button type="button" data-action="dynamic-fields#remove" class="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-3 py-2.5 text-sm font-black text-rose-700 transition hover:bg-rose-100">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="border-t border-violet-100/80 bg-white/60 px-5 py-4 lg:px-6">
+    <button type="button" data-action="dynamic-fields#add" class="inline-flex items-center gap-2 rounded-2xl border border-violet-200 bg-white px-4 py-3 text-sm font-black text-violet-700 shadow-sm transition hover:bg-violet-50">
+      <i class="fa-solid fa-plus text-xs"></i>
+      Add custom field
+    </button>
+  </div>
+
+  <template data-dynamic-fields-target="template">
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-100 hover:shadow-xl hover:shadow-violet-100/50" data-dynamic-fields-row>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+        <div>
+          <label class="block text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Field label</label>
+          <input type="text" value="" placeholder="Example: Industry" data-field-name="label" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold focus:border-violet-300 focus:outline-none focus:ring-4 focus:ring-violet-50">
+        </div>
+        <div>
+          <label class="block text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Value</label>
+          <input type="text" value="" placeholder="Example: SaaS startup" data-field-name="value" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold focus:border-violet-300 focus:outline-none focus:ring-4 focus:ring-violet-50">
+        </div>
+        <div class="flex items-end">
+          <button type="button" data-action="dynamic-fields#remove" class="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-3 py-2.5 text-sm font-black text-rose-700 transition hover:bg-rose-100">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>

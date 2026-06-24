@@ -35,4 +35,26 @@ class LeadTest < ActiveSupport::TestCase
     assert_nil lead.reload.client
     assert_not Client.exists?(client.id)
   end
+
+  test "normalizes blank custom fields on save" do
+    lead = Lead.create!(
+      name: "Custom Field Lead",
+      custom_fields: [
+        { "label" => " Industry ", "value" => " SaaS " },
+        { "label" => "", "value" => "" }
+      ]
+    )
+
+    assert_equal [ { "label" => "Industry", "value" => "SaaS" } ], lead.custom_fields
+  end
+
+  test "adds and removes custom fields" do
+    lead = Lead.create!(name: "Field Ops")
+
+    assert lead.add_custom_field!(label: "Budget", value: "$5k")
+    assert_equal 1, lead.reload.custom_fields.size
+
+    assert lead.remove_custom_field_at!(0)
+    assert_equal [], lead.reload.custom_fields
+  end
 end
