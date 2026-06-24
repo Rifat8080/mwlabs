@@ -72,3 +72,8 @@ gem "prawn-svg", "~> 0.37"
 gem "prawn-table", "~> 0.2"
 
 gem "cancancan", "~> 3.6"
+
+gem "roo", "~> 3.0"
+gem "csv", "~> 3.3"
+
+gem "caxlsx", "~> 4.5", group: :test

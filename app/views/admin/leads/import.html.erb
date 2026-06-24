@@ -9,12 +9,12 @@
         Back to Leads
       <% end %>
       <div class="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.2em] text-cyan-100 backdrop-blur">
-        <i class="fa-solid fa-file-csv"></i>
-        CSV Import
+        <i class="fa-solid fa-file-arrow-up"></i>
+        Spreadsheet Import
       </div>
-      <h1 class="mt-5 text-4xl font-black tracking-tight md:text-5xl">Import leads from CSV</h1>
+      <h1 class="mt-5 text-4xl font-black tracking-tight md:text-5xl">Import leads from CSV or Excel</h1>
       <p class="mt-3 max-w-3xl text-sm font-semibold leading-7 text-slate-300">
-        Upload a spreadsheet export and every column will be preserved. Known CRM fields are mapped automatically and any extra columns become custom fields on each lead.
+        Upload a CSV, XLSX, or XLS export and every column will be preserved. Known CRM fields are mapped automatically and any extra columns become custom fields on each lead.
       </p>
     </div>
   </section>
@@ -22,14 +22,14 @@
   <section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
     <div class="mb-6">
       <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Upload</p>
-      <h2 class="mt-2 text-xl font-black text-slate-950">Choose a CSV file</h2>
-      <p class="mt-1 text-sm font-semibold text-slate-500">The first row must contain column headers. UTF-8 and Excel-exported CSV files are supported.</p>
+      <h2 class="mt-2 text-xl font-black text-slate-950">Choose a spreadsheet file</h2>
+      <p class="mt-1 text-sm font-semibold text-slate-500">The first row must contain column headers. CSV, Excel (.xlsx), and legacy Excel (.xls) files are supported.</p>
     </div>
 
     <%= form_with url: import_admin_leads_path, method: :post, multipart: true, class: "space-y-5" do |form| %>
       <label class="block rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-6 transition hover:border-blue-200 hover:bg-blue-50/40">
-        <span class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">CSV file</span>
-        <%= form.file_field :file, accept: ".csv,text/csv", required: true, class: "mt-3 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
+        <span class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">Spreadsheet file</span>
+        <%= form.file_field :file, accept: ".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel", required: true, class: "mt-3 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
       </label>
 
       <div class="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 text-sm font-semibold leading-7 text-slate-600">
@@ -38,6 +38,7 @@
           <li>Standard headers like <strong>name</strong>, <strong>email</strong>, <strong>phone</strong>, <strong>company</strong>, <strong>status</strong>, and <strong>follow up date</strong> map to CRM fields.</li>
           <li>Any column that does not match an existing field is saved as a custom field using the original header name.</li>
           <li>Invalid status, source, or urgency values are kept in custom fields so no cell data is lost.</li>
+          <li>Excel dates and whole-number phone values are normalized automatically during import.</li>
           <li>Rows without a name will use company, email, or another imported value to create the lead.</li>
         </ul>
       </div>
@@ -81,7 +82,7 @@
             <table class="min-w-full divide-y divide-slate-100 text-sm">
               <thead class="bg-slate-50/80">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">CSV column</th>
+                  <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">File column</th>
                   <th class="px-4 py-3 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Saved as</th>
                 </tr>
               </thead>

@@ -11,7 +11,7 @@ module Admin
       get import_admin_leads_url
 
       assert_response :success
-      assert_select "h1", text: /Import leads from CSV/
+      assert_select "h1", text: /Import leads from CSV or Excel/
       assert_select "form[action=?]", import_admin_leads_path
     end
 
@@ -20,7 +20,7 @@ module Admin
       get admin_leads_url
 
       assert_response :success
-      assert_select "a[href=?]", import_admin_leads_path, text: /Import CSV/
+      assert_select "a[href=?]", import_admin_leads_path, text: /Import CSV \/ Excel/
     end
 
     test "admin can import leads from uploaded csv" do
@@ -59,6 +59,26 @@ module Admin
       assert_select "h2", text: /Processing results/
       assert_select "body", text: /Failed rows/
       assert Lead.exists?(email: "valid@example.com")
+    end
+
+    test "admin can import leads from uploaded xlsx" do
+      sign_in @admin
+
+      xlsx = fixture_file_upload(csv_fixture("leads_import_sample.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+      assert_difference -> { Lead.count }, 1 do
+        post import_admin_leads_url, params: { file: xlsx }
+      end
+
+      assert_redirected_to admin_leads_url
+
+      lead = Lead.find_by!(email: "excel@example.com")
+      assert_equal "Excel User", lead.name
+      assert_equal "8801700000002", lead.phone
+      assert_equal "Excel Co", lead.company_name
+      assert_equal "Excel Import", lead.source
+      assert_includes lead.custom_fields, { "label" => "LinkedIn URL", "value" => "https://linkedin.com/in/excel" }
+      assert_includes lead.custom_fields, { "label" => "Campaign ID", "value" => "CMP-EXCEL" }
     end
 
     private

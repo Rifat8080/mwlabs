@@ -1,7 +1,16 @@
 require "csv"
+require "roo"
 
 module Leads
   class CsvImporter
+    ImportTable = Data.define(:headers, :rows) do
+      def each_with_index
+        rows.each_with_index { |row, index| yield(row, index) }
+      end
+    end
+
+    SUPPORTED_EXTENSIONS = %w[.csv .xlsx .xls].freeze
+
     Result = Data.define(
       :imported_count,
       :failed_count,
@@ -62,17 +71,17 @@ module Leads
     end
 
     def call
-      return failure("Please choose a CSV file to import.") if file.blank?
+      return failure("Please choose a CSV or Excel file to import.") if file.blank?
+      return failure("Unsupported file type. Upload a .csv, .xlsx, or .xls file.") unless supported_format?
 
-      content = read_file_content
-      return failure("The uploaded file is empty.") if content.blank?
+      table = parse_upload
+      return failure("The uploaded file is empty.") if table.headers.blank?
 
-      table = parse_csv(content)
       plan = build_column_plan(table.headers)
       custom_columns = plan.filter_map { |column| column[:header] if column[:target] == :custom_field }
 
       if custom_columns.any? && !Lead.custom_fields_supported?
-        return failure("This CSV has extra columns (#{custom_columns.join(', ')}) but custom fields are not enabled yet. Run bin/rails db:migrate on the server, then retry the import.")
+        return failure("This file has extra columns (#{custom_columns.join(', ')}) but custom fields are not enabled yet. Run bin/rails db:migrate on the server, then retry the import.")
       end
 
       imported_count = 0
@@ -90,7 +99,7 @@ module Leads
 
         lead_attributes = build_lead_attributes(row, plan)
         lead = Lead.new(lead_attributes)
-        lead.source = lead.source.presence || "CSV Import"
+        lead.source = lead.source.presence || import_source_label
 
         if lead.save
           imported_count += 1
@@ -112,6 +121,10 @@ module Leads
       )
     rescue CSV::MalformedCSVError => error
       failure("The CSV file could not be read: #{error.message}")
+    rescue StandardError => error
+      return failure("The CSV file could not be read: #{error.message}") if file_format == :csv
+
+      failure("The Excel file could not be read: #{error.message}")
     end
 
     private
@@ -130,19 +143,112 @@ module Leads
       )
     end
 
+    def supported_format?
+      file_format.present?
+    end
+
+    def file_format
+      @file_format ||= detect_file_format
+    end
+
+    def detect_file_format
+      extension = File.extname(uploaded_filename.to_s).downcase
+      return extension.delete_prefix(".").to_sym if SUPPORTED_EXTENSIONS.include?(extension)
+
+      if file.respond_to?(:content_type)
+        case file.content_type.to_s.downcase
+        when "text/csv", "application/csv"
+          return :csv
+        when "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          return :xlsx
+        when "application/vnd.ms-excel"
+          return :xls
+        end
+      end
+
+      :csv if uploaded_filename.blank?
+    end
+
+    def uploaded_filename
+      return file.original_filename if file.respond_to?(:original_filename)
+
+      file.path if file.respond_to?(:path)
+    end
+
+    def import_source_label
+      file_format == :csv ? "CSV Import" : "Excel Import"
+    end
+
+    def parse_upload
+      case file_format
+      when :csv
+        parse_csv_table(read_file_content)
+      when :xlsx, :xls
+        parse_excel_table
+      end
+    end
+
     def read_file_content
-      raw = file.respond_to?(:read) ? file.read : file.to_s
+      io = file.respond_to?(:tempfile) ? file.tempfile : file
+      io.rewind if io.respond_to?(:rewind)
+      raw = io.read
       raw = raw.delete_prefix("\uFEFF")
       raw.strip
     end
 
-    def parse_csv(content)
-      CSV.parse(
+    def parse_csv_table(content)
+      return ImportTable.new([], []) if content.blank?
+
+      csv = CSV.parse(
         content,
         headers: true,
         liberal_parsing: true,
         skip_blanks: false
       )
+
+      headers = Array(csv.headers).map { |header| header_label(header) }
+      rows = csv.map { |row| row_hash(headers, row.fields) }
+      ImportTable.new(headers, rows)
+    end
+
+    def parse_excel_table
+      spreadsheet = Roo::Spreadsheet.open(import_path, extension: file_format)
+      sheet = spreadsheet.sheet(0)
+
+      return ImportTable.new([], []) if sheet.last_row.nil? || sheet.last_row < 1
+
+      headers = sheet.row(1).each_with_index.map do |header, index|
+        header_label(header, fallback: "Column #{index + 1}")
+      end
+
+      rows = (2..sheet.last_row).map do |row_number|
+        row_hash(headers, sheet.row(row_number))
+      end
+
+      ImportTable.new(headers, rows)
+    end
+
+    def import_path
+      return @import_path if defined?(@import_path) && @import_path.present?
+
+      if file.respond_to?(:tempfile)
+        @import_path = file.tempfile.path
+      elsif file.respond_to?(:path) && File.exist?(file.path.to_s)
+        @import_path = file.path
+      else
+        extension = ".#{file_format}"
+        @tempfile = Tempfile.new([ "lead_import", extension ])
+        @tempfile.binmode
+        @tempfile.write(file.respond_to?(:read) ? file.read : file.to_s)
+        @tempfile.flush
+        @import_path = @tempfile.path
+      end
+    end
+
+    def row_hash(headers, values)
+      headers.each_with_index.to_h do |header, index|
+        [ header, values[index] ]
+      end
     end
 
     def build_column_plan(headers)
@@ -177,8 +283,8 @@ module Leads
       header.to_s.strip.downcase.gsub(/[^a-z0-9]+/, "_").gsub(/\A_|_\z/, "")
     end
 
-    def header_label(header)
-      header.to_s.strip.presence || "Imported column"
+    def header_label(header, fallback: "Imported column")
+      header.to_s.strip.presence || fallback
     end
 
     def mapping_summary(plan)
@@ -192,14 +298,14 @@ module Leads
     end
 
     def row_blank?(row)
-      row.fields.all? { |value| value.to_s.strip.blank? }
+      row.values.all? { |value| normalize_cell(value).blank? }
     end
 
     def build_lead_attributes(row, plan)
       attributes = { custom_fields: [] }
 
       plan.each do |column|
-        value = row[column[:header]].to_s.strip
+        value = normalize_cell(row[column[:header]]).strip
         next if value.blank?
 
         if column[:target] == :attribute
@@ -212,6 +318,17 @@ module Leads
       attributes[:name] = infer_name(attributes) if attributes[:name].blank?
       attributes[:custom_fields].uniq! { |field| [ field["label"], field["value"] ] }
       attributes
+    end
+
+    def normalize_cell(value)
+      return "" if value.nil?
+      return value.strftime("%Y-%m-%d") if value.is_a?(Date)
+      return value.strftime("%Y-%m-%d") if value.is_a?(Time) || value.is_a?(DateTime)
+      if value.is_a?(Float) && value.finite? && value == value.floor
+        return value.floor.to_s
+      end
+
+      value.to_s.strip
     end
 
     def assign_attribute(attributes, attribute, header, value)
@@ -354,7 +471,7 @@ module Leads
         subject: lead,
         user: importer,
         action: "Lead imported",
-        details: "Imported from CSV."
+        details: "Imported from #{import_source_label}."
       )
     end
   end

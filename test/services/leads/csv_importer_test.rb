@@ -143,7 +143,52 @@ class Leads::CsvImporterTest < ActiveSupport::TestCase
     assert_match(/could not be read/i, result.fatal_error)
   end
 
+  test "imports excel xlsx files with normalized phone numbers" do
+    result = import_file(
+      Rails.root.join("test/fixtures/files/leads_import_sample.xlsx"),
+      content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    assert result.success?
+    assert_equal 1, result.imported_count
+
+    lead = Lead.find_by!(email: "excel@example.com")
+    assert_equal "8801700000002", lead.phone
+    assert_equal "Excel Import", lead.source
+  end
+
+  test "rejects unsupported file types" do
+    result = import_file(
+      StringIO.new("not a spreadsheet"),
+      filename: "leads.txt",
+      content_type: "text/plain"
+    )
+
+    assert_not result.success?
+    assert_match(/Unsupported file type/i, result.fatal_error)
+  end
+
   private
+
+  def import_file(path_or_io, filename: nil, content_type: nil)
+    file = if path_or_io.is_a?(String) || path_or_io.is_a?(Pathname)
+      uploaded_file(path_or_io, content_type || "application/octet-stream")
+    else
+      if filename
+        path_or_io.define_singleton_method(:original_filename) { filename }
+      end
+      if content_type
+        path_or_io.define_singleton_method(:content_type) { content_type }
+      end
+      path_or_io
+    end
+
+    Leads::CsvImporter.new(file: file, importer: @admin).call
+  end
+
+  def uploaded_file(path, content_type)
+    Rack::Test::UploadedFile.new(path, content_type)
+  end
 
   def import_csv(content)
     file = StringIO.new(content)
