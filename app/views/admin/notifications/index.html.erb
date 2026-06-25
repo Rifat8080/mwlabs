@@ -1,3 +1,6 @@
+<% content_for :title, "Notifications | M&W Labs Control Center" %>
+<% content_for :meta_description, "Track client activity, project updates, lead changes, and quote events in the M&W Labs Control Center notification workspace." %>
+
 <% total_count = current_user.notifications.count %>
 <% unread_count = current_user.notifications.unread.count %>
 <% read_count = total_count - unread_count %>

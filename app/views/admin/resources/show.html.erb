@@ -1,4 +1,5 @@
 <% content_for :title, "#{resource_model.model_name.human} | M&W Labs Control Center" %>
+<% content_for :meta_description, "View #{admin_resource_record_title(@resource)} in the M&W Labs Control Center. #{resource_description}" %>
 
 <div class="space-y-6">
   <% if @resource.is_a?(Quote) && @resource.negotiation_open? %>

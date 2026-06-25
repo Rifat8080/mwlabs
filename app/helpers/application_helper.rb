@@ -1,4 +1,16 @@
 module ApplicationHelper
+  def default_meta_description
+    "M&W Labs helps startups and businesses build, market, automate, and scale with websites, software, digital marketing, branding, content, AI automation, and growth strategy."
+  end
+
+  def admin_meta_description
+    "M&W Labs Control Center for managing leads, clients, quotes, projects, tasks, invoices, files, payments, expenses, follow-ups, and client portal collaboration."
+  end
+
+  def meta_description_content(default: default_meta_description)
+    strip_tags(content_for(:meta_description).presence || default).squish
+  end
+
   def admin_field_label(field)
     field[:label].presence || field[:name].to_s.humanize
   end

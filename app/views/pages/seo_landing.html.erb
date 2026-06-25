@@ -1,6 +1,6 @@
 <% content_for :title, @seo_page[:title] %>
+<% content_for :meta_description, @seo_page[:description] %>
 <% content_for :head do %>
-  <meta name="description" content="<%= @seo_page[:description] %>">
   <link rel="canonical" href="<%= seo_landing_url(@seo_page[:slug]) %>">
 <% end %>
 

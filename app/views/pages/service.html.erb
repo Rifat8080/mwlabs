@@ -1,4 +1,5 @@
 <% content_for :title, "#{@service[:title]} | Mwlabs" %>
+<% content_for :meta_description, @service[:summary] %>
 
 <%= render "pages/shared/hero",
   eyebrow: @service[:eyebrow],
