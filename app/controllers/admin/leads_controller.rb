@@ -42,13 +42,36 @@ module Admin
       end
     end
 
+    def update
+      if params.dig(:lead, :client_answers).present? || params.dig(:lead, :caller_notes).present? || params.dig(:lead, :question_answers).present?
+        @resource = resource_scope.find(params[:id])
+        authorize! :manage, @resource
+
+        safe_question_answers = params.require(:lead).permit(question_answers: {}).dig(:question_answers) || {}
+
+        @resource.append_cold_call_feedback!(
+          client_answers: params.dig(:lead, :client_answers),
+          caller_notes: params.dig(:lead, :caller_notes),
+          question_answers: safe_question_answers
+        )
+
+        respond_to do |format|
+          format.html { redirect_to polymorphic_path([ :admin, @resource ]), notice: "Call notes saved." }
+          format.js { render partial: "admin/leads/cold_calling_panel", locals: { lead: @resource.reload } }
+          format.any { render partial: "admin/leads/cold_calling_panel", locals: { lead: @resource.reload } }
+        end
+      else
+        super
+      end
+    end
+
     private
 
     def resource_params
       if Lead.custom_fields_supported?
-        params.require(:lead).permit(*permitted_fields, custom_fields: [ :label, :value ])
+        params.require(:lead).permit(*permitted_fields, :client_answers, :caller_notes, question_answers: {}, custom_fields: [ :label, :value ])
       else
-        params.require(:lead).permit(*permitted_fields)
+        params.require(:lead).permit(*permitted_fields, :client_answers, :caller_notes, question_answers: {})
       end
     end
   end

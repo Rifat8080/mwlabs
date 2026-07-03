@@ -34,6 +34,28 @@ module ApplicationHelper
     end
   end
 
+  def admin_value_copyable?(value)
+    value.is_a?(String) && value.present? && !admin_value_link?(value)
+  end
+
+  def admin_value_link?(value)
+    return false unless value.is_a?(String)
+
+    normalized = value.strip
+    normalized.match?(/\A(?:https?:\/\/|mailto:|tel:|www\.)/i) || normalized.match?(/\A[^@\s]+@[^@\s]+\.[^@\s]+\z/)
+  end
+
+  def admin_value_link_url(value)
+    return value unless value.is_a?(String)
+
+    normalized = value.strip
+    if normalized.match?(/\Awww\./i)
+      "https://#{normalized}"
+    else
+      normalized
+    end
+  end
+
   def admin_status_class(status)
     case status.to_s
     when "Won", "Accepted", "Paid", "Done", "Completed", "Delivered", "Active", "Approved", "Published"

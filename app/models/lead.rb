@@ -73,6 +73,157 @@ class Lead < ApplicationRecord
     end
   end
 
+  def cold_call_script_steps
+    [
+      {
+        title: "Step 1: Introduction",
+        lines: [
+          "Hello, is this #{company_name.present? ? company_name : '[Business Owner Name]'}?",
+          "Hi [Name], my name is [Your Name] from M&W Labs.",
+          "I’m not calling to sell anything right now. I was looking at businesses in your area and noticed your online presence, so I wanted to ask you a quick question.",
+          "Have I caught you at a bad time?"
+        ]
+      },
+      {
+        title: "Step 2: If they say no",
+        lines: [
+          "If they have a website: I had a look at your website before calling. Can I ask, are you getting enough enquiries or customers from it right now?",
+          "If they do not have a website: I noticed you don’t currently have a website. Are most of your customers finding you through referrals, social media, or something else?"
+        ]
+      },
+      {
+        title: "Step 3: Ask questions",
+        lines: [
+          "How do most of your customers find you?",
+          "Would you like to get more enquiries or customers this year?",
+          "What’s the biggest challenge in growing the business right now?"
+        ]
+      },
+      {
+        title: "Step 4: Relate their problem",
+        lines: [
+          "I understand. We speak with a lot of business owners who have the same challenge.",
+          "The problem is that many businesses lose customers online because their website isn’t converting visitors into enquiries."
+        ]
+      },
+      {
+        title: "Step 5: Explain what M&W Labs does",
+        lines: [
+          "At M&W Labs, we help businesses attract more customers online.",
+          "We build modern websites and improve existing ones so they generate more enquiries, build trust, and help businesses grow."
+        ]
+      },
+      {
+        title: "Step 6: Offer free value",
+        lines: [
+          "We’re currently offering a free website and online presence review.",
+          "We’ll show you what’s working, what’s not working, and what improvements could help bring in more customers."
+        ]
+      },
+      {
+        title: "Step 7: Book a meeting",
+        lines: [
+          "Would you be open to a quick 15-minute call with one of our specialists this week?"
+        ]
+      }
+    ]
+  end
+
+  def cold_call_note_prompts
+    [
+      "How do most customers find you?",
+      "Would you like more enquiries or customers this year?",
+      "What is the biggest challenge in growing the business right now?",
+      "Next step / meeting booked"
+    ]
+  end
+
+  def cold_call_questions
+    cold_call_note_prompts.map do |prompt|
+      {
+        key: prompt.parameterize(separator: "_"),
+        label: prompt
+      }
+    end
+  end
+
+  def cold_call_answer_values
+    values = { question_answers: {}, client_answers: "", caller_notes: "" }
+    return values if notes.blank?
+
+    current_section = nil
+    notes.to_s.lines.each do |line|
+      line = line.chomp
+      case line.strip
+      when "Client answers:"
+        current_section = :client_answers
+        next
+      when "Question answers:"
+        current_section = :question_answers
+        next
+      when "Caller notes:"
+        current_section = :caller_notes
+        next
+      end
+
+      next if line.strip.blank?
+
+      case current_section
+      when :question_answers
+        if line =~ /\A(.+?):\s*(.*)\z/
+          label = Regexp.last_match(1).strip
+          answer = Regexp.last_match(2).strip
+          question_key = cold_call_questions.find { |item| item[:label] == label }&.dig(:key) || label.parameterize(separator: "_")
+          values[:question_answers][question_key] = answer
+        end
+      when :client_answers
+        values[:client_answers] += "\n" unless values[:client_answers].blank?
+        values[:client_answers] += line
+      when :caller_notes
+        values[:caller_notes] += "\n" unless values[:caller_notes].blank?
+        values[:caller_notes] += line
+      end
+    end
+
+    values
+  end
+
+  def cold_call_note_template
+    <<~TEXT
+      Prospect summary:
+      - Customer needs:
+      - Main objection:
+      - Follow-up plan:
+      - Next step / meeting booked:
+    TEXT
+  end
+
+  def append_cold_call_feedback!(client_answers:, caller_notes:, question_answers: {})
+    safe_question_answers = question_answers.respond_to?(:to_unsafe_h) ? question_answers.to_unsafe_h : question_answers.to_h
+
+    payload = []
+    payload << "Client answers:" if client_answers.present?
+    payload << client_answers.to_s.strip if client_answers.present?
+
+    question_lines = safe_question_answers.transform_values(&:to_s).filter_map do |key, answer|
+      answer_text = answer.strip
+      next if answer_text.blank?
+      question = cold_call_questions.find { |item| item[:key] == key }
+      "#{question ? question[:label] : key.to_s.humanize}: #{answer_text}"
+    end
+
+    if question_lines.any?
+      payload << "Question answers:"
+      payload.concat(question_lines)
+    end
+
+    payload << "Caller notes:" if caller_notes.present?
+    payload << caller_notes.to_s.strip if caller_notes.present?
+
+    combined = [ notes.presence, payload.join("\n") ].compact.join("\n\n")
+    update!(notes: combined)
+  end
+
   def convert_to_client!
     return client if client.present?
 

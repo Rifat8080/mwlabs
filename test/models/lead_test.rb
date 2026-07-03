@@ -65,4 +65,22 @@ class LeadTest < ActiveSupport::TestCase
   test "custom_fields_supported reflects the database schema" do
     assert_equal Lead.column_names.include?("custom_fields"), Lead.custom_fields_supported?
   end
+
+  test "provides a beginner-friendly cold calling script and note prompts" do
+    lead = Lead.new(name: "Cold Caller Lead")
+
+    assert_includes lead.cold_call_script_steps.map { |step| step[:title] }, "Step 1: Introduction"
+    assert_includes lead.cold_call_note_prompts, "How do most customers find you?"
+    assert_includes lead.cold_call_note_template, "Next step / meeting booked"
+  end
+
+  test "appends cold call answers into the lead notes" do
+    lead = Lead.create!(name: "Call Notes Lead", notes: "Existing note")
+
+    lead.append_cold_call_feedback!(client_answers: "They want more enquiries", caller_notes: "Booked a follow-up")
+
+    assert_includes lead.reload.notes, "Client answers"
+    assert_includes lead.reload.notes, "They want more enquiries"
+    assert_includes lead.reload.notes, "Booked a follow-up"
+  end
 end

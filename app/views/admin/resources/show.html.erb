@@ -26,7 +26,7 @@
   <% end %>
 
   <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]"></div>
+    <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]" aria-hidden="true"></div>
     <div class="relative space-y-6">
       <%= link_to polymorphic_path([ :admin, resource_model ]), class: "inline-flex items-center gap-2 text-sm font-black text-cyan-100 transition hover:text-white" do %>
         <i class="fa-solid fa-arrow-left text-xs"></i>
@@ -180,7 +180,7 @@
 
       <% if @resource.is_a?(Quote) %>
         <section class="relative overflow-hidden rounded-[1.75rem] border border-blue-400/20 bg-slate-950 p-5 text-white shadow-2xl shadow-slate-900/20 lg:p-6">
-          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.45),_transparent_18rem)]"></div>
+          <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.45),_transparent_18rem)]" aria-hidden="true"></div>
           <div class="relative">
             <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Quote Totals</p>
             <div class="mt-4 space-y-2 text-sm">
@@ -233,6 +233,7 @@
   <% end %>
 
   <% if @resource.is_a?(Lead) %>
+    <%= render "admin/leads/cold_calling_panel", lead: @resource %>
     <%= render "admin/leads/custom_fields_panel", lead: @resource %>
   <% end %>
 
