@@ -1,22 +1,30 @@
-<section data-controller="cold-calling" data-cold-calling-panel class="rounded-[1.75rem] border border-emerald-100 bg-emerald-50/80 p-5 shadow-lg shadow-emerald-100/40 lg:p-6">
-  <div class="flex items-start gap-3">
-    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
-      <i class="fa-solid fa-phone-volume"></i>
-    </span>
-    <div class="min-w-0">
-      <p class="text-xs font-black uppercase tracking-[0.16em] text-emerald-700">Cold calling guide</p>
-      <h2 class="mt-2 text-lg font-black text-slate-950">Beginner-friendly script for callers</h2>
-      <p class="mt-2 text-sm font-semibold leading-6 text-slate-700">
-        This framework keeps the conversation natural, helps the caller listen more than talk, and gives them a simple structure for taking notes.
-      </p>
+<details data-controller="cold-calling" data-cold-calling-panel class="group rounded-[1.75rem] border border-emerald-100 bg-emerald-50/80 p-5 shadow-lg shadow-emerald-100/40 lg:p-6">
+  <summary class="list-none flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between cursor-pointer">
+    <div class="flex items-start gap-3">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
+        <i class="fa-solid fa-phone-volume"></i>
+      </span>
+      <div class="min-w-0">
+        <p class="text-xs font-black uppercase tracking-[0.16em] text-emerald-700">Cold calling guide</p>
+        <h2 class="mt-2 text-lg font-black text-slate-950">Beginner-friendly script for callers</h2>
+        <p class="mt-2 text-sm font-semibold leading-6 text-slate-700">
+          This framework keeps the conversation natural, helps the caller listen more than talk, and gives them a simple structure for taking notes.
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div class="mt-4 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm">
-    <span data-cold-calling-target="status">Ready to save answers without reloading.</span>
-  </div>
+    <span class="inline-flex items-center gap-2 self-start rounded-full border border-emerald-200 bg-white px-4 py-2 text-sm font-black text-emerald-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50">
+      Open cold call guide
+      <i class="fa-solid fa-chevron-down text-xs transition duration-200 group-open:-rotate-180"></i>
+    </span>
+  </summary>
 
-  <%= form_with model: [:admin, lead], url: admin_lead_path(lead), method: :patch, local: true, data: { action: "submit->cold-calling#submit", cold_calling_target: "form" }, class: "mt-6 space-y-6" do |form| %>
+  <div class="mt-6">
+    <div class="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm">
+      <span data-cold-calling-target="status">Ready to save answers without reloading.</span>
+    </div>
+
+    <%= form_with model: [:admin, lead], url: admin_lead_path(lead), method: :patch, local: true, data: { action: "submit->cold-calling#submit", cold_calling_target: "form" }, class: "mt-6 space-y-6" do |form| %>
     <% saved_answers = lead.cold_call_answer_values %>
     <div class="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
       <div class="rounded-[1.5rem] border border-emerald-200 bg-white/95 p-5 shadow-sm">
@@ -84,4 +92,4 @@
       <% end %>
     </ul>
   </div>
-</section>
+</details>

@@ -65,6 +65,10 @@ module Admin
       end
     end
 
+    def visible_resource_columns
+      super.reject { |column| column == :source }
+    end
+
     private
 
     def resource_params
