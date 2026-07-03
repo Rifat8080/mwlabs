@@ -43,10 +43,10 @@ module Admin
     end
 
     def update
-      if params.dig(:lead, :client_answers).present? || params.dig(:lead, :caller_notes).present? || params.dig(:lead, :question_answers).present?
-        @resource = resource_scope.find(params[:id])
-        authorize! :manage, @resource
+      @resource = resource_scope.find(params[:id])
+      authorize! :manage, @resource
 
+      if params.dig(:lead, :client_answers).present? || params.dig(:lead, :caller_notes).present? || params.dig(:lead, :question_answers).present?
         safe_question_answers = params.require(:lead).permit(question_answers: {}).dig(:question_answers) || {}
 
         @resource.append_cold_call_feedback!(
@@ -57,11 +57,27 @@ module Admin
 
         respond_to do |format|
           format.html { redirect_to polymorphic_path([ :admin, @resource ]), notice: "Call notes saved." }
-          format.js { render partial: "admin/leads/cold_calling_panel", locals: { lead: @resource.reload } }
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("lead-show-details", partial: "admin/leads/show_details", locals: { lead: @resource.reload, resource_fields: visible_resource_fields })
+          end
           format.any { render partial: "admin/leads/cold_calling_panel", locals: { lead: @resource.reload } }
         end
+      elsif @resource.update(resource_params)
+        respond_to do |format|
+          format.html { redirect_to polymorphic_path([ :admin, @resource ]), notice: "Lead updated." }
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("lead-show-details", partial: "admin/leads/show_details", locals: { lead: @resource.reload, resource_fields: visible_resource_fields })
+          end
+          format.any { render partial: "admin/leads/show_details", locals: { lead: @resource.reload, resource_fields: visible_resource_fields } }
+        end
       else
-        super
+        respond_to do |format|
+          format.html { render "admin/resources/show", status: :unprocessable_entity }
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("lead-show-details", partial: "admin/leads/show_details", locals: { lead: @resource, resource_fields: visible_resource_fields }), status: :unprocessable_entity
+          end
+          format.any { render plain: "Unable to save lead", status: :unprocessable_entity }
+        end
       end
     end
 

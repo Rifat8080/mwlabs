@@ -112,8 +112,8 @@
     </div>
   </section>
 
-  <div class="grid gap-6 xl:grid-cols-3">
-    <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6 xl:col-span-2">
+  <div class="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+    <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Record Details</p>
@@ -122,35 +122,74 @@
         <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-slate-600"><%= resource_model.model_name.human %></span>
       </div>
 
-      <dl class="mt-5 grid gap-4 sm:grid-cols-2">
-        <% visible_resource_fields.each do |field| %>
-          <% next if field[:type] == :quote_items %>
-          <% next if @resource.is_a?(BlogPost) && field[:name] == :body %>
-          <% value = field_value(@resource, field) %>
-          <div class="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 transition hover:border-blue-100 hover:bg-white">
-            <dt class="text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-400"><%= admin_field_label(field) %></dt>
-            <dd class="mt-2 break-words text-sm font-semibold text-slate-900"><%= admin_value(value) %></dd>
-          </div>
+      <% if @resource.is_a?(Lead) %>
+        <%= turbo_frame_tag "lead-show-details" do %>
+          <%= render "admin/leads/show_details", lead: @resource, resource_fields: visible_resource_fields %>
         <% end %>
-      </dl>
+      <% else %>
+        <dl class="mt-5 grid gap-4 sm:grid-cols-2">
+          <% visible_resource_fields.each do |field| %>
+            <% next if field[:type] == :quote_items %>
+            <% next if @resource.is_a?(BlogPost) && field[:name] == :body %>
+            <% value = field_value(@resource, field) %>
+            <div class="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 transition hover:border-blue-100 hover:bg-white">
+              <dt class="text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-400"><%= admin_field_label(field) %></dt>
+              <dd class="mt-2 break-words text-sm font-semibold text-slate-900"><%= admin_value(value) %></dd>
+            </div>
+          <% end %>
+        </dl>
+      <% end %>
     </section>
 
-    <div class="space-y-6">
-      <% if @resource.respond_to?(:next_action) %>
-        <section class="rounded-[1.75rem] border border-amber-100 bg-amber-50/80 p-5 shadow-lg shadow-amber-100/40 lg:p-6">
+    <% if @resource.is_a?(Lead) %>
+      <div class="space-y-6">
+        <section class="rounded-[1.75rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-5 shadow-xl shadow-amber-100/50 backdrop-blur lg:p-6">
           <div class="flex items-start gap-3">
-            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-amber-600 shadow-sm">
-              <i class="fa-solid fa-route"></i>
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-200">
+              <i class="fa-solid fa-bullseye"></i>
             </span>
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.16em] text-amber-700">Recommended Next Action</p>
-              <p class="mt-2 text-sm font-semibold leading-6 text-slate-700"><%= @resource.next_action %></p>
+              <p class="text-xs font-black uppercase tracking-[0.16em] text-amber-700">Recommended next action</p>
+              <p class="mt-2 text-sm font-semibold leading-7 text-slate-700"><%= @resource.next_action %></p>
             </div>
           </div>
         </section>
-      <% end %>
 
-      <% if @resource.is_a?(FileUpload) %>
+        <section class="rounded-[1.75rem] border border-slate-100 bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+          <div class="flex items-center gap-2">
+            <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+              <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Lead snapshot</p>
+              <h3 class="text-lg font-black text-slate-950">At a glance</h3>
+            </div>
+          </div>
+
+          <dl class="mt-5 space-y-3 text-sm">
+            <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+              <dt class="font-semibold text-slate-500">Status</dt>
+              <dd class="font-black text-slate-900"><%= @resource.status.presence || "New" %></dd>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+              <dt class="font-semibold text-slate-500">Source</dt>
+              <dd class="font-black text-slate-900"><%= @resource.source.presence || "Manual" %></dd>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+              <dt class="font-semibold text-slate-500">Assigned</dt>
+              <dd class="font-black text-slate-900"><%= @resource.assigned_to&.display_name.presence || "Unassigned" %></dd>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+              <dt class="font-semibold text-slate-500">Follow up</dt>
+              <dd class="font-black text-slate-900"><%= @resource.follow_up_date.present? ? l(@resource.follow_up_date, format: :long) : "Not set" %></dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @resource.is_a?(FileUpload) %>
         <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
           <div class="flex items-start gap-3">
             <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-sm">
@@ -203,10 +242,19 @@
       <% end %>
 
       <% if @activity_logs.present? %>
-        <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Timeline</p>
-          <h2 class="mt-2 text-lg font-black text-slate-950">Activity</h2>
-          <div class="mt-4 space-y-4">
+        <details class="group rounded-[1.75rem] border border-slate-200 bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Timeline</p>
+              <h2 class="mt-2 text-lg font-black text-slate-950">Activity</h2>
+            </div>
+            <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-black text-slate-600 transition group-open:border-blue-200 group-open:bg-blue-50 group-open:text-blue-700">
+              Show history
+              <i class="fa-solid fa-chevron-down text-xs transition duration-200 group-open:-rotate-180"></i>
+            </span>
+          </summary>
+
+          <div class="mt-5 space-y-4">
             <% @activity_logs.each do |log| %>
               <div class="relative rounded-2xl border border-slate-100 bg-slate-50/80 p-4 pl-5">
                 <span class="absolute left-0 top-0 h-full w-1 rounded-l-2xl bg-blue-500"></span>
@@ -218,7 +266,7 @@
               </div>
             <% end %>
           </div>
-        </section>
+        </details>
       <% end %>
     </div>
   </div>
