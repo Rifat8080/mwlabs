@@ -73,6 +73,13 @@ module ApplicationHelper
     render "shared/toast", type: type, title: title, message: message
   end
 
+  def admin_initials(name)
+    parts = name.to_s.split(/\s+/).reject(&:blank?)
+    return "?" if parts.empty?
+
+    parts.first(2).map { |part| part[0] }.join.upcase
+  end
+
   def admin_resource_icon(resource_model)
     {
       "Lead" => "fa-user-plus",

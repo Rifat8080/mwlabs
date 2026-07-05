@@ -25,6 +25,59 @@ module Admin
       includes: %i[ assigned_to client ]
     )
 
+    def index
+      @resources = resource_scope.includes(resource_includes).order(created_at: :desc)
+      @lead_stats = {
+        total: @resources.size,
+        new_this_month: @resources.count { |lead| lead.created_at >= Time.current.beginning_of_month },
+        follow_ups_due: @resources.count { |lead| lead.follow_up_date.present? && lead.follow_up_date <= Date.current },
+        won: @resources.count { |lead| lead.status == "Won" }
+      }
+      render "admin/leads/index"
+    end
+
+    def show
+      @activity_logs = client_user? ? [] : @resource.activity_logs.order(created_at: :desc).limit(20)
+      render "admin/leads/show"
+    end
+
+    def bulk_update
+      leads = resource_scope.where(id: bulk_lead_ids)
+      count = leads.count
+
+      if count.zero?
+        redirect_to admin_leads_path, alert: "Select at least one lead first." and return
+      end
+
+      case params[:bulk_action]
+      when "assign"
+        assignee = User.find_by(id: params[:assigned_to_id])
+        leads.find_each { |lead| lead.update(assigned_to: assignee) }
+        redirect_to admin_leads_path, notice: "#{count} #{'lead'.pluralize(count)} assigned to #{assignee&.display_name || 'Unassigned'}."
+      when "status"
+        if Lead::STATUSES.include?(params[:status])
+          leads.find_each { |lead| lead.update(status: params[:status]) }
+          redirect_to admin_leads_path, notice: "#{count} #{'lead'.pluralize(count)} moved to #{params[:status]}."
+        else
+          redirect_to admin_leads_path, alert: "Choose a valid status."
+        end
+      else
+        redirect_to admin_leads_path, alert: "Choose a bulk action."
+      end
+    end
+
+    def bulk_destroy
+      leads = resource_scope.where(id: bulk_lead_ids)
+      count = leads.count
+
+      if count.zero?
+        redirect_to admin_leads_path, alert: "Select at least one lead first." and return
+      end
+
+      leads.destroy_all
+      redirect_to admin_leads_path, notice: "#{count} #{'lead'.pluralize(count)} deleted."
+    end
+
     def import
       @import_result = nil
       render "admin/leads/import"
@@ -72,7 +125,7 @@ module Admin
         end
       else
         respond_to do |format|
-          format.html { render "admin/resources/show", status: :unprocessable_entity }
+          format.html { render "admin/leads/show", status: :unprocessable_entity }
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace("lead-show-details", partial: "admin/leads/show_details", locals: { lead: @resource, resource_fields: visible_resource_fields }), status: :unprocessable_entity
           end
@@ -86,6 +139,10 @@ module Admin
     end
 
     private
+
+    def bulk_lead_ids
+      Array(params[:lead_ids]).reject(&:blank?)
+    end
 
     def resource_params
       if Lead.custom_fields_supported?

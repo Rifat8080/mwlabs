@@ -1,0 +1,133 @@
+<% content_for :title, "#{admin_resource_record_title(@resource)} | M&W Labs Control Center" %>
+<% content_for :meta_description, "View #{admin_resource_record_title(@resource)} in the M&W Labs Control Center. #{resource_description}" %>
+
+<% overdue_follow_up = @resource.follow_up_date.present? && @resource.follow_up_date <= Date.current && !@resource.status.in?(%w[ Won Lost ]) %>
+
+<div class="space-y-6">
+  <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
+    <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]" aria-hidden="true"></div>
+    <div class="relative space-y-6">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <%= link_to admin_leads_path, class: "inline-flex items-center gap-2 text-sm font-black text-cyan-100 transition hover:text-white" do %>
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          Back to Leads
+        <% end %>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] ring-1 <%= admin_status_class(@resource.status) %>"><%= @resource.status.presence || "New" %></span>
+          <% if overdue_follow_up %>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-500/20 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-rose-100 ring-1 ring-rose-300/40">
+              <i class="fa-solid fa-triangle-exclamation text-[0.65rem]"></i>
+              Follow-up overdue
+            </span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+        <div class="min-w-0">
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.2em] text-cyan-100 backdrop-blur">
+            <i class="fa-solid fa-user-plus"></i>
+            Lead record
+          </div>
+          <h1 class="mt-5 break-words text-4xl font-black tracking-tight md:text-5xl"><%= @resource.display_name %></h1>
+          <p class="mt-3 max-w-3xl text-sm font-semibold leading-7 text-slate-300"><%= resource_description %></p>
+
+          <div class="mt-5 flex flex-wrap items-center gap-2">
+            <% if @resource.email.present? %>
+              <span class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-200"><i class="fa-solid fa-envelope text-[0.65rem] text-slate-400"></i><%= @resource.email %></span>
+            <% end %>
+            <% if @resource.phone.present? %>
+              <span class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-200"><i class="fa-solid fa-phone text-[0.65rem] text-slate-400"></i><%= @resource.phone %></span>
+            <% end %>
+            <span class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-200">
+              <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/30 text-[0.6rem] font-black text-blue-100"><%= admin_initials(@resource.assigned_to&.display_name || "Unassigned") %></span>
+              <%= @resource.assigned_to&.display_name.presence || "Unassigned" %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <% if can_manage_resource?(Lead) %>
+          <%= link_to "Edit", edit_admin_lead_path(@resource), class: "inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-black text-white backdrop-blur transition hover:bg-white/15" %>
+          <%= button_to "Delete", admin_lead_path(@resource), method: :delete, form: { data: { turbo_confirm: "Delete this lead?" } }, class: "rounded-2xl border border-rose-300/40 bg-rose-400/15 px-4 py-2.5 text-sm font-black text-rose-50 hover:bg-rose-400/25" %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+    <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+      <div class="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Record Details</p>
+          <h2 class="mt-2 text-xl font-black text-slate-950">Overview</h2>
+        </div>
+        <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-slate-600">Lead</span>
+      </div>
+
+      <%= turbo_frame_tag "lead-show-details" do %>
+        <%= render "admin/leads/show_details", lead: @resource, resource_fields: visible_resource_fields %>
+      <% end %>
+    </section>
+
+    <div class="space-y-6">
+      <section class="rounded-[1.75rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-5 shadow-xl shadow-amber-100/50 backdrop-blur lg:p-6">
+        <div class="flex items-start gap-3">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-200">
+            <i class="fa-solid fa-bullseye"></i>
+          </span>
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.16em] text-amber-700">Recommended next action</p>
+            <p class="mt-2 text-sm font-semibold leading-7 text-slate-700"><%= @resource.next_action %></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-[1.75rem] border border-slate-100 bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+        <div class="flex items-center gap-3">
+          <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+            <i class="fa-solid fa-chart-line"></i>
+          </span>
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Lead snapshot</p>
+            <h3 class="text-lg font-black text-slate-950">At a glance</h3>
+          </div>
+        </div>
+
+        <div class="mt-5 space-y-2.5 text-sm">
+          <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+            <span class="font-semibold text-slate-500">Status</span>
+            <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-black ring-1 <%= admin_status_class(@resource.status) %>"><%= @resource.status.presence || "New" %></span>
+          </div>
+          <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+            <span class="font-semibold text-slate-500">Source</span>
+            <span class="font-black text-slate-900"><%= @resource.source.presence || "Manual" %></span>
+          </div>
+          <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+            <span class="font-semibold text-slate-500">Assigned</span>
+            <span class="font-black text-slate-900"><%= @resource.assigned_to&.display_name.presence || "Unassigned" %></span>
+          </div>
+          <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+            <span class="font-semibold text-slate-500">Follow up</span>
+            <span class="font-black <%= overdue_follow_up ? "text-rose-600" : "text-slate-900" %>"><%= @resource.follow_up_date.present? ? l(@resource.follow_up_date, format: :long) : "Not set" %></span>
+          </div>
+          <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+            <span class="font-semibold text-slate-500">Linked client</span>
+            <span class="font-black text-slate-900"><%= @resource.client&.display_name.presence || "Not linked" %></span>
+          </div>
+          <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-3">
+            <span class="font-semibold text-slate-500">Created</span>
+            <span class="font-black text-slate-900"><%= @resource.created_at.to_fs(:long) %></span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <%= render "admin/resources/activity_log_timeline", activity_logs: @activity_logs %>
+
+  <%= render "admin/leads/cold_calling_panel", lead: @resource %>
+  <%= render "admin/leads/custom_fields_panel", lead: @resource %>
+</div>

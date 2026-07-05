@@ -22,6 +22,8 @@ Rails.application.routes.draw do
       collection do
         get :import
         post :import, action: :process_import
+        patch :bulk_update
+        delete :bulk_destroy
       end
 
       resources :custom_fields, only: [ :create, :destroy ], controller: "lead_custom_fields", param: :index
