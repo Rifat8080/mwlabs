@@ -3,6 +3,16 @@
 @plugin "flowbite/plugin";
 @source "../../../node_modules/flowbite";
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @layer utilities {
   @keyframes site-loader-orbit {
     0% {
@@ -123,6 +133,221 @@
 
   .hero-sheen::after {
     animation: hero-sheen 6.5s ease-in-out infinite;
+  }
+
+  /* ---- Landing page motion + 3D system ---- */
+
+  @keyframes aurora-drift {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    33% {
+      transform: translate3d(42px, -30px, 0) scale(1.08);
+    }
+
+    66% {
+      transform: translate3d(-32px, 26px, 0) scale(0.95);
+    }
+  }
+
+  @keyframes logo-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes text-shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+
+  @keyframes orbit-pulse {
+    0%, 100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 1;
+      transform: scale(1.35);
+    }
+  }
+
+  @keyframes btn-shine-sweep {
+    0% {
+      transform: translateX(0) skewX(-20deg);
+      opacity: 0;
+    }
+
+    15% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(1100%) skewX(-20deg);
+      opacity: 0;
+    }
+  }
+
+  .aurora-blob {
+    animation: aurora-drift 16s ease-in-out infinite;
+  }
+
+  .aurora-blob-slow {
+    animation: aurora-drift 24s ease-in-out infinite reverse;
+  }
+
+  .text-shimmer {
+    background-size: 200% auto;
+    animation: text-shimmer 5s linear infinite;
+  }
+
+  .orbit-dot {
+    animation: orbit-pulse 3.2s ease-in-out infinite;
+  }
+
+  .orbit-dot-delay {
+    animation-delay: 1.4s;
+  }
+
+  /* Scroll reveal — the hidden state is applied by JS only, so content
+     stays visible without JS and the LCP element is never delayed. */
+  [data-reveal] {
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal-pending {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+
+  .reveal-pending[data-reveal="left"] {
+    transform: translate3d(-32px, 0, 0);
+  }
+
+  .reveal-pending[data-reveal="right"] {
+    transform: translate3d(32px, 0, 0);
+  }
+
+  .reveal-pending[data-reveal="zoom"] {
+    transform: scale3d(0.93, 0.93, 1);
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Interactive 3D tilt cards (pointer-driven via --tilt-x / --tilt-y) */
+  .tilt-3d {
+    transform-style: preserve-3d;
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
+  }
+
+  .tilt-3d.tilt-active {
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .tilt-pop {
+    transform: translateZ(30px);
+  }
+
+  .tilt-pop-sm {
+    transform: translateZ(16px);
+  }
+
+  .tilt-glare::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background: radial-gradient(26rem circle at var(--glare-x, 50%) var(--glare-y, 50%), rgb(59 130 246 / 0.09), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .tilt-active.tilt-glare::before {
+    opacity: 1;
+  }
+
+  /* Hero 3D parallax scene (vars set per-frame by landing_effects.js) */
+  .scene-3d {
+    perspective: 1200px;
+  }
+
+  /* The stage is deliberately flattened (no preserve-3d): layers stack by
+     z-index so the tilted glass floor can never intersect the chips, while
+     the stage rotation + per-layer parallax speeds still read as 3D depth. */
+  .scene-stage {
+    transform: rotateX(var(--scene-rx, 0deg)) rotateY(var(--scene-ry, 0deg));
+  }
+
+  .scene-layer {
+    transform: translate3d(calc(var(--par-x, 0px) * var(--depth, 1)), calc(var(--par-y, 0px) * var(--depth, 1)), 0);
+  }
+
+  .scene-floor {
+    perspective: 1400px;
+  }
+
+  /* Seamless logo marquee */
+  .logo-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  }
+
+  .logo-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: logo-marquee 38s linear infinite;
+  }
+
+  .logo-marquee:hover .logo-marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Button shine sweep */
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    top: -40%;
+    bottom: -40%;
+    left: -18%;
+    width: 2.5rem;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.4), transparent);
+    transform: skewX(-20deg);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .btn-shine:hover::after {
+    animation: btn-shine-sweep 0.9s ease;
+  }
+
+  /* Gradient border card */
+  .gradient-ring {
+    border: 1px solid transparent;
+    background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(120deg, rgb(191 219 254), rgb(224 242 254) 45%, rgb(37 99 235)) border-box;
   }
 
   .blog-article-body {
@@ -543,8 +768,33 @@
     .hero-float,
     .hero-float-soft,
     .hero-orbit,
-    .hero-sheen::after {
+    .hero-sheen::after,
+    .aurora-blob,
+    .aurora-blob-slow,
+    .text-shimmer,
+    .orbit-dot,
+    .logo-marquee-track,
+    .btn-shine:hover::after {
       animation: none;
+    }
+
+    [data-reveal],
+    .tilt-3d {
+      transition: none;
+    }
+
+    .reveal-pending {
+      opacity: 1;
+      transform: none;
+    }
+
+    .tilt-3d {
+      transform: none;
+    }
+
+    .scene-stage,
+    .scene-layer {
+      transform: none;
     }
 
     .site-loader {

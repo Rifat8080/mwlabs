@@ -6,6 +6,7 @@ import "flowbite"
 import "@fortawesome/fontawesome-free"
 import { initProjectFilters } from "project_filters"
 import { initTestimonials } from "testimonials"
+import { initLandingEffects } from "landing_effects"
 
 const hideSiteLoader = () => {
   document.body.classList.add("site-loaded")
@@ -17,4 +18,5 @@ document.addEventListener("turbo:load", () => {
   window.requestAnimationFrame(hideSiteLoader)
   initProjectFilters()
   initTestimonials()
+  initLandingEffects()
 })
