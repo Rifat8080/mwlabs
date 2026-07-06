@@ -65,6 +65,15 @@ class BlogPostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".trix-content"
   end
 
+  test "show includes BlogPosting structured data and article social tags" do
+    get blog_post_url(@published.slug)
+
+    assert_response :success
+    assert_select "meta[property='og:type'][content='article']"
+    assert_match(/"@type":"BlogPosting"/, response.body)
+    assert_match(/"headline":/, response.body)
+  end
+
   test "show returns not found for draft posts" do
     get blog_post_url(@draft.slug)
 

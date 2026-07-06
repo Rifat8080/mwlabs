@@ -1,5 +1,8 @@
 <% content_for :title, "#{@service[:title]} | Mwlabs" %>
 <% content_for :meta_description, @service[:summary] %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag service_jsonld(name: @service[:title], description: @service[:summary], url: service_url(params[:slug])) %>
+<% end %>
 
 <%= render "pages/shared/hero",
   eyebrow: @service[:eyebrow],

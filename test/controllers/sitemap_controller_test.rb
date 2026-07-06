@@ -47,4 +47,29 @@ class SitemapControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Disallow: /admin/"
     assert_includes response.body, "Disallow: /dashboard"
   end
+
+  test "robots.txt explicitly welcomes AI crawlers and references llms.txt" do
+    get robots_url
+
+    assert_response :success
+    %w[GPTBot ClaudeBot PerplexityBot Google-Extended OAI-SearchBot].each do |agent|
+      assert_includes response.body, "User-agent: #{agent}"
+    end
+    assert_includes response.body, "http://www.example.com/llms.txt"
+  end
+
+  test "llms.txt describes the company, services, and programs for AI assistants" do
+    get llms_url
+
+    assert_response :success
+    assert_equal "text/plain", response.media_type
+    assert_includes response.body, "# M&W Labs"
+    assert_includes response.body, "## Free Programs"
+    assert_includes response.body, "/free-mvp-build"
+    assert_includes response.body, "/free-marketing-report"
+    assert_includes response.body, "/services/web-development"
+    assert_includes response.body, "hello@mwlabs.digital"
+    assert_includes response.body, "Published SEO Article"
+    assert_not_includes response.body, "Draft SEO Article"
+  end
 end

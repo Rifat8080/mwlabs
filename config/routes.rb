@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   get "sitemap.xml", to: "sitemap#show", defaults: { format: :xml }, format: false, as: :sitemap
   get "sitemap", to: redirect("/sitemap.xml")
   get "robots.txt", to: "robots#show", as: :robots
+  get "llms.txt", to: "llms#show", as: :llms
 
   get "blog", to: "blog_posts#index", as: :blog
   get "blog/:slug", to: "blog_posts#show", as: :blog_post
@@ -77,6 +78,8 @@ Rails.application.routes.draw do
   get "faqs", to: "pages#faqs"
   get "privacy", to: "pages#privacy"
   get "terms", to: "pages#terms"
+  get "free-mvp-build", to: "pages#free_mvp_build", as: :free_mvp_build
+  get "free-marketing-report", to: "pages#free_marketing_report", as: :free_marketing_report
   get "services/:slug", to: "pages#service", as: :service
   get "solutions/:slug", to: "pages#seo_landing", as: :seo_landing
 

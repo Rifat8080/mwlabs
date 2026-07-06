@@ -62,6 +62,12 @@ class PagesController < ApplicationController
   def pricing
   end
 
+  def free_mvp_build
+  end
+
+  def free_marketing_report
+  end
+
   def contact
     @lead = Lead.new(source: "Website Contact Form")
   end

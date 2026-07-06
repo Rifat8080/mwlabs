@@ -20,8 +20,9 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: /Everything Your Business Needs/
     assert_select "h2", text: /Tell us what you want to build/
     assert_select "form input[name='lead[source]'][value='Landing Page']"
-    assert_select "body", text: /Selected founders get MVP builds/
-    assert_select "body", text: /Request Growth Report/
+    assert_select "body", text: /Full-service digital agency for growing businesses/
+    assert_select "body", text: /A dedicated digital team behind your business growth/
+    assert_select "body", text: /Start Your Project/
     assert_select "h2", text: /Some Recent Projects/
     assert_select "h2", text: /How We Work/
     assert_select "h2", text: /Real People\. Real Results\./
@@ -84,6 +85,62 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "form input[name='lead[country]']", count: 0
     assert_select "form input[name='lead[budget]']", count: 0
     assert_select "form select[name='lead[urgency]']", count: 0
+  end
+
+  test "visitor pages include canonical, social, and organization metadata for AI and search" do
+    get root_url
+
+    assert_response :success
+    assert_select "link[rel='canonical'][href='http://www.example.com/']"
+    assert_select "meta[property='og:title']"
+    assert_select "meta[property='og:description']"
+    assert_select "meta[property='og:image']"
+    assert_select "meta[name='twitter:card'][content='summary_large_image']"
+    assert_select "script[type='application/ld+json']", minimum: 2
+    assert_match(/"@type":\["Organization","ProfessionalService"\]/, response.body)
+    assert_match(/"@type":"WebSite"/, response.body)
+    assert_match(/hello@mwlabs\.digital/, response.body)
+  end
+
+  test "faqs page includes FAQPage structured data" do
+    get faqs_url
+
+    assert_response :success
+    assert_match(/"@type":"FAQPage"/, response.body)
+    assert_match(/What services does M&amp;W Labs offer\?|What services does M\\u0026W Labs offer\?/, response.body)
+  end
+
+  test "service pages include Service structured data" do
+    get service_url("web-development")
+
+    assert_response :success
+    assert_match(/"@type":"Service"/, response.body)
+  end
+
+  test "free offer pages include Service structured data with free offer" do
+    get free_mvp_build_url
+
+    assert_response :success
+    assert_match(/"@type":"Service"/, response.body)
+    assert_match(/"price":"0"/, response.body)
+  end
+
+  test "shows free MVP build marketing page" do
+    get free_mvp_build_url
+
+    assert_response :success
+    assert_select "h1", text: /Free MVP Build for/
+    assert_select "form input[name='lead[source]'][value='Landing Page']"
+    assert_select "option[selected][value='Free MVP Build']"
+  end
+
+  test "shows free marketing report marketing page" do
+    get free_marketing_report_url
+
+    assert_response :success
+    assert_select "h1", text: /Free Marketing Report/
+    assert_select "form input[name='lead[source]'][value='Landing Page']"
+    assert_select "option[selected][value='Free Marketing Report']"
   end
 
   test "shows service pages" do

@@ -4,6 +4,8 @@ class Sitemap
     { helper: :about_path, changefreq: "monthly", priority: "0.8" },
     { helper: :work_path, changefreq: "monthly", priority: "0.8" },
     { helper: :pricing_path, changefreq: "monthly", priority: "0.8" },
+    { helper: :free_mvp_build_path, changefreq: "monthly", priority: "0.8" },
+    { helper: :free_marketing_report_path, changefreq: "monthly", priority: "0.8" },
     { helper: :blog_path, changefreq: "weekly", priority: "0.9" },
     { helper: :contact_path, changefreq: "monthly", priority: "0.9" },
     { helper: :team_path, changefreq: "monthly", priority: "0.6" },

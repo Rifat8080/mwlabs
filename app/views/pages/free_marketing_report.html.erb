@@ -1,0 +1,147 @@
+<% content_for :title, "Free Marketing Report for Your Business | M&W Labs" %>
+<% content_for :meta_description, "Request a free marketing report from M&W Labs. Get a practical audit of your website, SEO, ads, and funnels with clear, prioritized recommendations for growth." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag service_jsonld(
+    name: "Free Marketing Report",
+    description: "A complimentary marketing audit covering website performance, SEO, competitors, funnels, and channel recommendations, delivered as a prioritized 90-day action plan.",
+    url: free_marketing_report_url,
+    free: true) %>
+<% end %>
+
+<section class="relative isolate overflow-hidden border-b border-slate-100 bg-[radial-gradient(circle_at_top_right,_#eff6ff,_transparent_28rem),linear-gradient(180deg,_#ffffff_0%,_#f8fbff_100%)] py-14 sm:py-16">
+  <div class="aurora-blob absolute left-8 top-20 -z-10 h-72 w-72 rounded-full bg-blue-100/70 blur-3xl"></div>
+  <div class="aurora-blob-slow absolute right-0 top-10 -z-10 h-80 w-80 rounded-full bg-cyan-100/60 blur-3xl"></div>
+
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <div class="inline-flex items-center gap-2 rounded-full border border-blue-100/80 bg-white/90 px-4 py-2 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-700 shadow-[0_18px_45px_rgba(37,99,235,0.10)] backdrop-blur sm:text-xs">
+      <span class="relative flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[0.58rem] text-white shadow-lg shadow-blue-500/25">
+        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-40"></span>
+        +
+      </span>
+      Complimentary Growth Audit
+    </div>
+
+    <h1 class="mt-6 max-w-4xl text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
+      A Free Marketing Report That Shows <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Exactly Where to Grow</span>
+    </h1>
+    <p class="mt-5 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
+      Our marketing team audits your website, SEO, ads, and funnels — then delivers a clear, prioritized report of what's working, what's leaking revenue, and which moves will have the biggest impact first.
+    </p>
+
+    <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+      <a href="#request" class="btn-shine inline-flex items-center justify-center rounded-xl bg-blue-600 px-7 py-4 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+        Request Your Report
+        <i class="fa-solid fa-chart-line ms-3 text-xs"></i>
+      </a>
+      <a href="#whats-inside" class="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50">
+        See What's Inside
+        <i class="fa-solid fa-arrow-down ms-3 text-xs"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="whats-inside" class="bg-white py-14 sm:py-16">
+  <div class="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+    <div class="mx-auto max-w-3xl text-center" data-reveal>
+      <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">What's Inside</p>
+      <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+        A practical audit, not a <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">sales brochure</span>
+      </h2>
+    </div>
+
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <% [
+        [ "fa-magnifying-glass-chart", "bg-blue-50 text-blue-600", "Website & SEO Snapshot", "How your site performs on speed, structure, and search visibility — and the fixes that matter most." ],
+        [ "fa-users-viewfinder", "bg-indigo-50 text-indigo-600", "Competitor Overview", "What your closest competitors are doing on search and social, and where the open opportunities are." ],
+        [ "fa-filter-circle-dollar", "bg-emerald-50 text-emerald-600", "Funnel & Conversion Review", "Where visitors drop off between landing and buying, and how to close those leaks." ],
+        [ "fa-bullhorn", "bg-cyan-50 text-cyan-600", "Channel Recommendations", "Which channels — SEO, paid ads, email, or social — deserve your budget first, based on your market." ],
+        [ "fa-list-check", "bg-amber-50 text-amber-600", "Prioritized Action Plan", "A ranked list of the highest-impact moves for the next 90 days, in plain language." ],
+        [ "fa-comments", "bg-purple-50 text-purple-600", "Optional Walkthrough Call", "A short call with our team to walk through the findings and answer your questions — no obligation." ]
+      ].each_with_index do |(icon, color, title, body), index| %>
+        <div class="h-full" data-reveal data-reveal-delay="<%= index * 80 %>">
+          <div class="tilt-3d relative flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100/70" data-tilt>
+            <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl <%= color %>">
+              <i class="fa-solid <%= icon %> text-xl"></i>
+            </div>
+            <h3 class="text-lg font-black leading-snug text-slate-950"><%= title %></h3>
+            <p class="mt-3 flex-1 text-sm font-medium leading-7 text-slate-600"><%= body %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-50 py-14 sm:py-16">
+  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:items-start lg:px-12 2xl:px-16">
+    <div data-reveal="left">
+      <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Who It's For</p>
+      <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Made for businesses that want clarity</h2>
+      <div class="mt-7 space-y-4">
+        <% [
+          "Businesses spending on marketing without clear results",
+          "Founders unsure which channel to invest in next",
+          "Teams whose website traffic isn't turning into leads or sales",
+          "Anyone who wants an honest outside review before committing budget"
+        ].each_with_index do |point, index| %>
+          <div class="flex items-start gap-3 text-sm font-bold text-slate-600" data-reveal data-reveal-delay="<%= index * 90 %>">
+            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs text-white shadow-lg shadow-blue-600/25">
+              <i class="fa-solid fa-check"></i>
+            </span>
+            <span><%= point %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm sm:p-8" data-reveal="right">
+      <h3 class="text-xl font-black text-slate-950">How it works</h3>
+      <div class="mt-6 space-y-5">
+        <% [
+          [ "01", "Request", "Send us your website and a few details about your business and goals." ],
+          [ "02", "Audit", "Our marketing team reviews your site, search presence, ads, and funnels." ],
+          [ "03", "Report Delivered", "You receive the report by email within a few business days." ],
+          [ "04", "Walkthrough (Optional)", "Book a short call to go through the findings together — only if you want to." ]
+        ].each do |number, title, body| %>
+          <div class="flex items-start gap-4">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-black text-blue-600"><%= number %></span>
+            <div>
+              <p class="text-sm font-black text-slate-950"><%= title %></p>
+              <p class="mt-1 text-sm font-semibold leading-6 text-slate-600"><%= body %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="request" class="relative isolate overflow-hidden bg-white py-14 sm:py-20">
+  <div class="aurora-blob absolute left-0 top-24 -z-10 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl"></div>
+  <div class="aurora-blob-slow absolute bottom-10 right-0 -z-10 h-80 w-80 rounded-full bg-cyan-100/50 blur-3xl"></div>
+
+  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 2xl:px-16">
+    <div data-reveal="left">
+      <p class="text-sm font-extrabold uppercase tracking-[0.25em] text-blue-600">Request Your Report</p>
+      <h2 class="mt-4 max-w-2xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl">
+        Get an honest look at your marketing.
+      </h2>
+      <p class="mt-5 max-w-2xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">
+        Share your website and what you're trying to achieve. We'll audit it and send back a report you can act on — whether or not you ever work with us.
+      </p>
+    </div>
+
+    <div data-reveal="right">
+      <%= render "pages/shared/lead_form",
+        lead: Lead.new(source: "Landing Page", service_interest: "Free Marketing Report"),
+        source: "Landing Page",
+        compact: true,
+        title: "Request your free marketing report",
+        description: "Include your website URL, your main goal (more leads, sales, or traffic), and any channels you're currently using.",
+        button_label: "Request Report" %>
+    </div>
+  </div>
+</section>
+
+<%= render "pages/shared/cta" %>

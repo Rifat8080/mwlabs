@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "M&W Labs | Digital solutions that drive real growth" %></title>
+    <title><%= page_title %></title>
     <%= tag.meta name: "description", content: meta_description_content %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <link rel="canonical" href="<%= canonical_url %>">
+    <%= tag.meta property: "og:site_name", content: SeoHelper::SITE_NAME %>
+    <%= tag.meta property: "og:type", content: og_type %>
+    <%= tag.meta property: "og:title", content: page_title %>
+    <%= tag.meta property: "og:description", content: meta_description_content %>
+    <%= tag.meta property: "og:url", content: canonical_url %>
+    <%= tag.meta property: "og:image", content: social_image_url %>
+    <%= tag.meta property: "og:locale", content: "en_US" %>
+    <%= tag.meta name: "twitter:card", content: "summary_large_image" %>
+    <%= tag.meta name: "twitter:title", content: page_title %>
+    <%= tag.meta name: "twitter:description", content: meta_description_content %>
+    <%= tag.meta name: "twitter:image", content: social_image_url %>
+
+    <%= jsonld_tag organization_jsonld %>
+    <%= jsonld_tag website_jsonld %>
+    <%= yield :structured_data %>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KY1K60R4T"></script>

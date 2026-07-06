@@ -1,5 +1,10 @@
 <% content_for :title, "#{@post.seo_title} | Mwlabs" %>
 <% content_for :meta_description, @post.seo_description %>
+<% content_for :og_type, "article" %>
+<% content_for :og_image, "#{site_base_url}#{blog_cover_url(@post)}" if @post.cover_image.attached? %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag blog_post_jsonld(@post) %>
+<% end %>
 <% content_for :head do %>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

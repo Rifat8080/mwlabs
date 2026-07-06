@@ -18,6 +18,8 @@ module PagesHelper
   ].freeze
 
   RESOURCE_LINKS = [
+    [ "Free MVP Build", :free_mvp_build_path ],
+    [ "Free Marketing Report", :free_marketing_report_path ],
     [ "Case Studies", :case_studies_path ],
     [ "Pricing", :pricing_path ],
     [ "FAQs", :faqs_path ],
