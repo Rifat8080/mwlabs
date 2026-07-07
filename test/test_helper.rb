@@ -30,6 +30,17 @@ module ActiveSupport
         author: author
       }.merge(attrs))
     end
+
+    def create_portfolio_project_for_tests!(attrs = {})
+      title = attrs[:title] || "Sample Project #{PortfolioProject.count + 1}"
+      PortfolioProject.create!({
+        title: title,
+        client_name: "Acme",
+        category: "Web Development",
+        summary: "Sample project summary",
+        status: "Published"
+      }.merge(attrs))
+    end
   end
 end
 

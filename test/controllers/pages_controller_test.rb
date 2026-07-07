@@ -9,6 +9,12 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       published_at: 1.day.ago,
       author: users(:admin)
     )
+    6.times do |index|
+      create_portfolio_project_for_tests!(
+        title: "Landing Page Project #{index}",
+        category: index.even? ? "Web Development" : "Digital Marketing"
+      )
+    end
 
     get root_url
 
@@ -32,7 +38,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-floating-cta-whatsapp]"
     assert_select "[data-floating-cta-quote]"
     assert_select "button[aria-label='Close floating contact buttons']"
-    assert_select "[data-project-filter='Marketing']"
+    assert_select "[data-project-filter='Digital Marketing']"
     assert_select "[data-project-card]", minimum: 6
     assert_select "h2", text: /We Don’t Just Deliver Services/
     assert_select "footer", text: /From code to campaigns/

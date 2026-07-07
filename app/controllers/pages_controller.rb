@@ -169,6 +169,7 @@ class PagesController < ApplicationController
   def home
     @recent_blog_posts = load_recent_blog_posts
     @blog_categories = BlogCategory.with_published_posts.ordered
+    @recent_projects = load_recent_projects
   end
 
   def seo_landing
@@ -177,6 +178,7 @@ class PagesController < ApplicationController
 
     @recent_blog_posts = load_recent_blog_posts
     @blog_categories = BlogCategory.with_published_posts.ordered
+    @recent_projects = load_recent_projects
   end
 
   def about
@@ -251,5 +253,12 @@ class PagesController < ApplicationController
       .includes(:author, :blog_category, cover_image_attachment: :blob)
       .order(published_at: :desc)
       .limit(3)
+  end
+
+  def load_recent_projects
+    PortfolioProject.published
+      .includes(cover_image_attachment: :blob, gallery_images_attachments: :blob)
+      .ordered
+      .limit(6)
   end
 end

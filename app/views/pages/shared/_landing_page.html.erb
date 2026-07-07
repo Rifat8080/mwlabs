@@ -450,93 +450,80 @@
         </h2>
       </div>
 
-      <div class="flex flex-wrap gap-2" data-project-filters>
-        <% [ "All", "Web Development", "Marketing", "Branding", "Video" ].each_with_index do |filter, index| %>
-          <button type="button" class="rounded-lg border px-5 py-2.5 text-xs font-extrabold transition <%= index.zero? ? "border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700" %>" data-project-filter="<%= filter %>" aria-pressed="<%= index.zero? %>">
-            <%= filter %>
-          </button>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6" data-project-grid data-reveal>
-      <% [
-        {
-          title: "Fintech Website Development",
-          category: "Web Development",
-          icon: "fa-chart-pie",
-          accent: "from-blue-500 to-cyan-400",
-          panel: "bg-blue-50"
-        },
-        {
-          title: "Lead Generation Campaign",
-          category: "Marketing",
-          icon: "fa-bullseye",
-          accent: "from-emerald-500 to-teal-400",
-          panel: "bg-emerald-50"
-        },
-        {
-          title: "Coffee Brand Identity",
-          category: "Branding",
-          icon: "fa-mug-hot",
-          accent: "from-slate-900 to-amber-700",
-          panel: "bg-stone-100"
-        },
-        {
-          title: "YouTube Channel Editing",
-          category: "Video",
-          icon: "fa-play",
-          accent: "from-violet-600 to-fuchsia-500",
-          panel: "bg-violet-50"
-        },
-        {
-          title: "SaaS Dashboard Development",
-          category: "Web Development",
-          icon: "fa-table-columns",
-          accent: "from-blue-600 to-indigo-500",
-          panel: "bg-blue-50"
-        },
-        {
-          title: "Instagram Ad Campaign",
-          category: "Marketing",
-          icon: "fa-mobile-screen-button",
-          accent: "from-rose-400 to-orange-300",
-          panel: "bg-rose-50"
-        }
-      ].each do |project| %>
-        <article class="tilt-3d tilt-glare group relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100/70" data-tilt data-project-card data-project-category="<%= project[:category] %>">
-          <div class="relative h-40 overflow-hidden <%= project[:panel] %>">
-            <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r <%= project[:accent] %>"></div>
-            <div class="absolute inset-4 rounded-xl bg-white/80 shadow-xl shadow-slate-200/70 ring-1 ring-white/80 transition duration-300 group-hover:scale-105">
-              <div class="flex items-center gap-1 border-b border-slate-100 px-3 py-2">
-                <span class="h-2 w-2 rounded-full bg-rose-400"></span>
-                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
-                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-              </div>
-              <div class="grid h-[calc(100%-2rem)] grid-cols-[0.42fr_0.58fr] gap-3 p-3">
-                <div class="space-y-2">
-                  <span class="block h-3 rounded-full bg-slate-200"></span>
-                  <span class="block h-3 w-3/4 rounded-full bg-slate-100"></span>
-                  <span class="block h-16 rounded-lg bg-gradient-to-br <%= project[:accent] %>"></span>
-                </div>
-                <div class="space-y-2">
-                  <div class="flex h-16 items-center justify-center rounded-lg bg-slate-50 text-blue-600">
-                    <i class="fa-solid <%= project[:icon] %> text-3xl"></i>
-                  </div>
-                  <span class="block h-3 rounded-full bg-slate-200"></span>
-                  <span class="block h-3 w-2/3 rounded-full bg-slate-100"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="p-5">
-            <h3 class="text-base font-black leading-snug text-slate-950"><%= project[:title] %></h3>
-            <p class="mt-2 text-sm font-bold text-slate-500"><%= project[:category] %></p>
-          </div>
-        </article>
+      <% if @recent_projects.present? %>
+        <div class="flex flex-wrap gap-2" data-project-filters>
+          <% categories = [ "All", *@recent_projects.map(&:category).compact.uniq ] %>
+          <% categories.each_with_index do |filter, index| %>
+            <button type="button" class="rounded-lg border px-5 py-2.5 text-xs font-extrabold transition <%= index.zero? ? "border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700" %>" data-project-filter="<%= filter %>" aria-pressed="<%= index.zero? %>">
+              <%= filter %>
+            </button>
+          <% end %>
+        </div>
       <% end %>
     </div>
+
+    <% if @recent_projects.present? %>
+      <div class="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-project-grid>
+        <% @recent_projects.each_with_index do |project, index| %>
+          <div class="h-full" data-project-card data-project-category="<%= project.category %>" data-reveal data-reveal-delay="<%= index * 60 %>">
+            <article class="tilt-3d tilt-glare group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-100/70" data-tilt>
+              <%= link_to portfolio_project_path(project.slug), class: "relative block aspect-video overflow-hidden bg-slate-100", data: { gallery_card: true } do %>
+                <% images = portfolio_showcase_images(project).first(4) %>
+                <% if images.any? %>
+                  <% images.each_with_index do |image, i| %>
+                    <%= image_tag image.variant(resize_to_fill: [ 800, 500 ]), class: "absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 #{i.zero? ? 'opacity-100' : 'opacity-0'}", data: { gallery_slide: true }, alt: project.title %>
+                  <% end %>
+                <% else %>
+                  <div class="absolute inset-0 flex items-center justify-center <%= portfolio_category_color(project.category) %>">
+                    <i class="fa-solid <%= portfolio_category_icon(project.category) %> text-5xl opacity-40"></i>
+                  </div>
+                <% end %>
+
+                <div class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 px-3 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wide text-white backdrop-blur">
+                  <span class="relative flex h-1.5 w-1.5">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  </span>
+                  Live
+                </div>
+                <span class="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wide text-slate-700 shadow-sm"><%= project.category %></span>
+              <% end %>
+
+              <div class="flex flex-1 flex-col p-6">
+                <h3 class="text-lg font-black leading-snug text-slate-950">
+                  <%= link_to project.title, portfolio_project_path(project.slug), class: "transition hover:text-blue-700" %>
+                </h3>
+                <p class="mt-1 text-xs font-extrabold uppercase tracking-wide text-slate-400"><%= project.client_name %></p>
+                <p class="mt-3 flex-1 text-sm font-medium leading-7 text-slate-600"><%= project.summary %></p>
+
+                <% if project.result_metric_value.present? %>
+                  <div class="mt-4 flex items-baseline gap-2 border-t border-slate-100 pt-4">
+                    <i class="fa-solid fa-arrow-trend-up text-emerald-500"></i>
+                    <span class="text-xl font-black text-slate-950" data-counter="<%= project.result_metric_value %>" data-counter-suffix="<%= project.result_metric_suffix %>">0<%= project.result_metric_suffix %></span>
+                    <span class="text-xs font-bold text-slate-500"><%= project.result_metric_label %></span>
+                  </div>
+                <% end %>
+
+                <div class="mt-5">
+                  <%= link_to portfolio_project_path(project.slug), class: "group/link inline-flex items-center text-sm font-extrabold text-blue-600 hover:text-blue-700" do %>
+                    View Case Study
+                    <i class="fa-solid fa-arrow-right ms-2 text-xs transition-transform duration-300 group-hover/link:translate-x-1"></i>
+                  <% end %>
+                </div>
+              </div>
+            </article>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="mt-9 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center" data-reveal>
+        <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <i class="fa-solid fa-diagram-project text-xl"></i>
+        </span>
+        <p class="mt-4 text-lg font-black text-slate-900">Fresh case studies are on the way</p>
+        <p class="mx-auto mt-2 max-w-md text-sm font-semibold text-slate-500">We're publishing our latest client work here. In the meantime, book a call and we'll walk you through relevant projects directly.</p>
+      </div>
+    <% end %>
 
     <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row" data-reveal>
       <%= link_to work_path, class: "inline-flex items-center justify-center rounded-lg border border-blue-200 bg-white px-8 py-3 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-100" do %>
