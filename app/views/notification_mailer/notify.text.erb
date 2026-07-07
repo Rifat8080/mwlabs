@@ -1,7 +1,7 @@
 M&W LABS NOTIFICATION
 <%= "="*50 %>
 
-Hi <%= current_user&.display_name || 'there' %>,
+Hi <%= (@user || @client)&.display_name || 'there' %>,
 
 Action: <%= @action %>
 
