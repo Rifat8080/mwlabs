@@ -25,6 +25,6 @@ class NotificationMailerTest < ActionMailer::TestCase
   test "does not send mail when there is no recipient" do
     mail = NotificationMailer.with(user: nil, client: nil, action: "Test").notify
 
-    assert_nil mail.message.perform_deliveries
+    assert_instance_of ActionMailer::Base::NullMail, mail.message
   end
 end
