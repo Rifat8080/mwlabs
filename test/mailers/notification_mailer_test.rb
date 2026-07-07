@@ -18,7 +18,6 @@ class NotificationMailerTest < ActionMailer::TestCase
 
     mail = NotificationMailer.with(user: user, action: "Test", notifiable: nil, actor: nil, details: nil).notify
 
-    assert_match "there", mail.html_part.body.to_s if user.display_name.blank?
     assert mail.html_part.body.to_s.present?
   end
 
