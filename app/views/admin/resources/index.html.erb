@@ -35,6 +35,29 @@
     </div>
   </section>
 
+  <% if resource_model == MarketingItem %>
+    <details class="group rounded-[1.75rem] border border-blue-200 bg-blue-50/60 shadow-xl shadow-blue-100/50">
+      <summary class="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-sm font-black text-blue-700">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        Generate content ideas with AI
+        <i class="fa-solid fa-chevron-down ml-auto text-[0.65rem] transition duration-200 group-open:-rotate-180"></i>
+      </summary>
+      <%= form_with url: ai_generate_admin_marketing_items_path, method: :post, class: "grid gap-3 border-t border-blue-100 p-5 sm:grid-cols-2 lg:grid-cols-4" do %>
+        <input type="text" name="service" placeholder="Service (e.g. AI automation)" required class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50">
+        <input type="text" name="audience" placeholder="Target audience" required class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50">
+        <select name="platform" required class="block w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50">
+          <option value="">Platform</option>
+          <% MarketingItem::PLATFORMS.each do |platform| %><option value="<%= platform %>"><%= platform %></option><% end %>
+        </select>
+        <div class="flex gap-2">
+          <input type="text" name="goal" placeholder="Goal (e.g. leads)" required class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50">
+          <button type="submit" class="shrink-0 rounded-xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">Generate</button>
+        </div>
+      <% end %>
+      <div id="marketing-ai-ideas" class="px-5 pb-5"></div>
+    </details>
+  <% end %>
+
   <%= render "admin/resources/filters",
     resources: @resources,
     columns: visible_resource_columns,

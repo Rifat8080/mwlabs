@@ -1,0 +1,37 @@
+<% first_day = month.beginning_of_month.beginning_of_week(:sunday) %>
+<% last_day = month.end_of_month.end_of_week(:sunday) %>
+
+<section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 shadow-xl shadow-slate-200/70 backdrop-blur" data-controller="marketing-calendar" data-marketing-calendar-month-value="<%= month.strftime("%Y-%m") %>">
+  <div class="grid grid-cols-7 border-b border-slate-100 bg-slate-50/80 text-center text-xs font-black uppercase tracking-[0.14em] text-slate-500">
+    <% %w[Sun Mon Tue Wed Thu Fri Sat].each do |day| %>
+      <div class="px-2 py-3"><%= day %></div>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-7">
+    <% (first_day..last_day).each do |date| %>
+      <div class="min-h-[7rem] border-b border-r border-slate-100 p-2 <%= date.month == month.month ? 'bg-white' : 'bg-slate-50/60' %> <%= date == Date.current ? 'ring-2 ring-inset ring-blue-400' : '' %>"
+        data-marketing-calendar-target="day"
+        data-date="<%= date.iso8601 %>"
+        data-action="dragover->marketing-calendar#allowDrop dragleave->marketing-calendar#dragLeave drop->marketing-calendar#drop">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-black <%= date.month == month.month ? 'text-slate-700' : 'text-slate-300' %>"><%= date.day %></span>
+          <%= link_to new_admin_marketing_item_path(publish_on: date.iso8601), class: "text-slate-300 transition hover:text-blue-600", title: "Quick add" do %>
+            <i class="fa-solid fa-plus text-[0.65rem]"></i>
+          <% end %>
+        </div>
+        <div class="mt-1.5 space-y-1">
+          <% (items_by_date[date] || []).each do |item| %>
+            <%= link_to edit_admin_marketing_item_path(item),
+              draggable: true,
+              class: "block truncate rounded-lg px-2 py-1 text-[0.68rem] font-bold ring-1 #{admin_status_class(item.status)}",
+              data: { marketing_item_id: item.id, action: "dragstart->marketing-calendar#dragStart dragend->marketing-calendar#dragEnd" },
+              title: "#{item.title} (#{item.platform})" do %>
+              <%= item.title %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

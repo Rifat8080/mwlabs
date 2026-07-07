@@ -1,0 +1,18 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  feature: daily_planner
+  model: gemini-2.5-flash
+  prompt_tokens: 100
+  output_tokens: 50
+  tokens_used: 150
+  status: success
+
+two:
+  feature: task_creation
+  model: gemini-2.5-flash
+  prompt_tokens: 80
+  output_tokens: 40
+  tokens_used: 120
+  status: error
+  error_message: Timeout

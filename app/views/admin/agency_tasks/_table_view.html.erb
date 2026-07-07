@@ -1,0 +1,60 @@
+<section class="overflow-hidden rounded-[1.75rem] border border-white bg-white/90 shadow-xl shadow-slate-200/70 backdrop-blur">
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-slate-100 text-sm">
+      <thead class="bg-slate-50/80">
+        <tr>
+          <th class="w-10 px-5 py-4"><input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" data-bulk-actions-target="selectAll" data-action="change->bulk-actions#toggleAll"></th>
+          <th class="px-5 py-4 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Title</th>
+          <th class="px-5 py-4 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Category</th>
+          <th class="px-5 py-4 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Status</th>
+          <th class="px-5 py-4 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Priority</th>
+          <th class="px-5 py-4 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-500">Due Date</th>
+          <th class="px-5 py-4 text-right text-xs font-black uppercase tracking-[0.16em] text-slate-500">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% tasks.each do |task| %>
+          <tr class="transition hover:bg-blue-50/50" data-table-filter-target="row" data-search-text="<%= [ task.title, task.description, task.tags ].compact.join(' ').downcase %>">
+            <td class="px-5 py-4"><input type="checkbox" value="<%= task.id %>" class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" data-bulk-actions-target="checkbox" data-action="change->bulk-actions#refresh"></td>
+            <td class="whitespace-nowrap px-5 py-4 font-semibold text-slate-700">
+              <%= link_to task.title, admin_agency_task_path(task), class: "text-slate-950 transition hover:text-blue-700" %>
+            </td>
+            <td class="whitespace-nowrap px-5 py-4" data-filter-column="category" data-filter-value="<%= task.agency_task_category&.name.to_s.downcase %>">
+              <% if task.agency_task_category.present? %>
+                <span class="rounded-full px-2.5 py-1 text-xs font-black <%= agency_task_category_badge_class(task.agency_task_category) %>"><%= task.agency_task_category.name %></span>
+              <% else %>
+                <span class="text-xs font-semibold text-slate-400">Uncategorized</span>
+              <% end %>
+            </td>
+            <td class="whitespace-nowrap px-5 py-4" data-filter-column="status" data-filter-value="<%= task.status.downcase %>">
+              <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-black ring-1 <%= admin_status_class(task.status) %>"><%= task.status.titleize %></span>
+            </td>
+            <td class="whitespace-nowrap px-5 py-4" data-filter-column="priority" data-filter-value="<%= task.priority.downcase %>">
+              <span class="rounded-full px-2.5 py-1 text-xs font-black <%= admin_priority_class(task.priority) %>"><%= task.priority %></span>
+            </td>
+            <td class="whitespace-nowrap px-5 py-4 font-semibold text-slate-700">
+              <%= task.due_date&.strftime("%b %-d, %Y") || "—" %>
+            </td>
+            <td class="whitespace-nowrap px-5 py-4 text-right">
+              <div class="inline-flex items-center gap-2">
+                <%= link_to "Edit", edit_admin_agency_task_path(task), class: "rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 hover:bg-slate-50" %>
+                <%= button_to "Delete", admin_agency_task_path(task), method: :delete, form: { data: { turbo_confirm: "Delete this task?" } }, class: "rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-xs font-black text-rose-700 hover:bg-rose-100" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+
+        <% if tasks.empty? %>
+          <tr>
+            <td colspan="7" class="px-4 py-16 text-center">
+              <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                <i class="fa-solid fa-inbox text-xl"></i>
+              </span>
+              <p class="mt-4 text-sm font-black text-slate-900">No tasks yet</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

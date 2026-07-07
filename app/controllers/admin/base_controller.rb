@@ -68,7 +68,18 @@ module Admin
           nav_item("Payments", helpers.admin_payments_path, "fa-credit-card", Payment),
           nav_item("Expenses", helpers.admin_expenses_path, "fa-receipt", Expense)
         ],
-        "Team" => [ nav_item("Users", helpers.admin_users_path, "fa-users", User) ]
+        "Team" => [ nav_item("Users", helpers.admin_users_path, "fa-users", User) ],
+        "Agency OS" => [
+          nav_item("Dashboard", helpers.admin_agency_dashboard_path, "fa-chart-line", AgencyTask),
+          nav_item("Tasks", helpers.admin_agency_tasks_path, "fa-list-check", AgencyTask),
+          nav_item("Task Categories", helpers.admin_agency_task_categories_path, "fa-tags", AgencyTaskCategory),
+          nav_item("Marketing Planner", helpers.admin_marketing_items_path, "fa-bullhorn", MarketingItem),
+          nav_item("Daily Planner", helpers.admin_daily_plan_path, "fa-calendar-day", DailyPlan),
+          nav_item("AI Assistant", helpers.admin_ai_assistant_path, "fa-robot", AgencyTask),
+          nav_item("AI Prompts", helpers.admin_ai_prompts_path, "fa-comment-dots", AiPrompt),
+          nav_item("AI Knowledge", helpers.admin_ai_knowledge_entries_path, "fa-brain", AiKnowledgeEntry),
+          nav_item("AI Usage Logs", helpers.admin_ai_usage_logs_path, "fa-chart-simple", AiUsageLog)
+        ]
       }.transform_values(&:compact).reject { |_section, links| links.empty? }
     end
 

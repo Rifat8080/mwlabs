@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2026-07-08
+  focus: Fixture focus one
+  top_priorities: Fixture priorities
+  notes: Fixture notes
+  wins: Fixture wins
+  tomorrow_plan: Fixture tomorrow plan
+
+two:
+  date: 2026-07-09
+  focus: Fixture focus two
+  top_priorities: Fixture priorities
+  notes: Fixture notes
+  wins: Fixture wins
+  tomorrow_plan: Fixture tomorrow plan

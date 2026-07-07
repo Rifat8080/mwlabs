@@ -7,6 +7,11 @@ export default class extends Controller {
     "assignSubmit", "statusSubmit"
   ]
 
+  static values = {
+    idParam: { type: String, default: "lead_ids[]" },
+    label: { type: String, default: "lead" }
+  }
+
   connect() {
     this.refresh()
   }
@@ -29,7 +34,7 @@ export default class extends Controller {
 
     if (this.hasBarTarget) this.barTarget.classList.toggle("hidden", count === 0)
     if (this.hasCountTarget) {
-      this.countTarget.textContent = count === 1 ? "1 lead selected" : `${count} leads selected`
+      this.countTarget.textContent = count === 1 ? `1 ${this.labelValue} selected` : `${count} ${this.labelValue}s selected`
     }
     if (this.hasAssignSubmitTarget) this.assignSubmitTarget.disabled = count === 0
     if (this.hasStatusSubmitTarget) this.statusSubmitTarget.disabled = count === 0
@@ -74,7 +79,7 @@ export default class extends Controller {
     ids.forEach((id) => {
       const input = document.createElement("input")
       input.type = "hidden"
-      input.name = "lead_ids[]"
+      input.name = this.idParamValue
       input.value = id
       input.dataset.bulkIdField = "true"
       form.appendChild(input)
@@ -86,8 +91,8 @@ export default class extends Controller {
     if (count === 0) return
 
     const message = count === 1
-      ? "Delete 1 selected lead? This cannot be undone."
-      : `Delete ${count} selected leads? This cannot be undone.`
+      ? `Delete 1 selected ${this.labelValue}? This cannot be undone.`
+      : `Delete ${count} selected ${this.labelValue}s? This cannot be undone.`
 
     if (!window.confirm(message)) {
       event.preventDefault()

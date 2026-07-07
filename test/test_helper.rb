@@ -41,6 +41,27 @@ module ActiveSupport
         status: "Published"
       }.merge(attrs))
     end
+
+    # Temporarily replaces Ai::GeminiClient.new so any code calling it during
+    # the block (e.g. controllers instantiating Ai::TaskAssistant.new) receives
+    # a fake client instead of making a real network call. No mocking gem is
+    # installed (minitest 6 dropped Object#stub), so this uses plain
+    # singleton-method substitution with restore-on-exit.
+    def stub_gemini_client(response)
+      fake_client = Object.new
+      fake_client.define_singleton_method(:generate) do |**|
+        raise response if response.is_a?(Exception)
+
+        response
+      end
+
+      original_new = Ai::GeminiClient.method(:new)
+      Ai::GeminiClient.define_singleton_method(:new) { |*_args, **_kwargs| fake_client }
+
+      yield
+    ensure
+      Ai::GeminiClient.define_singleton_method(:new, original_new)
+    end
   end
 end
 

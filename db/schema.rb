@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_07_192552) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -65,6 +65,80 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
     t.index ["user_id"], name: "index_activity_logs_on_user_id"
   end
 
+  create_table "agency_task_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "color", default: "blue", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_agency_task_categories_on_name", unique: true
+  end
+
+  create_table "agency_tasks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.uuid "agency_task_category_id"
+    t.string "status", default: "Inbox", null: false
+    t.string "priority", default: "Medium", null: false
+    t.date "due_date"
+    t.date "start_date"
+    t.integer "estimated_minutes"
+    t.text "notes"
+    t.string "tags"
+    t.integer "position", default: 0, null: false
+    t.datetime "completed_at"
+    t.string "recurrence_rule"
+    t.integer "recurrence_interval", default: 1
+    t.string "recurrence_weekdays"
+    t.uuid "parent_recurring_task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agency_task_category_id"], name: "index_agency_tasks_on_agency_task_category_id"
+    t.index ["due_date"], name: "index_agency_tasks_on_due_date"
+    t.index ["parent_recurring_task_id"], name: "index_agency_tasks_on_parent_recurring_task_id"
+    t.index ["status"], name: "index_agency_tasks_on_status"
+  end
+
+  create_table "ai_assistant_conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ai_assistant_conversations_on_user_id"
+  end
+
+  create_table "ai_assistant_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "ai_assistant_conversation_id", null: false
+    t.string "role", null: false
+    t.text "content"
+    t.string "feature"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ai_assistant_conversation_id"], name: "index_ai_assistant_messages_on_ai_assistant_conversation_id"
+    t.index ["feature"], name: "index_ai_assistant_messages_on_feature"
+  end
+
+  create_table "ai_knowledge_entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.text "value"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_ai_knowledge_entries_on_key", unique: true
+  end
+
+  create_table "ai_prompts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "category", null: false
+    t.text "prompt_text", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_ai_prompts_on_category"
+    t.index ["name"], name: "index_ai_prompts_on_name", unique: true
+  end
+
   create_table "ai_receptionist_conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "channel", default: "website", null: false
     t.string "external_id"
@@ -104,6 +178,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
     t.index ["ai_receptionist_conversation_id"], name: "idx_on_ai_receptionist_conversation_id_4dced30684"
   end
 
+  create_table "ai_usage_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "feature", null: false
+    t.string "model"
+    t.integer "prompt_tokens"
+    t.integer "output_tokens"
+    t.integer "tokens_used"
+    t.string "status", default: "success", null: false
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_ai_usage_logs_on_created_at"
+    t.index ["feature"], name: "index_ai_usage_logs_on_feature"
+    t.index ["status"], name: "index_ai_usage_logs_on_status"
+  end
+
   create_table "blog_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -136,6 +225,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
     t.index ["status"], name: "index_blog_posts_on_status"
   end
 
+  create_table "checklist_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "checklistable_type", null: false
+    t.uuid "checklistable_id", null: false
+    t.string "list_type"
+    t.string "title", null: false
+    t.boolean "done", default: false, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["checklistable_type", "checklistable_id"], name: "idx_on_checklistable_type_checklistable_id_30a8a319cb"
+  end
+
   create_table "clients", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "company_name"
@@ -151,6 +252,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_clients_on_email"
     t.index ["status"], name: "index_clients_on_status"
+  end
+
+  create_table "daily_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.date "date", null: false
+    t.text "focus"
+    t.text "top_priorities"
+    t.text "notes"
+    t.text "wins"
+    t.text "tomorrow_plan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_daily_plans_on_date", unique: true
   end
 
   create_table "expenses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -226,6 +339,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
     t.jsonb "custom_fields", default: [], null: false
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["client_id"], name: "index_leads_on_client_id"
+  end
+
+  create_table "marketing_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "platform"
+    t.string "content_type"
+    t.string "topic"
+    t.text "description"
+    t.string "target_audience"
+    t.string "keywords"
+    t.string "hashtags"
+    t.string "cta"
+    t.date "publish_on"
+    t.string "status", default: "Idea", null: false
+    t.text "notes"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["platform"], name: "index_marketing_items_on_platform"
+    t.index ["publish_on"], name: "index_marketing_items_on_publish_on"
+    t.index ["status"], name: "index_marketing_items_on_status"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -425,6 +559,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activity_logs", "users"
+  add_foreign_key "ai_assistant_conversations", "users"
+  add_foreign_key "ai_assistant_messages", "ai_assistant_conversations"
   add_foreign_key "ai_receptionist_conversations", "leads"
   add_foreign_key "ai_receptionist_messages", "ai_receptionist_conversations"
   add_foreign_key "blog_posts", "blog_categories"

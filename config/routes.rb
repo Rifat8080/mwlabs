@@ -57,6 +57,45 @@ Rails.application.routes.draw do
     resources :portfolio_projects, path: "portfolio" do
       delete "gallery_images/:gallery_image_id", to: "portfolio_projects#remove_gallery_image", as: :remove_gallery_image, on: :member
     end
+
+    get "agency-os", to: "agency_dashboard#show", as: :agency_dashboard
+    get "agency-search", to: "agency_search#index", as: :agency_search
+
+    resources :agency_tasks, path: "tasks-manager" do
+      collection do
+        patch :bulk_update
+        delete :bulk_destroy
+        post :ai_create
+      end
+      member do
+        patch :move
+        post :ai_improve
+      end
+    end
+    resources :agency_task_categories, path: "task-categories"
+
+    resources :marketing_items, path: "marketing-planner" do
+      collection do
+        get :calendar
+        post :ai_generate
+      end
+      member do
+        patch :move
+        post :ai_rewrite
+      end
+    end
+
+    resource :daily_plan, path: "daily-planner", only: [ :show, :update ]
+
+    resources :checklist_items, only: [ :create, :update, :destroy ]
+
+    get "ai-assistant", to: "ai_assistant#show", as: :ai_assistant
+    post "ai-assistant/messages", to: "ai_assistant#create_message", as: :ai_assistant_messages
+    post "ai-assistant/quick-action", to: "ai_assistant#quick_action", as: :ai_assistant_quick_action
+
+    resources :ai_prompts, path: "ai-prompts"
+    resources :ai_knowledge_entries, path: "ai-knowledge"
+    resources :ai_usage_logs, path: "ai-usage-logs", only: [ :index, :show ]
   end
 
   get "sitemap.xml", to: "sitemap#show", defaults: { format: :xml }, format: false, as: :sitemap

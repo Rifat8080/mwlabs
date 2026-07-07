@@ -1,0 +1,47 @@
+<% content_for :title, "Search | M&W Labs Control Center" %>
+<% content_for :meta_description, "Search across agency tasks and marketing planner items." %>
+
+<div class="space-y-6">
+  <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]"></div>
+    <div class="relative">
+      <h1 class="text-4xl font-black tracking-tight md:text-5xl">Agency Search</h1>
+      <%= form_with url: admin_agency_search_path, method: :get, class: "mt-6" do %>
+        <div class="relative">
+          <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-slate-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input type="search" name="q" value="<%= @query %>" placeholder="Search tasks and marketing items..." class="block h-12 w-full max-w-xl rounded-2xl border border-white/15 bg-white/10 pl-11 pr-4 text-sm font-semibold text-white placeholder-slate-400 outline-none backdrop-blur focus:bg-white/15">
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <% if @query.present? %>
+    <div class="grid gap-6 lg:grid-cols-2">
+      <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Tasks (<%= @tasks.size %>)</p>
+        <ul class="mt-4 space-y-2">
+          <% @tasks.each do |task| %>
+            <li class="rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3">
+              <%= link_to task.title, admin_agency_task_path(task), class: "text-sm font-black text-slate-950 hover:text-blue-700" %>
+              <p class="mt-1 text-xs font-semibold text-slate-500"><%= task.status.titleize %> · <%= task.priority %></p>
+            </li>
+          <% end %>
+          <% if @tasks.empty? %><li class="text-sm font-medium text-slate-400">No matching tasks.</li><% end %>
+        </ul>
+      </section>
+
+      <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Marketing Items (<%= @marketing_items.size %>)</p>
+        <ul class="mt-4 space-y-2">
+          <% @marketing_items.each do |item| %>
+            <li class="rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3">
+              <%= link_to item.title, edit_admin_marketing_item_path(item), class: "text-sm font-black text-slate-950 hover:text-blue-700" %>
+              <p class="mt-1 text-xs font-semibold text-slate-500"><%= item.platform %> · <%= item.status %></p>
+            </li>
+          <% end %>
+          <% if @marketing_items.empty? %><li class="text-sm font-medium text-slate-400">No matching marketing items.</li><% end %>
+        </ul>
+      </section>
+    </div>
+  <% end %>
+</div>

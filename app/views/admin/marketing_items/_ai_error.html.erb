@@ -1,0 +1,5 @@
+<div class="rounded-2xl border border-rose-200 bg-rose-50 p-5 text-sm font-semibold text-rose-700" id="<%= local_assigns.fetch(:target_id, "marketing-ai-ideas") %>" data-controller="dismissible">
+  <p class="flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em]"><i class="fa-solid fa-triangle-exclamation"></i> AI Assistant</p>
+  <p class="mt-2"><%= message %></p>
+  <button type="button" data-action="click->dismissible#dismiss" class="mt-2 text-xs font-bold text-rose-600 hover:text-rose-800">Dismiss</button>
+</div>

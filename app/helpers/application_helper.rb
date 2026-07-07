@@ -60,9 +60,9 @@ module ApplicationHelper
     case status.to_s
     when "Won", "Accepted", "Paid", "Done", "Completed", "Delivered", "Active", "Approved", "Published"
       "bg-emerald-50 text-emerald-700 ring-emerald-200"
-    when "Lost", "Rejected", "Cancelled", "Overdue"
+    when "Lost", "Rejected", "Cancelled", "Overdue", "Archived"
       "bg-rose-50 text-rose-700 ring-rose-200"
-    when "Draft", "To Do", "New", "Open"
+    when "Draft", "To Do", "New", "Open", "Idea", "Inbox"
       "bg-slate-50 text-slate-700 ring-slate-200"
     else
       "bg-amber-50 text-amber-700 ring-amber-200"
@@ -71,6 +71,42 @@ module ApplicationHelper
 
   def render_toast(type: "info", title:, message: nil)
     render "shared/toast", type: type, title: title, message: message
+  end
+
+  def admin_priority_class(priority)
+    case priority.to_s
+    when "Critical"
+      "bg-rose-100 text-rose-700"
+    when "High"
+      "bg-amber-100 text-amber-700"
+    when "Medium"
+      "bg-blue-100 text-blue-700"
+    else
+      "bg-slate-100 text-slate-600"
+    end
+  end
+
+  def agency_task_category_badge_class(category)
+    case category&.color
+    when "slate"
+      "bg-slate-100 text-slate-700"
+    when "blue"
+      "bg-blue-50 text-blue-700"
+    when "emerald"
+      "bg-emerald-50 text-emerald-700"
+    when "purple"
+      "bg-purple-50 text-purple-700"
+    when "pink"
+      "bg-pink-50 text-pink-700"
+    when "amber"
+      "bg-amber-50 text-amber-700"
+    when "cyan"
+      "bg-cyan-50 text-cyan-700"
+    when "rose"
+      "bg-rose-50 text-rose-700"
+    else
+      "bg-slate-100 text-slate-700"
+    end
   end
 
   def admin_initials(name)
@@ -94,7 +130,11 @@ module ApplicationHelper
       "Expense" => "fa-receipt",
       "User" => "fa-users",
       "Task" => "fa-list-check",
-      "BlogPost" => "fa-newspaper"
+      "BlogPost" => "fa-newspaper",
+      "AgencyTask" => "fa-list-check",
+      "AgencyTaskCategory" => "fa-tags",
+      "MarketingItem" => "fa-bullhorn",
+      "DailyPlan" => "fa-calendar-day"
     }.fetch(resource_model.name, "fa-layer-group")
   end
 

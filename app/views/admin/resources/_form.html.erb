@@ -28,6 +28,7 @@
   <div class="grid gap-5 sm:grid-cols-2">
     <% resource_fields.each do |field| %>
       <% next if field[:type] == :quote_items %>
+      <% next if field[:type] == :checklist_items %>
       <% type = field[:type] || :text %>
       <% wrapper_class = type.in?(%i[textarea rich_text]) ? "sm:col-span-2" : "" %>
 
@@ -139,6 +140,10 @@
 
   <% if @resource.is_a?(Lead) %>
     <%= render "admin/leads/custom_fields_form" %>
+  <% end %>
+
+  <% if @resource.is_a?(AgencyTask) %>
+    <%= render "admin/agency_tasks/checklist_form" %>
   <% end %>
 
   <% if quote_form %>

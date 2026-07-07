@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Fixture Marketing Item One
+  platform: LinkedIn
+  content_type: Post
+  topic: Fixture topic
+  status: Idea
+  publish_on: 2026-07-08
+  position: 1
+
+two:
+  title: Fixture Marketing Item Two
+  platform: Instagram
+  content_type: Reel
+  topic: Fixture topic
+  status: Scheduled
+  publish_on: 2026-07-10
+  position: 2

@@ -1,0 +1,66 @@
+<% content_for :title, "Daily Planner | M&W Labs Control Center" %>
+<% content_for :meta_description, "Plan today's focus, top priorities, morning and evening checklists, notes, and wins." %>
+
+<div class="space-y-6">
+  <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]"></div>
+    <div class="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+      <div class="min-w-0">
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.2em] text-cyan-100 backdrop-blur">
+          <i class="fa-solid fa-calendar-day"></i>
+          Agency OS
+        </div>
+        <h1 class="mt-5 text-4xl font-black tracking-tight md:text-5xl"><%= @date.strftime("%A, %B %-d") %></h1>
+        <p class="mt-3 max-w-3xl text-sm font-semibold leading-7 text-slate-300 md:text-base">Daily Planner</p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <%= link_to admin_daily_plan_path(date: @date - 1.day), class: "inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black text-white backdrop-blur transition hover:bg-white/15" do %>
+          <i class="fa-solid fa-chevron-left text-xs"></i> Prev day
+        <% end %>
+        <%= link_to admin_daily_plan_path, class: "inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black text-white backdrop-blur transition hover:bg-white/15" do %>
+          Today
+        <% end %>
+        <%= link_to admin_daily_plan_path(date: @date + 1.day), class: "inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black text-white backdrop-blur transition hover:bg-white/15" do %>
+          Next day <i class="fa-solid fa-chevron-right text-xs"></i>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <%= form_with model: @daily_plan, url: admin_daily_plan_path(date: @date), method: :patch, class: "space-y-5 rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6" do |form| %>
+      <div>
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">Focus</p>
+        <h2 class="mt-2 text-xl font-black text-slate-950">Today's Focus</h2>
+      </div>
+      <%= form.text_area :focus, rows: 2, placeholder: "The one thing that matters most today...", class: "block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+
+      <div>
+        <label class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">Top 3 Priorities</label>
+        <%= form.text_area :top_priorities, rows: 3, placeholder: "1.\n2.\n3.", class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+      </div>
+
+      <div>
+        <label class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">Notes</label>
+        <%= form.text_area :notes, rows: 3, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+      </div>
+
+      <div>
+        <label class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">Wins</label>
+        <%= form.text_area :wins, rows: 2, placeholder: "What went well today?", class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+      </div>
+
+      <div>
+        <label class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500">Tomorrow's Plan</label>
+        <%= form.text_area :tomorrow_plan, rows: 2, class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" %>
+      </div>
+
+      <%= form.submit "Save Daily Plan", class: "w-full rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700" %>
+    <% end %>
+
+    <div id="daily-plan-checklists">
+      <%= render "admin/daily_plans/checklists", daily_plan: @daily_plan %>
+    </div>
+  </div>
+</div>

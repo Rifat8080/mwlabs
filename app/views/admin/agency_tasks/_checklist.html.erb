@@ -1,0 +1,32 @@
+<section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6" id="agency-task-checklist">
+  <% checklist_items = agency_task.checklist_items.ordered %>
+  <div class="flex items-center justify-between">
+    <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">
+      Checklist (<%= checklist_items.count(&:done) %>/<%= checklist_items.size %>)
+    </p>
+  </div>
+
+  <% if checklist_items.any? %>
+    <ul class="mt-4 space-y-2">
+      <% checklist_items.each do |item| %>
+        <li class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3">
+          <%= button_to admin_checklist_item_path(item),
+            method: :patch,
+            params: { checklist_item: { done: !item.done } },
+            class: "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-xs transition #{item.done ? 'border-emerald-300 bg-emerald-500 text-white' : 'border-slate-300 bg-white text-transparent hover:border-blue-300'}" do %>
+            <i class="fa-solid fa-check"></i>
+          <% end %>
+          <span class="flex-1 text-sm font-semibold <%= item.done ? 'text-slate-400 line-through' : 'text-slate-900' %>"><%= item.title %></span>
+          <%= button_to admin_checklist_item_path(item),
+            method: :delete,
+            form: { data: { turbo_confirm: "Remove this checklist item?" } },
+            class: "flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" do %>
+            <i class="fa-solid fa-xmark text-xs"></i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="mt-4 text-sm font-semibold text-slate-500">No checklist items yet. Add some from the edit form.</p>
+  <% end %>
+</section>

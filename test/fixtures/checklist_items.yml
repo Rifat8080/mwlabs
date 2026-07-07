@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  checklistable: one (AgencyTask)
+  title: Fixture checklist item one
+  done: false
+  position: 1
+
+two:
+  checklistable: one (AgencyTask)
+  title: Fixture checklist item two
+  done: true
+  position: 2

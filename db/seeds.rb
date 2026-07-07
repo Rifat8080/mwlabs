@@ -101,3 +101,28 @@ services.each do |attributes|
     service.assign_attributes(attributes.merge(status: "Active"))
   end
 end
+
+ai_knowledge_entries = [
+  { key: "agency_name", value: "MW Labs" },
+  { key: "services", value: "Web development, SaaS development, AI automation, AI agents, Marketing, SEO, Branding" },
+  { key: "tone", value: "Professional, concise, and practical." }
+]
+
+ai_knowledge_entries.each do |attributes|
+  AiKnowledgeEntry.find_or_create_by!(key: attributes[:key]) do |entry|
+    entry.value = attributes[:value]
+    entry.active = true
+  end
+end
+
+ai_prompts = Ai::PromptTemplate::DEFAULTS.map do |category, prompt_text|
+  { name: "Default #{category.titleize}", category: category, prompt_text: prompt_text }
+end
+
+ai_prompts.each do |attributes|
+  AiPrompt.find_or_create_by!(name: attributes[:name]) do |prompt|
+    prompt.category = attributes[:category]
+    prompt.prompt_text = attributes[:prompt_text]
+    prompt.active = true
+  end
+end

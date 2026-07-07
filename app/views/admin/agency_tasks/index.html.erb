@@ -1,0 +1,170 @@
+<% content_for :title, "Tasks | M&W Labs Control Center" %>
+<% content_for :meta_description, resource_description %>
+
+<div class="space-y-6" data-controller="table-filter bulk-actions" data-bulk-actions-id-param-value="agency_task_ids[]" data-bulk-actions-label-value="task">
+  <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]"></div>
+    <div class="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+      <div class="min-w-0">
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.2em] text-cyan-100 backdrop-blur">
+          <i class="fa-solid fa-list-check"></i>
+          Agency OS
+        </div>
+        <h1 class="mt-5 text-4xl font-black tracking-tight md:text-5xl">Tasks</h1>
+        <p class="mt-3 max-w-3xl text-sm font-semibold leading-7 text-slate-300 md:text-base"><%= resource_description %></p>
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur">
+          <p class="text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-300">Tasks</p>
+          <p class="mt-1 text-3xl font-black"><%= @resources.size %></p>
+        </div>
+        <%= link_to new_admin_agency_task_path, class: "inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:bg-blue-50" do %>
+          New Task
+          <i class="fa-solid fa-plus text-xs"></i>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <details class="group rounded-[1.75rem] border border-blue-200 bg-blue-50/60 shadow-xl shadow-blue-100/50">
+    <summary class="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-sm font-black text-blue-700">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      Create a task with AI
+      <i class="fa-solid fa-chevron-down ml-auto text-[0.65rem] transition duration-200 group-open:-rotate-180"></i>
+    </summary>
+    <%= form_with url: ai_create_admin_agency_tasks_path, method: :post, class: "flex flex-col gap-3 border-t border-blue-100 p-5 sm:flex-row" do %>
+      <input type="text" name="description" placeholder="e.g. Create a LinkedIn marketing campaign for AI automation services next week" required class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50">
+      <button type="submit" class="shrink-0 rounded-xl bg-blue-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">Generate Task</button>
+    <% end %>
+  </details>
+
+  <div class="flex flex-wrap items-center justify-between gap-3 rounded-[1.75rem] border border-slate-200 bg-white/95 p-2 shadow-xl shadow-slate-200/70 backdrop-blur">
+    <div class="flex gap-2">
+      <% [ [ "kanban", "Kanban", "fa-table-columns" ], [ "table", "Table", "fa-table-list" ], [ "list", "List", "fa-list-ul" ] ].each do |view, label, icon| %>
+        <%= link_to admin_agency_tasks_path(view: view), class: "inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-black transition #{@view == view ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-600 hover:bg-slate-100'}" do %>
+          <i class="fa-solid <%= icon %> text-xs"></i>
+          <%= label %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <details class="group rounded-[1.75rem] border border-slate-200 bg-white/95 shadow-xl shadow-slate-200/70 backdrop-blur">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 lg:px-6">
+      <div class="flex min-w-0 items-center gap-3">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition group-open:bg-blue-600 group-open:text-white">
+          <i class="fa-solid fa-sliders text-sm"></i>
+        </span>
+        <h2 class="truncate text-sm font-black tracking-tight text-slate-950">Search &amp; filters</h2>
+      </div>
+      <i class="fa-solid fa-chevron-down text-[0.65rem] transition duration-200 group-open:-rotate-180"></i>
+    </summary>
+
+    <div class="space-y-4 border-t border-slate-100 p-5 lg:p-6">
+      <div>
+        <label for="agency-task-search" class="mb-1.5 block text-[0.65rem] font-black uppercase tracking-[0.14em] text-slate-400">Search</label>
+        <input id="agency-task-search" type="search" placeholder="Search title or description..." class="block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100/60" data-table-filter-target="input" data-action="input->table-filter#filter">
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <label class="mb-1.5 block text-[0.65rem] font-black uppercase tracking-[0.14em] text-slate-400">Status</label>
+          <select class="block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm font-semibold text-slate-700 outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100/60" data-table-filter-target="filterInput" data-column="status" data-action="change->table-filter#filter change->bulk-actions#refresh">
+            <option value="">All statuses</option>
+            <% AgencyTask::STATUSES.each do |status| %>
+              <option value="<%= status.downcase %>"><%= status.titleize %></option>
+            <% end %>
+          </select>
+        </div>
+        <div>
+          <label class="mb-1.5 block text-[0.65rem] font-black uppercase tracking-[0.14em] text-slate-400">Category</label>
+          <select class="block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm font-semibold text-slate-700 outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100/60" data-table-filter-target="filterInput" data-column="category" data-action="change->table-filter#filter change->bulk-actions#refresh">
+            <option value="">All categories</option>
+            <% @agency_task_categories.each do |category| %>
+              <option value="<%= category.name.downcase %>"><%= category.name %></option>
+            <% end %>
+          </select>
+        </div>
+        <div>
+          <label class="mb-1.5 block text-[0.65rem] font-black uppercase tracking-[0.14em] text-slate-400">Priority</label>
+          <select class="block h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm font-semibold text-slate-700 outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100/60" data-table-filter-target="filterInput" data-column="priority" data-action="change->table-filter#filter change->bulk-actions#refresh">
+            <option value="">All priorities</option>
+            <% AgencyTask::PRIORITIES.each do |priority| %>
+              <option value="<%= priority.downcase %>"><%= priority %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <div class="sticky top-4 z-20 hidden overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/95 shadow-2xl shadow-slate-900/40 backdrop-blur" data-bulk-actions-target="bar">
+    <div class="flex flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:px-5">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex min-w-8 items-center justify-center rounded-lg bg-blue-500 px-2 py-1 text-sm font-black text-white shadow-lg shadow-blue-500/30" data-bulk-actions-target="count">0 tasks selected</span>
+        <button type="button" class="text-xs font-bold text-slate-400 transition hover:text-white" data-action="click->bulk-actions#clear">
+          Clear
+          <i class="fa-solid fa-xmark ml-1 text-[0.65rem]"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <%= form_with url: bulk_update_admin_agency_tasks_path, method: :patch, class: "flex items-center", data: { bulk_actions_target: "statusForm", action: "submit->bulk-actions#injectIds" } do %>
+          <input type="hidden" name="bulk_action" value="status">
+          <div class="flex items-center overflow-hidden rounded-xl border border-slate-700 bg-slate-900">
+            <span class="flex items-center gap-2 border-r border-slate-700 px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.12em] text-slate-400">
+              <i class="fa-solid fa-tag text-[0.65rem]"></i>
+              Status
+            </span>
+            <select name="status" class="h-9 border-0 bg-transparent pl-3 pr-8 text-xs font-bold text-white outline-none [&>option]:text-slate-900">
+              <option value="">Choose&hellip;</option>
+              <% AgencyTask::STATUSES.each do |status| %>
+                <option value="<%= status %>"><%= status.titleize %></option>
+              <% end %>
+            </select>
+            <button type="submit" disabled class="h-9 border-l border-slate-700 bg-slate-800 px-3.5 text-xs font-black text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-slate-800" data-bulk-actions-target="statusSubmit">Apply</button>
+          </div>
+        <% end %>
+
+        <%= form_with url: bulk_update_admin_agency_tasks_path, method: :patch, class: "flex items-center", data: { bulk_actions_target: "assignForm", action: "submit->bulk-actions#injectIds" } do %>
+          <input type="hidden" name="bulk_action" value="category">
+          <div class="flex items-center overflow-hidden rounded-xl border border-slate-700 bg-slate-900">
+            <span class="flex items-center gap-2 border-r border-slate-700 px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.12em] text-slate-400">
+              <i class="fa-solid fa-layer-group text-[0.65rem]"></i>
+              Category
+            </span>
+            <select name="agency_task_category_id" class="h-9 border-0 bg-transparent pl-3 pr-8 text-xs font-bold text-white outline-none [&>option]:text-slate-900">
+              <option value="">Uncategorized</option>
+              <% @agency_task_categories.each do |category| %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% end %>
+            </select>
+            <button type="submit" disabled class="h-9 border-l border-slate-700 bg-slate-800 px-3.5 text-xs font-black text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-slate-800" data-bulk-actions-target="assignSubmit">Apply</button>
+          </div>
+        <% end %>
+
+        <%= form_with url: bulk_destroy_admin_agency_tasks_path, method: :delete, data: { bulk_actions_target: "deleteForm", action: "submit->bulk-actions#confirmDelete submit->bulk-actions#injectIds" } do %>
+          <button type="submit" class="inline-flex h-9 items-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 text-xs font-black text-rose-300 transition hover:bg-rose-500 hover:text-white">
+            <i class="fa-solid fa-trash text-[0.7rem]"></i>
+            Delete
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% if @view == "kanban" %>
+    <div id="agency-task-board">
+      <%= render "admin/agency_tasks/kanban_board", tasks_by_status: @tasks_by_status %>
+    </div>
+  <% elsif @view == "table" %>
+    <%= render "admin/agency_tasks/table_view", tasks: @resources %>
+  <% else %>
+    <%= render "admin/agency_tasks/list_view", tasks: @resources %>
+  <% end %>
+
+  <div class="hidden rounded-[1.5rem] border border-dashed border-slate-200 bg-white px-6 py-12 text-center text-sm font-semibold text-slate-500" data-table-filter-target="empty">
+    No matching tasks found.
+  </div>
+</div>

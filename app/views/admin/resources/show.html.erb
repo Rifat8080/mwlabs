@@ -127,6 +127,7 @@
       <dl class="mt-5 grid gap-4 sm:grid-cols-2">
         <% visible_resource_fields.each do |field| %>
           <% next if field[:type] == :quote_items %>
+          <% next if field[:type] == :checklist_items %>
           <% next if @resource.is_a?(BlogPost) && field[:name] == :body %>
           <% next if @resource.is_a?(PortfolioProject) && field[:name].in?(%i[story cover_image gallery_images]) %>
           <% value = field_value(@resource, field) %>
@@ -306,6 +307,32 @@
       <div class="trix-content max-w-none p-5 text-sm font-medium leading-7 text-slate-700 lg:p-6">
         <%= @resource.story %>
       </div>
+    </section>
+  <% end %>
+
+  <% if @resource.is_a?(AgencyTask) %>
+    <%= render "admin/agency_tasks/checklist", agency_task: @resource %>
+
+    <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">AI Assistant</p>
+        <%= button_to ai_improve_admin_agency_task_path(@resource), method: :post, class: "inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-black text-blue-700 hover:bg-blue-100" do %>
+          <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Improve with AI
+        <% end %>
+      </div>
+      <div id="agency-task-ai-suggestions" class="mt-4"></div>
+    </section>
+  <% end %>
+
+  <% if @resource.is_a?(MarketingItem) %>
+    <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-600">AI Assistant</p>
+        <%= button_to ai_rewrite_admin_marketing_item_path(@resource), method: :post, class: "inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-black text-blue-700 hover:bg-blue-100" do %>
+          <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Draft content with AI
+        <% end %>
+      </div>
+      <div id="marketing-item-ai-content" class="mt-4"></div>
     </section>
   <% end %>
 </div>

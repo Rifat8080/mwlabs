@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Fixture Task One
+  description: Sample fixture task
+  status: Todo
+  priority: Medium
+  due_date: 2026-07-08
+  position: 1
+
+two:
+  title: Fixture Task Two
+  description: Sample fixture task
+  status: InProgress
+  priority: High
+  due_date: 2026-07-10
+  position: 2

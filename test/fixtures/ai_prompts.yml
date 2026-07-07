@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Fixture Prompt One
+  category: daily_planner
+  prompt_text: Plan the day.
+  active: true
+
+two:
+  name: Fixture Prompt Two
+  category: task_creation
+  prompt_text: Create a task.
+  active: true
