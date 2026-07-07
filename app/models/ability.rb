@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
 
-  STAFF_MODELS = [ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost, BlogCategory ].freeze
+  STAFF_MODELS = [ Lead, Quote, Project, Task, FileUpload, Reminder, BlogPost, BlogCategory, PortfolioProject ].freeze
   CLIENT_PORTAL_MODELS = [ Lead, Quote, Project, Task, Invoice, FileUpload ].freeze
 
   attr_reader :user
@@ -14,6 +14,9 @@ class Ability
     can :update, User, id: @user.id
     can :read, BlogPost do |post|
       post.published?
+    end
+    can :read, PortfolioProject do |project|
+      project.published?
     end
 
     case @user.role
@@ -94,6 +97,7 @@ class Ability
     end
     can :manage, Reminder, user_id: user.id
     can :manage, BlogPost
+    can :manage, PortfolioProject
 
     can :manage, Quote do |quote|
       team_member_quote_scope.exists?(quote.id)
@@ -150,6 +154,8 @@ class Ability
       BlogPost.all
     when "BlogCategory"
       BlogCategory.all
+    when "PortfolioProject"
+      PortfolioProject.all
     else
       model.none
     end

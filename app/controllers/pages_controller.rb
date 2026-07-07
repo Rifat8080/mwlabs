@@ -183,6 +183,25 @@ class PagesController < ApplicationController
   end
 
   def work
+    @projects = PortfolioProject.published
+      .includes(cover_image_attachment: :blob)
+      .ordered
+    @featured_project = @projects.featured.first
+  end
+
+  def project
+    @project = PortfolioProject.published
+      .includes(cover_image_attachment: :blob, gallery_images_attachments: :blob)
+      .find_by!(slug: params[:slug])
+
+    @related_projects = PortfolioProject.published
+      .includes(cover_image_attachment: :blob)
+      .where(category: @project.category)
+      .where.not(id: @project.id)
+      .ordered
+      .limit(3)
+  rescue ActiveRecord::RecordNotFound
+    raise ActionController::RoutingError, "Not Found"
   end
 
   def pricing

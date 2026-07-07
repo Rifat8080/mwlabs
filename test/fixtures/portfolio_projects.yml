@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Fixture Project One
+  slug: fixture-project-one
+  client_name: Acme
+  category: Web Development
+  summary: MyText
+  status: Published
+  display_order: 1
+  featured: false
+
+two:
+  title: Fixture Project Two
+  slug: fixture-project-two
+  client_name: Acme
+  category: Digital Marketing
+  summary: MyText
+  status: Published
+  display_order: 2
+  featured: false

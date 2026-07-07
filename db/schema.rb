@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_24_130618) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_07_173003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -260,6 +260,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_24_130618) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["invoice_id"], name: "index_payments_on_invoice_id"
+  end
+
+  create_table "portfolio_projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.string "client_name"
+    t.string "category"
+    t.text "summary"
+    t.string "project_url"
+    t.integer "result_metric_value"
+    t.string "result_metric_suffix"
+    t.string "result_metric_label"
+    t.string "technologies"
+    t.date "completed_on"
+    t.string "status", default: "Draft", null: false
+    t.integer "display_order", default: 0, null: false
+    t.boolean "featured", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_portfolio_projects_on_category"
+    t.index ["slug"], name: "index_portfolio_projects_on_slug", unique: true
+    t.index ["status"], name: "index_portfolio_projects_on_status"
   end
 
   create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

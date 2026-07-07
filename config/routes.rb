@@ -54,6 +54,9 @@ Rails.application.routes.draw do
     resources :reminders, path: "follow-ups"
     resources :blog_categories, path: "blog-categories"
     resources :blog_posts, path: "blog"
+    resources :portfolio_projects, path: "portfolio" do
+      delete "gallery_images/:gallery_image_id", to: "portfolio_projects#remove_gallery_image", as: :remove_gallery_image, on: :member
+    end
   end
 
   get "sitemap.xml", to: "sitemap#show", defaults: { format: :xml }, format: false, as: :sitemap
@@ -65,6 +68,7 @@ Rails.application.routes.draw do
   get "blog/:slug", to: "blog_posts#show", as: :blog_post
   get "about", to: "pages#about"
   get "work", to: "pages#work"
+  get "work/:slug", to: "pages#project", as: :portfolio_project
   get "pricing", to: "pages#pricing"
   get "contact", to: "pages#contact"
   post "leads", to: "leads#create"

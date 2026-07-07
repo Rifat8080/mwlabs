@@ -7,6 +7,7 @@ import "@fortawesome/fontawesome-free"
 import { initProjectFilters } from "project_filters"
 import { initTestimonials } from "testimonials"
 import { initLandingEffects } from "landing_effects"
+import { initProjectGalleries, initProjectShowcases } from "project_gallery"
 
 const hideSiteLoader = () => {
   document.body.classList.add("site-loaded")
@@ -19,4 +20,6 @@ document.addEventListener("turbo:load", () => {
   initProjectFilters()
   initTestimonials()
   initLandingEffects()
+  initProjectGalleries()
+  initProjectShowcases()
 })

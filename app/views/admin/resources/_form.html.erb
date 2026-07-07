@@ -76,6 +76,43 @@
                 </div>
               </div>
             </div>
+          <% elsif @resource.is_a?(PortfolioProject) && field[:name] == :cover_image %>
+            <div class="mt-2 space-y-3">
+              <% if @resource.cover_image.attached? %>
+                <div class="overflow-hidden rounded-xl border border-blue-100 bg-blue-50">
+                  <%= admin_cover_image_preview @resource.cover_image, class: "h-40 w-full object-cover", alt: "Current cover image" %>
+                  <p class="px-4 py-3 text-sm font-semibold text-blue-900">
+                    Current cover: <%= @resource.cover_image.filename %> (<%= number_to_human_size(@resource.cover_image.byte_size) %>)
+                  </p>
+                </div>
+              <% end %>
+              <%= form.file_field field[:name],
+                accept: "image/png,image/jpeg,image/gif,image/webp",
+                class: "block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
+            </div>
+          <% elsif @resource.is_a?(PortfolioProject) && field[:name] == :gallery_images %>
+            <div class="mt-2 space-y-3" id="gallery">
+              <% if @resource.gallery_images.attached? %>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  <% @resource.gallery_images.each do |image| %>
+                    <div class="group relative overflow-hidden rounded-xl border border-blue-100 bg-blue-50">
+                      <%= image_tag image.representable? ? image.variant(resize_to_limit: [ 300, 200 ]) : image, class: "h-24 w-full object-cover", alt: "Gallery image" %>
+                      <%= button_to admin_remove_gallery_image_portfolio_project_path(@resource, gallery_image_id: image.id),
+                        method: :delete,
+                        class: "absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-rose-600 text-white shadow-lg opacity-0 transition group-hover:opacity-100",
+                        form: { data: { turbo_confirm: "Remove this gallery image?" } } do %>
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+              <%= form.file_field field[:name],
+                multiple: true,
+                accept: "image/png,image/jpeg,image/gif,image/webp",
+                class: "block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
+              <p class="text-xs font-semibold text-slate-500">Select multiple screenshots to build the live gallery slideshow shown on the case study page.</p>
+            </div>
           <% elsif @resource.is_a?(FileUpload) && @resource.file.attached? %>
             <div class="mt-2 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-900">
               <p class="font-black">Current file</p>
@@ -83,7 +120,7 @@
               <p class="mt-1 text-xs text-blue-700">Upload a new file below to replace it.</p>
             </div>
           <% end %>
-          <% unless @resource.is_a?(BlogPost) && field[:name] == :cover_image %>
+          <% unless (@resource.is_a?(BlogPost) && field[:name] == :cover_image) || (@resource.is_a?(PortfolioProject) && field[:name].in?(%i[cover_image gallery_images])) %>
           <%= form.file_field field[:name], class: "mt-2 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-black file:text-blue-700 hover:file:bg-blue-100" %>
           <% end %>
         <% when :decimal %>

@@ -48,4 +48,25 @@ module PagesHelper
   def home_nav_link_classes
     nav_link_classes(root_path, exact: true)
   end
+
+  PORTFOLIO_CATEGORY_STYLES = {
+    "Web Development" => { icon: "fa-code", color: "bg-blue-600 text-white" },
+    "Digital Marketing" => { icon: "fa-bullhorn", color: "bg-emerald-50 text-emerald-600" },
+    "Branding & Design" => { icon: "fa-pen-nib", color: "bg-purple-50 text-purple-600" },
+    "Video Editing" => { icon: "fa-clapperboard", color: "bg-pink-50 text-pink-600" },
+    "AI & Automation" => { icon: "fa-robot", color: "bg-amber-50 text-amber-600" },
+    "Growth Strategy" => { icon: "fa-bullseye", color: "bg-cyan-50 text-cyan-600" }
+  }.freeze
+
+  def portfolio_category_icon(category)
+    PORTFOLIO_CATEGORY_STYLES.dig(category, :icon) || "fa-briefcase"
+  end
+
+  def portfolio_category_color(category)
+    PORTFOLIO_CATEGORY_STYLES.dig(category, :color) || "bg-slate-900 text-white"
+  end
+
+  def portfolio_showcase_images(project)
+    [ project.cover_image.attached? ? project.cover_image : nil, *project.gallery_images ].compact
+  end
 end
