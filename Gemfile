@@ -71,7 +71,7 @@ gem "tailwindcss-ruby", "~> 4.3"
 
 gem "devise", "~> 5.0"
 gem "prawn", "~> 2.5"
-gem "prawn-svg", "~> 0.37"
+gem "prawn-svg", "~> 0.40"
 gem "prawn-table", "~> 0.2"
 
 gem "cancancan", "~> 3.6"
