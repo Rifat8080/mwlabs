@@ -71,9 +71,9 @@
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                 </svg>
               </button>
-              <div id="services-dropdown" class="z-50 hidden w-56 divide-y divide-slate-100 rounded-xl border border-slate-100 bg-white shadow-xl">
+              <div id="services-dropdown" class="z-50 hidden w-64 divide-y divide-slate-100 rounded-xl border border-slate-100 bg-white shadow-xl">
                 <ul class="py-2 text-sm font-semibold text-slate-700" aria-labelledby="services-dropdown-button">
-                  <% PagesHelper::SERVICE_LINKS.first(3).each do |label, slug| %>
+                  <% PagesHelper::SERVICE_LINKS.each do |label, slug| %>
                     <li><%= link_to label, service_path(slug), class: "block px-4 py-3 hover:bg-blue-50 hover:text-blue-700" %></li>
                   <% end %>
                 </ul>
