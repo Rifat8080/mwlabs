@@ -1,14 +1,16 @@
 class NotificationMailer < ApplicationMailer
   def notify
+    @user = params[:user]
+    @client = params[:client]
     @action = params[:action]
     @notifiable = params[:notifiable]
     @actor = params[:actor]
     @details = params[:details]
 
-    if params[:user]
-      mail(to: params[:user].email, subject: "New notification: #{@action}")
-    elsif params[:client]
-      mail(to: params[:client].email, subject: "Update: #{@action}")
+    if @user
+      mail(to: @user.email, subject: "New notification: #{@action}")
+    elsif @client
+      mail(to: @client.email, subject: "Update: #{@action}")
     else
       # no recipient
       nil

@@ -24,7 +24,7 @@
         <p style="margin: 10px 0 0 0; color: #64748b;">Agency Operations Platform</p>
       </div>
 
-      <p>Hi <%= current_user&.display_name || 'there' %>,</p>
+      <p>Hi <%= (@user || @client)&.display_name || 'there' %>,</p>
 
       <div class="action-box">
         <strong><%= @action %></strong>
