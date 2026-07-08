@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_07_192552) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_08_045351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -97,6 +97,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_192552) do
     t.index ["due_date"], name: "index_agency_tasks_on_due_date"
     t.index ["parent_recurring_task_id"], name: "index_agency_tasks_on_parent_recurring_task_id"
     t.index ["status"], name: "index_agency_tasks_on_status"
+  end
+
+  create_table "ai_agent_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "agent_key", null: false
+    t.string "feature"
+    t.uuid "user_id"
+    t.jsonb "input", default: {}, null: false
+    t.text "output"
+    t.string "status", default: "success", null: false
+    t.string "model"
+    t.integer "prompt_tokens"
+    t.integer "output_tokens"
+    t.integer "tokens_used"
+    t.integer "duration_ms"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_key"], name: "index_ai_agent_runs_on_agent_key"
+    t.index ["created_at"], name: "index_ai_agent_runs_on_created_at"
+    t.index ["status"], name: "index_ai_agent_runs_on_status"
+    t.index ["user_id"], name: "index_ai_agent_runs_on_user_id"
   end
 
   create_table "ai_assistant_conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -368,7 +389,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_07_192552) do
     t.string "notifiable_type"
     t.string "actor_type"
     t.jsonb "params", default: {}
-    t.datetime "read_at", precision: nil
+    t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "url"

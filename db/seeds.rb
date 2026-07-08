@@ -105,7 +105,13 @@ end
 ai_knowledge_entries = [
   { key: "agency_name", value: "MW Labs" },
   { key: "services", value: "Web development, SaaS development, AI automation, AI agents, Marketing, SEO, Branding" },
-  { key: "tone", value: "Professional, concise, and practical." }
+  { key: "tone", value: "Professional, concise, and practical." },
+  { key: "target_audience", value: "Small to mid-sized agencies and businesses that need web, SaaS, marketing, or AI automation help." },
+  { key: "writing_style", value: "Clear, direct, and jargon-free. Short sentences over long ones." },
+  { key: "brand_voice", value: "Confident and practical — an expert partner, not a hype machine." },
+  { key: "business_goals", value: "Grow recurring client work, ship reliable AI automation, and keep operations lean." },
+  { key: "preferred_platforms", value: "LinkedIn and the company blog first; Twitter/X and Instagram secondary." },
+  { key: "preferred_response_format", value: "Concise, scannable output with headings or bullet points where useful." }
 ]
 
 ai_knowledge_entries.each do |attributes|

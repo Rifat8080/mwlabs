@@ -93,6 +93,10 @@ Rails.application.routes.draw do
     post "ai-assistant/messages", to: "ai_assistant#create_message", as: :ai_assistant_messages
     post "ai-assistant/quick-action", to: "ai_assistant#quick_action", as: :ai_assistant_quick_action
 
+    get "ai-employees", to: "ai_employees#index", as: :ai_employees
+    get "ai-employees/:agent_key", to: "ai_employees#show", as: :ai_employee
+    post "ai-employees/:agent_key/run", to: "ai_employees#run", as: :run_ai_employee
+
     resources :ai_prompts, path: "ai-prompts"
     resources :ai_knowledge_entries, path: "ai-knowledge"
     resources :ai_usage_logs, path: "ai-usage-logs", only: [ :index, :show ]

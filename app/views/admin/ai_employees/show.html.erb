@@ -1,0 +1,94 @@
+<% content_for :title, "#{@agent[:name]} | AI Employees | M&W Labs Control Center" %>
+<% content_for :meta_description, @agent[:description] %>
+
+<div class="space-y-6" data-controller="ai-employee" data-ai-employee-run-url-value="<%= admin_run_ai_employee_path(@agent[:key]) %>">
+  <div>
+    <%= link_to admin_ai_employees_path, class: "inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-blue-600 hover:text-blue-700" do %>
+      <i class="fa-solid fa-arrow-left"></i> All AI Employees
+    <% end %>
+  </div>
+
+  <section class="relative overflow-hidden rounded-[2.25rem] border border-white/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 lg:p-8">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.35),_transparent_28rem),radial-gradient(circle_at_bottom_left,_rgba(37,99,235,0.3),_transparent_22rem)]"></div>
+    <div class="relative flex items-start gap-4">
+      <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl text-cyan-100">
+        <i class="fa-solid <%= @agent[:icon] %>"></i>
+      </span>
+      <div>
+        <h1 class="text-3xl font-black tracking-tight md:text-4xl"><%= @agent[:name] %></h1>
+        <p class="mt-2 max-w-2xl text-sm font-semibold leading-7 text-slate-300"><%= @agent[:description] %></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
+    <div class="space-y-6">
+      <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-blue-600">Run this agent</p>
+          <p class="text-xs font-bold text-slate-400" data-ai-employee-target="status"></p>
+        </div>
+
+        <form class="mt-4 space-y-4" data-ai-employee-target="form" data-action="submit->ai-employee#run">
+          <% @agent[:fields].each do |field| %>
+            <div>
+              <label class="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-slate-500"><%= field[:name].to_s.humanize %></label>
+              <% case field[:type] %>
+              <% when :textarea %>
+                <textarea name="<%= field[:name] %>" rows="4" placeholder="<%= field[:placeholder] %>" class="mt-2 block w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50"></textarea>
+              <% when :select %>
+                <select name="<%= field[:name] %>" class="mt-2 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50">
+                  <% field[:collection].each do |option| %>
+                    <option value="<%= option %>"><%= option.to_s.humanize %></option>
+                  <% end %>
+                </select>
+              <% else %>
+                <input type="text" name="<%= field[:name] %>" placeholder="<%= field[:placeholder] %>" class="mt-2 block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-50" />
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if @agent[:fields].empty? %>
+            <p class="text-sm font-medium text-slate-400">This agent needs no input &mdash; it reads live data from your workspace.</p>
+          <% end %>
+
+          <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">
+            <i class="fa-solid fa-bolt"></i> Run Agent
+          </button>
+        </form>
+      </section>
+
+      <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-black uppercase tracking-[0.16em] text-blue-600">Output</p>
+          <div class="flex items-center gap-3">
+            <button type="button" data-action="click->ai-employee#copy" class="text-xs font-bold text-slate-400 transition hover:text-slate-600"><i class="fa-regular fa-copy"></i> Copy</button>
+            <button type="button" data-action="click->ai-employee#run" class="text-xs font-bold text-slate-400 transition hover:text-slate-600"><i class="fa-solid fa-rotate-right"></i> Run again</button>
+          </div>
+        </div>
+        <div class="mt-4 min-h-[10rem] whitespace-pre-line rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm font-medium leading-6 text-slate-700" data-ai-employee-target="output" data-content="">
+          <span class="text-slate-400">Output will appear here after you run the agent.</span>
+        </div>
+      </section>
+    </div>
+
+    <section class="rounded-[1.75rem] border border-white bg-white/90 p-5 shadow-xl shadow-slate-200/70 backdrop-blur lg:p-6">
+      <p class="text-xs font-black uppercase tracking-[0.16em] text-blue-600">Run history</p>
+      <div class="mt-4 space-y-3" data-ai-employee-target="history">
+        <% @runs.each do |run| %>
+          <div class="rounded-xl border border-slate-100 bg-slate-50 p-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-black <%= run.status == "error" ? "text-rose-500" : "text-emerald-600" %>"><%= run.status %></span>
+              <span class="text-[0.65rem] font-bold text-slate-400"><%= time_ago_in_words(run.created_at) %> ago</span>
+            </div>
+            <p class="mt-1 truncate text-xs font-semibold text-slate-600"><%= (run.output.presence || run.error_message).to_s.truncate(80) %></p>
+          </div>
+        <% end %>
+
+        <% if @runs.empty? %>
+          <p class="text-sm font-medium text-slate-400">No runs yet.</p>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>
