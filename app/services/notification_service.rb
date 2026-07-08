@@ -39,6 +39,8 @@ class NotificationService
       Rails.application.routes.url_helpers.admin_payment_path(notifiable)
     when Expense
       Rails.application.routes.url_helpers.admin_expense_path(notifiable)
+    when AiAgentRun
+      Rails.application.routes.url_helpers.admin_ai_employee_path(notifiable.agent_key)
     else
       nil
     end
@@ -79,6 +81,8 @@ class NotificationService
       "fa-receipt"
     when Client
       "fa-address-book"
+    when AiAgentRun
+      "fa-robot"
     else
       "fa-bell"
     end

@@ -28,6 +28,54 @@ module Ai
       end
     end
 
+    def daily_operations_plan
+      prompt = <<~PROMPT
+        Today's date: #{Date.current}
+
+        Overdue tasks:
+        #{format_tasks(AgencyTask.overdue.includes(:agency_task_category))}
+
+        Due today:
+        #{format_tasks(AgencyTask.due_today.includes(:agency_task_category))}
+
+        Upcoming tasks:
+        #{format_tasks(AgencyTask.upcoming.includes(:agency_task_category).limit(10))}
+
+        Marketing scheduled today:
+        #{format_marketing(MarketingItem.where(publish_on: Date.current))}
+
+        Based on this, write a short narrative covering today's top priorities, a recommended task order, an estimated workload (hours), and important reminders. Also list the important reminders separately as short, standalone reminder items (each with a title and an optional one-sentence note) so they can be added to a reminders list.
+      PROMPT
+
+      schema = {
+        type: "OBJECT",
+        properties: {
+          narrative: { type: "STRING" },
+          reminders: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                title: { type: "STRING" },
+                note: { type: "STRING" }
+              },
+              required: %w[title]
+            }
+          }
+        },
+        required: %w[narrative reminders]
+      }
+
+      result = Ai::UsageTracker.track(feature: "daily_planner") do
+        gemini_client.generate(prompt: prompt, system_instruction: system_instruction("daily_planner"), json_schema: schema)
+      end
+
+      parsed = JSON.parse(result[:content])
+      result.merge(content: parsed["narrative"], parsed: parsed)
+    rescue JSON::ParserError => e
+      raise Ai::GeminiClient::Error, "Gemini returned invalid JSON: #{e.message}"
+    end
+
     def create_from_description(description)
       prompt = <<~PROMPT
         Turn this into a structured agency task: "#{description}"

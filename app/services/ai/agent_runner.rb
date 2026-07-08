@@ -19,6 +19,7 @@ module Ai
         user: user,
         input: params.to_h.transform_keys(&:to_s),
         output: result[:content],
+        parsed: result[:parsed],
         status: "success",
         model: result[:model],
         prompt_tokens: result[:prompt_tokens],

@@ -74,9 +74,12 @@ module Admin
           nav_item("Tasks", helpers.admin_agency_tasks_path, "fa-list-check", AgencyTask),
           nav_item("Task Categories", helpers.admin_agency_task_categories_path, "fa-tags", AgencyTaskCategory),
           nav_item("Marketing Planner", helpers.admin_marketing_items_path, "fa-bullhorn", MarketingItem),
-          nav_item("Daily Planner", helpers.admin_daily_plan_path, "fa-calendar-day", DailyPlan),
+          nav_item("Daily Planner", helpers.admin_daily_plan_path, "fa-calendar-day", DailyPlan)
+        ],
+        "AI Workforce" => [
           nav_item("AI Employees", helpers.admin_ai_employees_path, "fa-users-gear", AgencyTask),
           nav_item("AI Assistant", helpers.admin_ai_assistant_path, "fa-robot", AgencyTask),
+          nav_item("Agent Run History", helpers.admin_ai_agent_runs_path, "fa-clock-rotate-left", AiAgentRun),
           nav_item("AI Prompts", helpers.admin_ai_prompts_path, "fa-comment-dots", AiPrompt),
           nav_item("AI Knowledge", helpers.admin_ai_knowledge_entries_path, "fa-brain", AiKnowledgeEntry),
           nav_item("AI Usage Logs", helpers.admin_ai_usage_logs_path, "fa-chart-simple", AiUsageLog)

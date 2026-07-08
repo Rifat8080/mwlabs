@@ -96,10 +96,12 @@ Rails.application.routes.draw do
     get "ai-employees", to: "ai_employees#index", as: :ai_employees
     get "ai-employees/:agent_key", to: "ai_employees#show", as: :ai_employee
     post "ai-employees/:agent_key/run", to: "ai_employees#run", as: :run_ai_employee
+    post "ai-employees/:agent_key/apply", to: "ai_employees#apply", as: :apply_ai_employee
 
     resources :ai_prompts, path: "ai-prompts"
     resources :ai_knowledge_entries, path: "ai-knowledge"
     resources :ai_usage_logs, path: "ai-usage-logs", only: [ :index, :show ]
+    resources :ai_agent_runs, path: "ai-agent-runs", only: [ :index, :show ]
   end
 
   get "sitemap.xml", to: "sitemap#show", defaults: { format: :xml }, format: false, as: :sitemap

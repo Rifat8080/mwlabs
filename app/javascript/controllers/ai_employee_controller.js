@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["form", "output", "status", "history"]
-  static values = { runUrl: String }
+  static values = { runUrl: String, applyUrl: String, applyLabel: String }
 
   connect() {
     this.loading = false
@@ -68,6 +68,34 @@ export default class extends Controller {
       <p class="mt-1 truncate text-xs font-semibold text-slate-600"></p>
     `
     entry.querySelector("p").textContent = (payload.content || "").slice(0, 80)
+
+    if (this.hasApplyUrlValue && this.applyUrlValue) {
+      const form = document.createElement("form")
+      form.method = "post"
+      form.action = this.applyUrlValue
+      form.className = "mt-2"
+
+      const csrf = document.createElement("input")
+      csrf.type = "hidden"
+      csrf.name = "authenticity_token"
+      csrf.value = this.csrfToken()
+      form.appendChild(csrf)
+
+      const runId = document.createElement("input")
+      runId.type = "hidden"
+      runId.name = "run_id"
+      runId.value = payload.run_id
+      form.appendChild(runId)
+
+      const button = document.createElement("button")
+      button.type = "submit"
+      button.className = "inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-[0.65rem] font-black text-emerald-700 hover:bg-emerald-100"
+      button.textContent = this.applyLabelValue || "Apply"
+      form.appendChild(button)
+
+      entry.appendChild(form)
+    }
+
     this.historyTarget.prepend(entry)
   }
 

@@ -25,6 +25,18 @@ module Admin
       render json: { error: e.message }, status: :service_unavailable
     end
 
+    def apply
+      return redirect_to admin_ai_employees_path, alert: "Unknown AI agent." if @agent.blank?
+      return redirect_to admin_ai_employee_path(@agent[:key]), alert: "This agent has nothing to apply." if @agent[:apply].blank?
+
+      run = AiAgentRun.for_agent(@agent[:key]).find(params[:run_id])
+      summary = @agent[:apply].call(parsed: run.parsed || {}, user: current_user)
+
+      redirect_to admin_ai_employee_path(@agent[:key]), notice: summary
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_ai_employee_path(@agent[:key]), alert: "That run could not be found."
+    end
+
     private
 
     def require_admin!
