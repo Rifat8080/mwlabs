@@ -79,18 +79,28 @@ module Quotes
     private
 
     def render_header(pdf)
-      if File.exist?(logo_path)
-        pdf.svg File.read(logo_path), width: 140, enable_web_requests: false
-        pdf.move_down 8
-      else
-        pdf.fill_color "1D4ED8"
-        pdf.text "M&W Labs", size: 22, style: :bold
-        pdf.fill_color "0F172A"
-        pdf.move_down 4
-      end
+      render_logo(pdf) || render_text_logo(pdf)
 
       pdf.fill_color "0F172A"
       pdf.text "Professional Quotation", size: 14, style: :bold
+    end
+
+    def render_logo(pdf)
+      return false unless File.exist?(logo_path)
+
+      pdf.svg File.read(logo_path), width: 140, enable_web_requests: false
+      pdf.move_down 8
+      true
+    rescue StandardError => e
+      Rails.logger.error("[Quotes::PdfRenderer] failed to render logo.svg: #{e.class}: #{e.message}")
+      false
+    end
+
+    def render_text_logo(pdf)
+      pdf.fill_color "1D4ED8"
+      pdf.text "M&W Labs", size: 22, style: :bold
+      pdf.fill_color "0F172A"
+      pdf.move_down 4
     end
 
     def logo_path
@@ -103,6 +113,7 @@ module Quotes
         [ "Prepared for", @quote.recipient_name ],
         [ "Email", @quote.recipient_email.presence || "Not provided" ],
         [ "Status", @quote.status ],
+        [ "Currency", @quote.currency ],
         [ "Issue date", @quote.created_at&.strftime("%B %d, %Y") || Date.current.strftime("%B %d, %Y") ],
         [ "Valid until", @quote.validity_date&.strftime("%B %d, %Y") || "Open" ]
       ]
@@ -118,7 +129,7 @@ module Quotes
     end
 
     def format_money(amount)
-      format("$%.2f", amount.to_d)
+      format("%s%.2f", @quote.currency_pdf_symbol, amount.to_d)
     end
   end
 end

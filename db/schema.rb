@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_08_054339) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_20_080133) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -505,6 +505,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_08_054339) do
     t.uuid "sent_by_id"
     t.string "public_token"
     t.string "negotiation_status", default: "none", null: false
+    t.string "currency", default: "USD", null: false
     t.index ["client_id"], name: "index_quotes_on_client_id"
     t.index ["lead_id"], name: "index_quotes_on_lead_id"
     t.index ["public_token"], name: "index_quotes_on_public_token", unique: true

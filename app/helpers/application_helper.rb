@@ -15,7 +15,7 @@ module ApplicationHelper
     field[:label].presence || field[:name].to_s.humanize
   end
 
-  def admin_value(value)
+  def admin_value(value, currency: nil)
     return value.display_name if value.respond_to?(:display_name)
 
     case value
@@ -24,7 +24,7 @@ module ApplicationHelper
     when Date, Time, ActiveSupport::TimeWithZone
       value.to_date.to_fs(:long)
     when BigDecimal
-      number_to_currency(value)
+      currency ? number_to_currency(value, unit: currency) : number_to_currency(value)
     when TrueClass
       "Yes"
     when FalseClass

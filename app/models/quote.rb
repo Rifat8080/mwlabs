@@ -3,6 +3,21 @@ class Quote < ApplicationRecord
   NEGOTIATION_STATUSES = %w[none open resolved].freeze
   CLIENT_VISIBLE_STATUSES = %w[Sent Viewed Revised Accepted Rejected Expired].freeze
 
+  # pdf_symbol is an ASCII-safe fallback for Prawn's built-in Helvetica font, which only
+  # supports Windows-1252 and cannot render ৳, ₹, or Arabic script without a bundled Unicode font.
+  CURRENCIES = {
+    "USD" => { symbol: "$", name: "US Dollar" },
+    "BDT" => { symbol: "৳", pdf_symbol: "Tk ", name: "Bangladeshi Taka" },
+    "EUR" => { symbol: "€", name: "Euro" },
+    "GBP" => { symbol: "£", name: "British Pound" },
+    "AUD" => { symbol: "A$", name: "Australian Dollar" },
+    "CAD" => { symbol: "C$", name: "Canadian Dollar" },
+    "INR" => { symbol: "₹", pdf_symbol: "Rs ", name: "Indian Rupee" },
+    "AED" => { symbol: "د.إ", pdf_symbol: "AED ", name: "UAE Dirham" },
+    "SGD" => { symbol: "S$", name: "Singapore Dollar" },
+    "JPY" => { symbol: "¥", name: "Japanese Yen" }
+  }.freeze
+
   belongs_to :client, optional: true
   belongs_to :lead, optional: true
   belongs_to :sent_by, class_name: "User", optional: true
@@ -22,6 +37,7 @@ class Quote < ApplicationRecord
 
   validates :status, inclusion: { in: STATUSES }
   validates :negotiation_status, inclusion: { in: NEGOTIATION_STATUSES }
+  validates :currency, inclusion: { in: CURRENCIES.keys }
   validates :total_amount, numericality: { greater_than_or_equal_to: 0 }
   validates :public_token, uniqueness: true, allow_nil: true
   validate :client_or_lead_present
@@ -32,6 +48,16 @@ class Quote < ApplicationRecord
 
   def quote_reference
     public_token.presence || "Q-#{id.to_s.first(8).upcase}"
+  end
+
+  def currency_symbol
+    CURRENCIES.fetch(currency, CURRENCIES["USD"])[:symbol]
+  end
+
+  # ASCII-safe symbol for PDF rendering (Prawn's built-in font can't render all currency symbols).
+  def currency_pdf_symbol
+    entry = CURRENCIES.fetch(currency, CURRENCIES["USD"])
+    entry[:pdf_symbol] || entry[:symbol]
   end
 
   def recipient_name

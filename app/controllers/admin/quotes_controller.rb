@@ -6,11 +6,12 @@ module Admin
       model: Quote,
       title: "Quotes",
       description: "Build proposals, track quote status, and convert accepted quotes into delivery work.",
-      columns: %i[ display_name client lead status total_amount validity_date ],
+      columns: %i[ display_name client lead status currency total_amount validity_date ],
       fields: [
         { name: :client_id, label: "Client", type: :select, collection: -> { Client.order(:name).map { |client| [ client.display_name, client.id ] } } },
         { name: :lead_id, label: "Lead", type: :select, collection: -> { Lead.order(:name).map { |lead| [ lead.display_name, lead.id ] } } },
         { name: :status, type: :select, collection: Quote::STATUSES },
+        { name: :currency, type: :select, collection: Quote::CURRENCIES.keys },
         { name: :discount, type: :decimal },
         { name: :tax, type: :decimal },
         { name: :payment_terms, type: :textarea },

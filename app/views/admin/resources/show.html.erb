@@ -128,6 +128,7 @@
         <% visible_resource_fields.each do |field| %>
           <% next if field[:type] == :quote_items %>
           <% next if field[:type] == :checklist_items %>
+          <% next if @resource.is_a?(Quote) && field[:name].in?(%i[discount tax]) %>
           <% next if @resource.is_a?(BlogPost) && field[:name] == :body %>
           <% next if @resource.is_a?(PortfolioProject) && field[:name].in?(%i[story cover_image gallery_images]) %>
           <% value = field_value(@resource, field) %>
@@ -174,10 +175,10 @@
           <div class="relative">
             <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Quote Totals</p>
             <div class="mt-4 space-y-2 text-sm">
-              <div class="flex justify-between gap-4"><span class="text-slate-300">Subtotal</span><strong><%= number_to_currency(@resource.subtotal) %></strong></div>
-              <div class="flex justify-between gap-4"><span class="text-slate-300">Discount</span><strong><%= number_to_currency(@resource.discount) %></strong></div>
-              <div class="flex justify-between gap-4"><span class="text-slate-300">Tax</span><strong><%= number_to_currency(@resource.tax) %></strong></div>
-              <div class="flex justify-between gap-4 border-t border-white/10 pt-3 text-base"><span class="text-slate-300">Total</span><strong><%= number_to_currency(@resource.total_amount) %></strong></div>
+              <div class="flex justify-between gap-4"><span class="text-slate-300">Subtotal</span><strong><%= number_to_currency(@resource.subtotal, unit: @resource.currency_symbol) %></strong></div>
+              <div class="flex justify-between gap-4"><span class="text-slate-300">Discount</span><strong><%= number_to_currency(@resource.discount, unit: @resource.currency_symbol) %></strong></div>
+              <div class="flex justify-between gap-4"><span class="text-slate-300">Tax</span><strong><%= number_to_currency(@resource.tax, unit: @resource.currency_symbol) %></strong></div>
+              <div class="flex justify-between gap-4 border-t border-white/10 pt-3 text-base"><span class="text-slate-300">Total</span><strong><%= number_to_currency(@resource.total_amount, unit: @resource.currency_symbol) %></strong></div>
             </div>
           </div>
         </section>
@@ -225,8 +226,8 @@
               <tr class="hover:bg-blue-50/40">
                 <td class="px-5 py-4 font-black text-slate-950"><%= item.name %></td>
                 <td class="px-5 py-4 font-semibold text-slate-700"><%= item.quantity %></td>
-                <td class="px-5 py-4 font-semibold text-slate-700"><%= number_to_currency(item.unit_price) %></td>
-                <td class="px-5 py-4 font-black text-slate-950"><%= number_to_currency(item.total) %></td>
+                <td class="px-5 py-4 font-semibold text-slate-700"><%= number_to_currency(item.unit_price, unit: @resource.currency_symbol) %></td>
+                <td class="px-5 py-4 font-black text-slate-950"><%= number_to_currency(item.total, unit: @resource.currency_symbol) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -244,11 +245,11 @@
               </div>
               <div class="rounded-xl bg-white p-3">
                 <p class="text-slate-400">Price</p>
-                <p class="mt-1 text-slate-800"><%= number_to_currency(item.unit_price) %></p>
+                <p class="mt-1 text-slate-800"><%= number_to_currency(item.unit_price, unit: @resource.currency_symbol) %></p>
               </div>
               <div class="rounded-xl bg-white p-3">
                 <p class="text-slate-400">Total</p>
-                <p class="mt-1 text-slate-800"><%= number_to_currency(item.total) %></p>
+                <p class="mt-1 text-slate-800"><%= number_to_currency(item.total, unit: @resource.currency_symbol) %></p>
               </div>
             </div>
           </article>
