@@ -1,0 +1,1 @@
+export { mountStudioScene } from "./scene"

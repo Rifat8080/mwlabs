@@ -323,6 +323,11 @@
   z-index: 4;
 }
 
+.studio-webgl .studio-hero-title {
+  color: var(--paper);
+  mix-blend-mode: difference;
+}
+
 .studio-hero-title span {
   display: block;
   white-space: nowrap;
@@ -332,7 +337,8 @@
   aspect-ratio: 1 / 1;
   left: 50%;
   max-height: min(71vh, 50rem);
-  position: absolute;
+  pointer-events: none;
+  position: fixed;
   top: 48%;
   transform: translate(-38%, -48%);
   width: min(57vw, 53rem);
@@ -351,6 +357,10 @@
   height: 100%;
   object-fit: contain;
   width: 100%;
+}
+
+.studio-hero-visual.has-webgl .studio-ampersand-poster {
+  opacity: 0;
 }
 
 .studio-hero-bottom {
@@ -1237,5 +1247,10 @@
   .studio-process-rule {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .studio-hero-title {
+    color: var(--ink) !important;
+    mix-blend-mode: normal !important;
   }
 }

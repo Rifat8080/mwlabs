@@ -8,10 +8,25 @@ export const scrollState = {
   target: 0,
   current: 0,
   materialTarget: 0,
+  materialInfluence: 0,
 }
 
 const DHAKA_TIME_ZONE = "Asia/Dhaka"
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+
+const supportsWebGL2 = () => {
+  const testCanvas = document.createElement("canvas")
+  return Boolean(testCanvas.getContext("webgl2", { failIfMajorPerformanceCaveat: true }))
+}
+
+const canRenderStudioScene = (root, reducedMotion = false) => {
+  const hasScene = Boolean(root.querySelector("[data-studio-scene]"))
+  const memory = navigator.deviceMemory
+  const lowMemory = typeof memory === "number" && memory < 4
+  const coarseSmall = window.matchMedia("(pointer: coarse) and (max-width: 720px)").matches
+
+  return hasScene && !reducedMotion && !lowMemory && !coarseSmall && supportsWebGL2()
+}
 
 const updateDhakaTime = (root) => {
   const formatter = new Intl.DateTimeFormat("en-GB", {
@@ -35,9 +50,16 @@ const updateDhakaTime = (root) => {
   return () => window.clearInterval(timer)
 }
 
-const createPreloader = (root) => {
+const createPreloader = (root, assetsEnabled = false) => {
   const element = root.querySelector("[data-studio-preloader]")
-  if (!element) return { ready: Promise.resolve(), destroy: () => {} }
+  if (!element) {
+    return {
+      fontsReady: Promise.resolve(),
+      setAssetProgress: () => {},
+      finish: () => Promise.resolve(),
+      destroy: () => {},
+    }
+  }
 
   const value = element.querySelector("[data-studio-progress]")
   const fill = element.querySelector("[data-studio-progress-fill]")
@@ -49,22 +71,27 @@ const createPreloader = (root) => {
 
   let complete = 0
   const total = fonts.length
+  let assetProgress = assetsEnabled ? 0 : 1
   const setProgress = () => {
-    const progress = Math.round((complete / total) * 100)
+    const fontProgress = complete / total
+    const progress = Math.round(
+      assetsEnabled ? fontProgress * 25 + assetProgress * 75 : fontProgress * 100,
+    )
     value.textContent = String(progress)
     fill.style.transform = `scaleX(${progress / 100})`
   }
 
   setProgress()
-  const ready = Promise.all(
+  const fontsReady = Promise.all(
     fonts.map(([font, sample]) =>
       document.fonts.load(font, sample).finally(() => {
         complete += 1
         setProgress()
       }),
     ),
-  ).then(async () => {
-    await document.fonts.ready
+  ).then(() => document.fonts.ready)
+
+  const finish = async () => {
     value.textContent = "100"
     fill.style.transform = "scaleX(1)"
     element.classList.add("is-complete")
@@ -74,10 +101,15 @@ const createPreloader = (root) => {
       ease: "power4.inOut",
     })
     document.documentElement.classList.remove("studio-loading")
-  })
+  }
 
   return {
-    ready,
+    fontsReady,
+    setAssetProgress: (progress) => {
+      assetProgress = Math.max(assetProgress, Math.min(1, progress))
+      setProgress()
+    },
+    finish,
     destroy: () => gsap.killTweensOf(element),
   }
 }
@@ -90,12 +122,20 @@ const setupStaticInteractions = (root, motionAllowed) => {
   root.querySelectorAll("[data-studio-material]").forEach((row) => {
     const retarget = () => {
       scrollState.materialTarget = Number(row.dataset.studioMaterial || 0)
+      scrollState.materialInfluence = 1
+    }
+    const release = () => {
+      scrollState.materialInfluence = 0
     }
     row.addEventListener("pointerenter", retarget)
+    row.addEventListener("pointerleave", release)
     row.addEventListener("focus", retarget)
+    row.addEventListener("blur", release)
     cleanups.push(() => {
       row.removeEventListener("pointerenter", retarget)
+      row.removeEventListener("pointerleave", release)
       row.removeEventListener("focus", retarget)
+      row.removeEventListener("blur", release)
     })
   })
 
@@ -216,13 +256,33 @@ export const mountStudio = async (root) => {
   }
 
   const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
-  const preloader = createPreloader(root)
+  const sceneEnabled = canRenderStudioScene(root, reducedMotion)
+  const preloader = createPreloader(root, sceneEnabled)
   const destroyStaticInteractions = setupStaticInteractions(root, !reducedMotion)
   const destroyMotion = reducedMotion ? () => {} : setupMotion(root)
+  let scene = null
 
-  await preloader.ready
+  const sceneReady = sceneEnabled
+    ? import(root.dataset.studioSceneBundleValue)
+        .then(({ mountStudioScene }) =>
+          mountStudioScene(root, scrollState, {
+            onProgress: preloader.setAssetProgress,
+          }),
+        )
+        .then((mountedScene) => {
+          scene = mountedScene
+        })
+        .catch((error) => {
+          preloader.setAssetProgress(1)
+          console.warn("WebGL scene unavailable; using the static ampersand poster.", error)
+        })
+    : Promise.resolve()
+
+  await Promise.all([preloader.fontsReady, sceneReady])
+  await preloader.finish()
 
   return () => {
+    scene?.destroy()
     preloader.destroy()
     destroyMotion()
     destroyStaticInteractions()

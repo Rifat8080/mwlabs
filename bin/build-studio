@@ -12,3 +12,13 @@ NODE_PATH="$repo_root/nextjs/node_modules" "$repo_root/nextjs/node_modules/.bin/
   --minify \
   --sourcemap \
   --outfile="$repo_root/app/assets/builds/studio.js"
+
+NODE_PATH="$repo_root/nextjs/node_modules" "$repo_root/nextjs/node_modules/.bin/esbuild" \
+  "$repo_root/app/javascript/studio/scene_entry.js" \
+  --bundle \
+  --format=esm \
+  --platform=browser \
+  --target=es2020 \
+  --minify \
+  --sourcemap \
+  --outfile="$repo_root/app/assets/builds/studio_scene.js"
