@@ -1,0 +1,27 @@
+<section class="studio-trust" aria-labelledby="trust-heading">
+  <div class="studio-wrap">
+    <div class="studio-trust-head">
+      <h2 id="trust-heading" class="studio-section-label">Trusted by 300+ businesses in 20+ countries</h2>
+    </div>
+    <div class="studio-marquee" data-studio-marquee>
+      <div class="studio-marquee-track" data-studio-marquee-track>
+        <% 2.times do |copy| %>
+          <% [
+            [ "wave.svg", "Wave" ],
+            [ "slack.svg", "Slack" ],
+            [ "notion.svg", "Notion" ],
+            [ "google.svg", "Google" ],
+            [ "monday.svg", "Monday.com" ],
+            [ "hubspot.svg", "HubSpot" ],
+            [ "shopify.svg", "Shopify" ],
+            [ "techtotherescue.svg", "Tech To The Rescue" ]
+          ].each do |filename, name| %>
+            <div class="studio-logo-cell" <%= 'aria-hidden="true"'.html_safe if copy == 1 %>>
+              <%= tag.img src: "/images/logos/#{filename}", alt: copy.zero? ? name : "", loading: "lazy", decoding: "async" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

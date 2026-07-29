@@ -1,0 +1,49 @@
+<footer class="studio-footer">
+  <div class="studio-footer-ticker" aria-label="M&W Labs local time">
+    <span>M&W Labs</span><span>·</span><time data-dhaka-time><%= Time.current.in_time_zone("Dhaka").strftime("%H:%M:%S") %></time><span>UTC+6</span><span>·</span><span>M&W Labs</span>
+  </div>
+  <div class="studio-wrap">
+    <div class="studio-footer-grid">
+      <div>
+        <span class="studio-footer-title">M&W Labs</span>
+        <p>From code to campaigns — we build digital growth systems.</p>
+      </div>
+      <div>
+        <span class="studio-footer-title">Services</span>
+        <ul class="studio-footer-list">
+          <% PagesHelper::SERVICE_LINKS.each do |label, slug| %>
+            <li><%= link_to label, service_path(slug) %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div>
+        <span class="studio-footer-title">Company</span>
+        <ul class="studio-footer-list">
+          <% PagesHelper::COMPANY_LINKS.first(4).each do |label, helper| %>
+            <li><%= link_to label, send(helper) %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div>
+        <span class="studio-footer-title">Resources</span>
+        <ul class="studio-footer-list">
+          <% PagesHelper::RESOURCE_LINKS.each do |label, helper| %>
+            <li><%= link_to label, send(helper) %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div>
+        <span class="studio-footer-title">Contact</span>
+        <ul class="studio-footer-list">
+          <li><a href="mailto:hello@mwlabs.digital">hello@mwlabs.digital</a></li>
+          <li><a href="tel:+8801704014210">+8801704014210</a></li>
+          <li>Demra, Dhaka, Bangladesh</li>
+        </ul>
+      </div>
+    </div>
+    <div class="studio-footer-bottom">
+      <span>© <%= Time.current.year %> M&W Labs</span>
+      <a href="#top" data-back-to-top>Back to top ↑</a>
+    </div>
+  </div>
+</footer>

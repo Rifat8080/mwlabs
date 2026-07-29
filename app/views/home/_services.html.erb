@@ -1,0 +1,26 @@
+<section id="services" class="studio-section studio-services" aria-labelledby="services-heading">
+  <div class="studio-wrap">
+    <div class="studio-section-head">
+      <h2 id="services-heading" class="studio-section-label">03 / Services</h2>
+      <p class="studio-section-note">Six capabilities. One joined-up growth system.</p>
+    </div>
+
+    <div class="studio-service-list">
+      <% [
+        [ "01", "Web & Software Development", "web-development", "We plan and build fast websites, custom platforms and internal tools that are ready to run.", "Websites / SaaS / Ecommerce / CRM" ],
+        [ "02", "Digital Marketing", "digital-marketing", "We run search, paid media and lifecycle campaigns built around qualified demand and clear reporting.", "SEO / Paid media / Funnels / Email" ],
+        [ "03", "Branding & Design", "branding-design", "We define the identity, interface and production rules your team needs to stay recognisable everywhere.", "Identity / UI systems / Guidelines / Print" ],
+        [ "04", "Video Editing & Content", "video-editing", "We turn raw ideas and footage into platform-ready content with disciplined pacing, sound and versioning.", "Reels / YouTube / Ads / Motion" ],
+        [ "05", "AI & Automation", "ai-automation", "We connect your tools, automate repetitive work and build useful AI into the workflows your team already uses.", "Agents / Integrations / CRM / Dashboards" ],
+        [ "06", "Growth Strategy", "growth-strategy", "We turn market evidence, customer needs and operating constraints into a focused plan your team can execute.", "Research / Positioning / Roadmaps / Advisory" ]
+      ].each do |index, name, slug, description, deliverables| %>
+        <%= link_to service_path(slug), class: "studio-service", data: { studio_material: index.to_i - 1 } do %>
+          <span class="studio-service-index"><%= index %></span>
+          <span class="studio-service-name"><%= name %></span>
+          <span class="studio-service-description"><%= description %></span>
+          <span class="studio-service-deliverables"><%= deliverables %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>

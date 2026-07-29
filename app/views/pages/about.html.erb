@@ -1,31 +1,56 @@
-<% content_for :title, "About Us | Mwlabs" %>
+<% content_for :title, "About | M&W Labs" %>
 <% content_for :meta_description, "M&W Labs is a full-service digital agency helping businesses launch, grow and scale with websites, marketing, branding, content and automation." %>
 
-<%= render "pages/shared/hero",
-  eyebrow: "About Us",
-  title: "We Build Digital Growth Systems",
-  description: "M&W Labs is a full-service digital agency helping businesses launch, grow and scale with websites, marketing, branding, content and automation." %>
+<section class="studio-inner-hero">
+  <div class="studio-wrap">
+    <p class="studio-section-label">About / M&W Labs</p>
+    <h1 class="studio-display studio-inner-title">One team for the whole growth system.</h1>
+    <p class="studio-inner-lede">We bring strategy, design, engineering, marketing and automation into one accountable delivery team based in Dhaka and working worldwide.</p>
+  </div>
+</section>
 
-<section class="bg-white py-14 sm:py-16">
-  <div class="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-12 2xl:px-16">
+<section class="studio-section">
+  <div class="studio-wrap studio-about-grid">
+    <p class="studio-section-label">How we work</p>
     <div>
-      <h2 class="text-2xl font-black text-slate-950 sm:text-3xl">Who We Are</h2>
-      <p class="mt-5 text-sm font-semibold leading-8 text-slate-600 sm:text-base">
-        We are a team of strategists, designers, developers and marketers focused on building systems that drive measurable business growth. From startups to established brands, we partner with clients who want more than deliverables — they want results.
-      </p>
-      <p class="mt-4 text-sm font-semibold leading-8 text-slate-600 sm:text-base">
-        Our approach blends creativity with data, ensuring every website, campaign and automation workflow is designed to perform.
-      </p>
+      <p class="studio-about-copy">Most growth problems do not sit inside one channel. The website, campaign, brand and operating workflow affect one another. We plan them together, then build the smallest useful system that can prove what works.</p>
+      <div class="studio-actions">
+        <%= link_to "Start your project", contact_path, class: "studio-button studio-button-primary studio-button-pill" %>
+        <%= link_to "See our work", work_path, class: "studio-button" %>
+      </div>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2">
-      <% [ [ "500+", "Projects Delivered" ], [ "300+", "Happy Clients" ], [ "5+", "Years Experience" ], [ "20+", "Countries Served" ] ].each do |value, label| %>
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p class="text-3xl font-black text-blue-600"><%= value %></p>
-          <p class="mt-2 text-sm font-bold text-slate-500"><%= label %></p>
-        </div>
+  </div>
+</section>
+
+<section class="studio-section">
+  <div class="studio-wrap">
+    <div class="studio-section-head">
+      <h2 class="studio-section-label">Operating principles</h2>
+      <p class="studio-section-note">Plain rules for decisions, delivery and long-term ownership.</p>
+    </div>
+    <div class="studio-principles">
+      <% [
+        [ "01", "Connect the work", "A campaign cannot rescue a confusing offer, and automation cannot rescue a broken process. We map the dependencies first." ],
+        [ "02", "Show progress early", "Working milestones create better decisions than long presentations. Clients see, test and respond while change is still cheap." ],
+        [ "03", "Measure the useful signal", "We agree what improvement looks like before launch, then report on decisions instead of decorative dashboards." ],
+        [ "04", "Leave a system behind", "Every engagement ends with clear ownership, documentation and a route for the next improvement." ]
+      ].each do |index, title, body| %>
+        <article class="studio-principle">
+          <span class="studio-utility"><%= index %></span>
+          <h3><%= title %></h3>
+          <p><%= body %></p>
+        </article>
       <% end %>
     </div>
   </div>
 </section>
 
-<%= render "pages/shared/cta" %>
+<section class="studio-section">
+  <div class="studio-wrap">
+    <div class="studio-proof-grid">
+      <% [ [ "500+", "Projects" ], [ "300+", "Clients" ], [ "5+", "Years" ], [ "20+", "Countries" ] ].each do |value, label| %>
+        <div class="studio-stat"><span class="studio-stat-value"><%= value %></span><span class="studio-stat-label"><%= label %></span></div>
+      <% end %>
+    </div>
+  </div>
+</section>

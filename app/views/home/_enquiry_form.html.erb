@@ -1,0 +1,58 @@
+<% lead = local_assigns.fetch(:lead, Lead.new(source: local_assigns.fetch(:source, "Website Contact Form"))) %>
+<% source = local_assigns.fetch(:source, lead.source.presence || "Website Contact Form") %>
+<% button_label = local_assigns.fetch(:button_label, "Send project enquiry") %>
+<% offer_options = [ "Free MVP Build", "Free Marketing Report" ] + Service::CATEGORIES %>
+<% honeypot_id = "website_#{source.parameterize}" %>
+
+<%= form_with model: lead, url: leads_path, class: "studio-form", data: { studio_form: true }, aria: { describedby: "studio-form-consent" } do |form| %>
+  <%= form.hidden_field :source, value: source %>
+  <div hidden aria-hidden="true">
+    <label for="<%= honeypot_id %>">Website</label>
+    <input id="<%= honeypot_id %>" name="website" type="text" tabindex="-1" autocomplete="off">
+  </div>
+
+  <div role="status" aria-live="polite" data-form-status>
+    <% if lead.errors.any? %>
+      <div class="studio-form-errors">
+        <p class="studio-utility">Please check the following</p>
+        <ul>
+          <% lead.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="studio-form-grid">
+    <div class="studio-field">
+      <%= form.label :name, "Name" %>
+      <%= form.text_field :name, required: true, autocomplete: "name", placeholder: "Your name" %>
+    </div>
+    <div class="studio-field">
+      <%= form.label :email, "Email" %>
+      <%= form.email_field :email, required: true, autocomplete: "email", placeholder: "you@company.com" %>
+    </div>
+    <div class="studio-field">
+      <%= form.label :phone, "Phone / WhatsApp" %>
+      <%= form.telephone_field :phone, autocomplete: "tel", placeholder: "+880…" %>
+    </div>
+    <div class="studio-field">
+      <%= form.label :company_name, "Company / Brand" %>
+      <%= form.text_field :company_name, autocomplete: "organization", placeholder: "Company or brand" %>
+    </div>
+    <div class="studio-field studio-field-full">
+      <%= form.label :service_interest, "Service interest" %>
+      <%= form.select :service_interest, options_for_select(offer_options, lead.service_interest), { include_blank: "Select a service or offer" } %>
+    </div>
+    <div class="studio-field studio-field-full">
+      <%= form.label :message, "Project details" %>
+      <%= form.text_area :message, rows: 5, required: true, placeholder: "What needs to change, who is it for, and when do you need it?" %>
+    </div>
+  </div>
+
+  <button type="submit" class="studio-button studio-button-primary studio-button-pill"><%= button_label %></button>
+  <p id="studio-form-consent" class="studio-consent">
+    By sending this request, you agree that M&W Labs can contact you about your enquiry. A client account will be prepared using your email for future updates.
+  </p>
+<% end %>

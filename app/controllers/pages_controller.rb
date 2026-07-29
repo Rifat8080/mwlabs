@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  layout "visitor"
+  layout :pages_layout
 
   SERVICES = {
     "web-development" => {
@@ -247,6 +247,10 @@ class PagesController < ApplicationController
   end
 
   private
+
+  def pages_layout
+    action_name.in?(%w[home about contact]) ? "studio" : "visitor"
+  end
 
   def load_recent_blog_posts
     BlogPost.published

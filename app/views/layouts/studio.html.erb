@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= page_title %></title>
+    <%= tag.meta name: "description", content: meta_description_content %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#E8E9E4">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="canonical" href="<%= canonical_url %>">
+    <%= tag.meta property: "og:site_name", content: SeoHelper::SITE_NAME %>
+    <%= tag.meta property: "og:type", content: og_type %>
+    <%= tag.meta property: "og:title", content: page_title %>
+    <%= tag.meta property: "og:description", content: meta_description_content %>
+    <%= tag.meta property: "og:url", content: canonical_url %>
+    <%= tag.meta property: "og:image", content: social_image_url %>
+    <%= tag.meta property: "og:locale", content: "en_US" %>
+    <%= tag.meta name: "twitter:card", content: "summary_large_image" %>
+    <%= tag.meta name: "twitter:title", content: page_title %>
+    <%= tag.meta name: "twitter:description", content: meta_description_content %>
+    <%= tag.meta name: "twitter:image", content: social_image_url %>
+
+    <%= jsonld_tag organization_jsonld %>
+    <%= jsonld_tag website_jsonld %>
+    <%= yield :structured_data %>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KY1K60R4T"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3KY1K60R4T');
+    </script>
+
+    <%= yield :head %>
+    <%= render "shared/favicons" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body id="top" class="studio-page">
+    <a class="studio-skip" href="#main-content">Skip to content</a>
+    <%= render "home/preloader" %>
+
+    <header class="studio-header">
+      <div class="studio-wrap studio-header-inner">
+        <%= link_to root_path, class: "studio-logo", aria: { label: "M&W Labs home" } do %>
+          <%= tag.img src: "/images/mwlogo-navbar-cropped.png", alt: "", class: "studio-logo-mark", width: 108, height: 40 %>
+          <span>M&W Labs</span>
+        <% end %>
+
+        <nav class="studio-nav" aria-label="Primary navigation">
+          <%= link_to "Services", "#{root_path}#services" %>
+          <%= link_to "Work", work_path %>
+          <%= link_to "About", about_path %>
+          <%= link_to "Process", "#{root_path}#process" %>
+          <%= link_to "Contact", contact_path %>
+          <% if user_signed_in? %>
+            <%= link_to "Dashboard", dashboard_root_path %>
+          <% else %>
+            <%= link_to "Login", new_user_session_path %>
+          <% end %>
+        </nav>
+
+        <%= link_to "Start a project", contact_path, class: "studio-button studio-button-primary studio-button-pill" %>
+
+        <details class="studio-menu">
+          <summary>Menu</summary>
+          <nav class="studio-menu-panel" aria-label="Mobile navigation">
+            <%= link_to "Services", "#{root_path}#services" %>
+            <%= link_to "Work", work_path %>
+            <%= link_to "About", about_path %>
+            <%= link_to "Process", "#{root_path}#process" %>
+            <%= link_to "Contact", contact_path %>
+            <%= link_to user_signed_in? ? "Dashboard" : "Login", user_signed_in? ? dashboard_root_path : new_user_session_path %>
+          </nav>
+        </details>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <% if flash.any? %>
+        <div class="studio-wrap" role="status" aria-live="polite">
+          <%= render "shared/flash" %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </main>
+
+    <%= render "home/footer" %>
+    <%= render "home/conversion_rail" %>
+    <%= render "shared/ai_receptionist" %>
+  </body>
+</html>

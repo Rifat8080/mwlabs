@@ -1,0 +1,44 @@
+<section class="studio-hero" aria-labelledby="studio-hero-title" data-studio-hero>
+  <div class="studio-wrap studio-hero-grid">
+    <div class="studio-hero-kicker studio-utility">
+      <span>01 / Digital growth systems</span>
+      <span class="studio-availability">Available for select projects</span>
+    </div>
+
+    <h1 id="studio-hero-title" class="studio-display studio-hero-title">
+      <span>Build. Market.</span>
+      <span>Automate. Grow.</span>
+    </h1>
+
+    <div class="studio-hero-visual" aria-hidden="true" data-studio-scene>
+      <%= tag.img src: "/studio/ampersand-poster.svg", alt: "", class: "studio-ampersand-poster", width: 800, height: 800, data: { studio_poster: true } %>
+    </div>
+
+    <div class="studio-hero-bottom">
+      <div>
+        <p class="studio-hero-copy">
+          Full-service digital agency helping businesses launch, grow and scale through websites and software, marketing, brand, content, and AI automation.
+        </p>
+        <div class="studio-actions">
+          <%= link_to "Start your project", contact_path, class: "studio-button studio-button-primary studio-button-pill" %>
+          <%= link_to "See our work", work_path, class: "studio-button" %>
+        </div>
+      </div>
+
+      <div class="studio-meta studio-meta-strip" aria-label="Studio information">
+        <div class="studio-meta-item">
+          <span class="studio-meta-label">Base</span>
+          Demra, Dhaka
+        </div>
+        <div class="studio-meta-item">
+          <span class="studio-meta-label">Local time</span>
+          <time data-dhaka-time datetime="<%= Time.current.iso8601 %>"><%= Time.current.in_time_zone("Dhaka").strftime("%H:%M:%S") %></time> UTC+6
+        </div>
+        <div class="studio-meta-item">
+          <span class="studio-meta-label">Response</span>
+          Within one working day
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

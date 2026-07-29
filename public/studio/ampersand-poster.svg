@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="title desc">
+  <title id="title">Machined M&amp;W Labs ampersand</title>
+  <desc id="desc">A static metal ampersand fallback for devices without WebGL.</desc>
+  <defs>
+    <filter id="contact" x="-30%" y="-30%" width="160%" height="190%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <ellipse cx="406" cy="674" rx="210" ry="38" fill="#0D0F12" opacity=".16" filter="url(#contact)"/>
+  <g transform="translate(74 56) scale(6.5)">
+    <path fill="#8F969C" fill-rule="evenodd" stroke="#0D0F12" stroke-width=".6" d="M58 93C43 93 31 89 23 81C15 73 12 63 14 52C16 42 23 34 34 28C30 22 30 16 33 11C37 4 45 1 55 1C66 1 74 4 80 10C85 16 87 23 84 31C82 39 76 45 67 50L77 61C80 56 83 50 85 43H98C96 55 91 65 85 73L99 91H80L74 84C69 90 64 93 58 93ZM43 39C35 43 31 48 30 54C28 61 30 67 35 72C40 77 47 79 56 79C60 79 63 77 66 74L43 39ZM55 14C50 14 46 15 44 18C42 21 42 24 45 28L58 41C64 38 68 34 69 29C71 25 70 21 67 18C64 15 60 14 55 14Z"/>
+    <path fill="none" stroke="#02D8FB" stroke-width=".52" opacity=".95" d="M58 93C43 93 31 89 23 81C15 73 12 63 14 52C16 42 23 34 34 28C30 22 30 16 33 11C37 4 45 1 55 1C66 1 74 4 80 10C85 16 87 23 84 31C82 39 76 45 67 50L77 61C80 56 83 50 85 43H98C96 55 91 65 85 73L99 91H80L74 84C69 90 64 93 58 93Z"/>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<section class="studio-section" aria-labelledby="proof-heading">
+  <div class="studio-wrap">
+    <div class="studio-section-head">
+      <h2 id="proof-heading" class="studio-section-label">06 / Proof</h2>
+      <p class="studio-section-note">Delivered across markets, time zones and business stages.</p>
+    </div>
+    <div class="studio-proof-grid">
+      <% [
+        [ "500+", "Projects" ],
+        [ "300+", "Clients" ],
+        [ "5+", "Years" ],
+        [ "20+", "Countries" ]
+      ].each do |value, label| %>
+        <div class="studio-stat">
+          <span class="studio-stat-value"><%= value %></span>
+          <span class="studio-stat-label"><%= label %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <figure class="studio-testimonial">
+      <figcaption>
+        <span class="studio-section-label">Project brief / Removlo</span>
+      </figcaption>
+      <div>
+        <blockquote>“Make moving easier through intelligent logistics, transparent communication, and real human support.”</blockquote>
+        <cite>Md Liakat Kawser / Removlo</cite>
+        <p class="studio-testimonial-slot">Reference slot 02 / Publish only after client approval</p>
+      </div>
+    </figure>
+  </div>
+</section>

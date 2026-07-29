@@ -1,4 +1,5 @@
 @import "../stylesheets/_tokens.css";
+@import "../stylesheets/studio.css";
 @import "tailwindcss";
 @import "flowbite/src/themes/default";
 @plugin "flowbite/plugin";

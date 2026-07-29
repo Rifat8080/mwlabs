@@ -1,0 +1,26 @@
+<section id="process" class="studio-section" aria-labelledby="process-heading">
+  <div class="studio-wrap">
+    <div class="studio-section-head">
+      <h2 id="process-heading" class="studio-section-label">05 / Process</h2>
+      <p class="studio-section-note">A visible sequence with decisions made before expensive work begins.</p>
+    </div>
+    <ol class="studio-process-list">
+      <span class="studio-process-rule" data-process-rule aria-hidden="true"></span>
+      <% [
+        [ "01", "Discover", "Goals, users, constraints and evidence." ],
+        [ "02", "Plan", "Scope, responsibilities, milestones and measures." ],
+        [ "03", "Build", "Focused production with visible progress." ],
+        [ "04", "Launch", "QA, deployment, tracking and handover." ],
+        [ "05", "Grow", "Review the signal, improve the system." ]
+      ].each do |number, title, description| %>
+        <li class="studio-process-step">
+          <span class="studio-process-node"><%= number %></span>
+          <div>
+            <h3><%= title %></h3>
+            <p><%= description %></p>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+</section>
