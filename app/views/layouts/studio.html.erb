@@ -7,6 +7,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#E8E9E4">
+    <script>
+      document.documentElement.classList.add("studio-loading");
+      window.__studioLoaderFallback = window.setTimeout(function () {
+        document.documentElement.classList.remove("studio-loading");
+      }, 8000);
+    </script>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -41,7 +47,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body id="top" class="studio-page">
+  <body id="top" class="studio-page" data-controller="studio" data-studio-bundle-value="<%= asset_path("studio.js") %>">
     <a class="studio-skip" href="#main-content">Skip to content</a>
     <%= render "home/preloader" %>
 

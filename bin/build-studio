@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+set -eu
+
+repo_root="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+
+NODE_PATH="$repo_root/nextjs/node_modules" "$repo_root/nextjs/node_modules/.bin/esbuild" \
+  "$repo_root/app/javascript/studio/index.js" \
+  --bundle \
+  --format=esm \
+  --platform=browser \
+  --target=es2020 \
+  --minify \
+  --sourcemap \
+  --outfile="$repo_root/app/assets/builds/studio.js"

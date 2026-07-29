@@ -243,6 +243,14 @@
   z-index: 400;
 }
 
+.studio-loading .studio-preloader {
+  display: grid;
+}
+
+.studio-preloader.is-complete {
+  pointer-events: none;
+}
+
 .studio-preloader-inner {
   padding: clamp(1.5rem, 4vw, 4rem);
 }
@@ -418,6 +426,7 @@
   align-items: center;
   display: flex;
   width: max-content;
+  will-change: transform;
 }
 
 .studio-logo-cell {
@@ -449,6 +458,7 @@
 
 .studio-positioning-word {
   display: inline-block;
+  will-change: opacity, transform;
 }
 
 .studio-services {
@@ -520,6 +530,7 @@
   gap: clamp(2rem, 6vw, 7rem);
   grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 1.3fr);
   margin-bottom: clamp(7rem, 14vw, 14rem);
+  will-change: opacity, transform;
 }
 
 .studio-work-chapter:last-child {
@@ -673,6 +684,7 @@
   right: 0;
   top: 1.55rem;
   transform-origin: left;
+  will-change: transform;
 }
 
 .studio-process-step {
@@ -1076,6 +1088,7 @@
     right: auto;
     top: 0;
     width: 1px;
+    transform-origin: top;
   }
 
   .studio-process-step {
@@ -1216,5 +1229,13 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .studio-marquee-track,
+  .studio-positioning-word,
+  .studio-work-chapter,
+  .studio-process-rule {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
