@@ -152,6 +152,31 @@ const setupStaticInteractions = (root, motionAllowed) => {
     cleanups.push(() => link.removeEventListener("click", handleClick))
   })
 
+  root.querySelectorAll("[data-studio-form]").forEach((form) => {
+    const status = form.querySelector("[data-form-status]")
+    const describeField = (field) => {
+      const label = form.querySelector(`label[for="${field.id}"]`)
+      return label?.textContent?.trim() || "This field"
+    }
+    const handleInvalid = (event) => {
+      const field = event.target
+      field.setAttribute("aria-invalid", "true")
+      if (status) status.textContent = `${describeField(field)} needs a valid value before this enquiry can be sent.`
+    }
+    const handleInput = (event) => {
+      const field = event.target
+      if (field.checkValidity()) field.removeAttribute("aria-invalid")
+      if (status && form.checkValidity()) status.textContent = ""
+    }
+
+    form.addEventListener("invalid", handleInvalid, true)
+    form.addEventListener("input", handleInput)
+    cleanups.push(() => {
+      form.removeEventListener("invalid", handleInvalid, true)
+      form.removeEventListener("input", handleInput)
+    })
+  })
+
   return () => cleanups.forEach((cleanup) => cleanup())
 }
 

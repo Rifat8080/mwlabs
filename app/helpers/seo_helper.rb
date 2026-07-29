@@ -24,7 +24,8 @@ module SeoHelper
   end
 
   def page_title
-    content_for(:title).presence || DEFAULT_TITLE
+    raw_title = (content_for(:title).presence || DEFAULT_TITLE).to_s
+    CGI.unescapeHTML(raw_title).gsub(/\bMwlabs\b/i) { SITE_NAME }
   end
 
   def canonical_url

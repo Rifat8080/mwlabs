@@ -2,66 +2,48 @@ require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
   test "shows the public landing page" do
-    create_blog_post_for_tests!(
-      title: "Landing Page Blog Feature",
-      body: "Published body for the landing page blog section.",
-      status: "Published",
-      published_at: 1.day.ago,
-      author: users(:admin)
-    )
-    6.times do |index|
-      create_portfolio_project_for_tests!(
-        title: "Landing Page Project #{index}",
-        category: index.even? ? "Web Development" : "Digital Marketing"
-      )
-    end
-
     get root_url
 
     assert_response :success
     assert_select "h1", text: /Build\. Market\. Automate\. Grow\./
-    assert_select "img[alt='M&W Labs digital services']"
+    assert_select "[data-studio-poster][src='/studio/ampersand-poster.svg']"
+    assert_select "body[data-controller='studio'][data-studio-bundle-value][data-studio-scene-bundle-value]"
     assert_select "img[alt='Shopify']"
     assert_select "img[alt='Tech To The Rescue']"
-    assert_select "h2", text: /Everything Your Business Needs/
-    assert_select "h2", text: /Tell us what you want to build/
+    assert_select "#services .studio-service", count: 6
+    assert_select "h2", text: /Strategy, code, campaigns and automation/
+    assert_select "h2", text: /Bring us the problem/
     assert_select "form input[name='lead[source]'][value='Landing Page']"
-    assert_select "body", text: /Full-service digital agency for growing businesses/
-    assert_select "body", text: /A dedicated digital team behind your business growth/
-    assert_select "body", text: /Start Your Project/
-    assert_select "h2", text: /Some Recent Projects/
-    assert_select "h2", text: /How We Work/
-    assert_select "h2", text: /Real People\. Real Results\./
-    assert_select "[data-testimonials-section]"
-    assert_select "[data-testimonials-dot]", count: 3
+    assert_select "body", text: /Full-service digital agency helping businesses/
+    assert_select "body", text: /Start your project/
+    assert_select "#featured-work", text: /Removlo/
+    assert_select "#featured-work", text: /Ravix Build/
+    assert_select "#process .studio-process-step", count: 5
+    assert_select ".studio-stat-value", text: "300+"
+    assert_select ".studio-testimonial", text: /Md Liakat Kawser/
+    assert_select ".studio-testimonial-slot", text: /Publish only after client approval/
+    assert_select "body", text: /Jessica Brown|Michael Lee|Sarah Johnson|David Smith/, count: 0
+    assert_select "body", text: /0\+/, count: 0
     assert_select "[data-floating-cta]"
     assert_select "[data-floating-cta-whatsapp]"
     assert_select "[data-floating-cta-quote]"
-    assert_select "button[aria-label='Close floating contact buttons']"
-    assert_select "[data-project-filter='Digital Marketing']"
-    assert_select "[data-project-card]", minimum: 6
-    assert_select "h2", text: /We Don’t Just Deliver Services/
     assert_select "footer", text: /From code to campaigns/
     assert_select "footer", text: /Back to top/
     assert_select "[data-controller='ai-receptionist']"
     assert_select "button", text: /AI Reception/
-    assert_select ".fa-code"
     assert_select "a[href='#{about_path}']"
     assert_select "a[href='#{contact_path}']"
     assert_select "a[href='#{new_user_session_path}']", text: "Login"
     assert_select "a[href='#{new_user_registration_path}']", count: 0
-    assert_select "h2", text: /Fresh strategies from the M&W Labs blog/
-    assert_select "h2", text: /Landing Page Blog Feature/
-    assert_select "a[href='#{blog_path}']", text: /View all articles/
   end
 
   test "shows visitor pages" do
     pages = {
-      about_url => /We Build Digital Growth Systems/,
+      about_url => /One team for the whole growth system/,
       work_url => /Projects That Drive Real Results/,
       pricing_url => /Flexible Plans for Every Stage/,
       blog_url => /Insights on Digital Growth/,
-      contact_url => /Let’s turn your idea into a clear growth plan/,
+      contact_url => /Turn the problem into a plan/,
       team_url => /Meet the People Behind M&W Labs/,
       careers_url => /Join Our Growing Team/,
       testimonials_url => /Real People\. Real Results\./,
@@ -87,6 +69,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "option", text: "Free Marketing Report"
     assert_select "body", text: /Apply for an MVP partnership, request a complimentary marketing report/
     assert_select "body", text: /What happens next/
+    assert_select "form[data-studio-form][aria-describedby='studio-form-consent']"
+    assert_select "[data-form-status][aria-live='polite']"
     assert_select "form input[name='lead[source]'][value='Website Contact Form']"
     assert_select "form input[name='lead[country]']", count: 0
     assert_select "form input[name='lead[budget]']", count: 0
@@ -106,6 +90,13 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_match(/"@type":\["Organization","ProfessionalService"\]/, response.body)
     assert_match(/"@type":"WebSite"/, response.body)
     assert_match(/hello@mwlabs\.digital/, response.body)
+  end
+
+  test "normalizes the brand name in legacy title tags" do
+    get work_url
+
+    assert_response :success
+    assert_select "title", text: "Our Work | M&W Labs"
   end
 
   test "faqs page includes FAQPage structured data" do

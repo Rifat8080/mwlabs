@@ -4,7 +4,7 @@
 <% offer_options = [ "Free MVP Build", "Free Marketing Report" ] + Service::CATEGORIES %>
 <% honeypot_id = "website_#{source.parameterize}" %>
 
-<%= form_with model: lead, url: leads_path, class: "studio-form", data: { studio_form: true }, aria: { describedby: "studio-form-consent" } do |form| %>
+<%= form_with model: lead, url: leads_path, class: "studio-form", data: { studio_form: true }, html: { "aria-describedby": "studio-form-consent" } do |form| %>
   <%= form.hidden_field :source, value: source %>
   <div hidden aria-hidden="true">
     <label for="<%= honeypot_id %>">Website</label>

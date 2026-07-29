@@ -94,6 +94,7 @@
   gap: var(--space-4);
   grid-template-columns: auto 1fr auto;
   min-height: 4.6rem;
+  min-width: 0;
 }
 
 .studio-logo {
@@ -105,6 +106,7 @@
   font-stretch: 125%;
   font-weight: 800;
   letter-spacing: -0.04em;
+  min-width: 0;
   text-decoration: none;
 }
 
@@ -291,6 +293,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: calc(100svh - 9rem);
+  min-width: 0;
 }
 
 .studio-hero-kicker {
@@ -319,13 +322,9 @@
   font-size: clamp(3.55rem, 10.2vw, 10.8rem);
   margin: clamp(2.4rem, 6vw, 6rem) -0.05em;
   max-width: 12ch;
+  min-width: 0;
   position: relative;
   z-index: 4;
-}
-
-.studio-webgl .studio-hero-title {
-  color: var(--paper);
-  mix-blend-mode: difference;
 }
 
 .studio-hero-title span {
@@ -368,12 +367,15 @@
   display: grid;
   gap: clamp(1.5rem, 4vw, 4rem);
   grid-template-columns: minmax(16rem, 0.85fr) 1fr;
+  min-width: 0;
   position: relative;
   z-index: 5;
 }
 
 .studio-hero-copy {
   max-width: 39rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .studio-actions {
@@ -1029,6 +1031,29 @@
   line-height: 1;
 }
 
+@media (min-width: 581px) {
+  .studio-page [data-controller~="ai-receptionist"] {
+    bottom: auto;
+    left: clamp(0.8rem, 2vw, 1.5rem);
+    top: 5.75rem;
+  }
+
+  .studio-page [data-ai-receptionist-target="launcher"] {
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    font-size: 0;
+    gap: 0;
+    padding: 0.45rem;
+  }
+
+  .studio-page [data-ai-receptionist-target="launcher"] > span {
+    border-radius: 1px;
+    font-size: 0.75rem;
+    height: 2rem;
+    width: 2rem;
+  }
+}
+
 @media (max-width: 900px) {
   .studio-nav,
   .studio-header > .studio-wrap > .studio-button {
@@ -1162,14 +1187,15 @@
   }
 
   .studio-hero-title {
-    font-size: clamp(3.15rem, 16.2vw, 5.3rem);
+    font-size: clamp(3rem, 13vw, 4.3rem);
     margin-top: 3.5rem;
+    max-width: 100%;
   }
 
   .studio-hero-visual {
     left: 52%;
     top: 46%;
-    width: 108vw;
+    width: 94vw;
   }
 
   .studio-hero-bottom {
@@ -1228,6 +1254,29 @@
   .studio-rail a {
     flex: 1;
     justify-content: center;
+    min-width: 0;
+    padding-inline: 0.45rem;
+    white-space: nowrap;
+  }
+
+  .studio-page [data-controller~="ai-receptionist"] {
+    bottom: 4.8rem;
+    left: 0.55rem;
+  }
+
+  .studio-page [data-ai-receptionist-target="launcher"] {
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    font-size: 0;
+    gap: 0;
+    padding: 0.45rem;
+  }
+
+  .studio-page [data-ai-receptionist-target="launcher"] > span {
+    border-radius: 1px;
+    font-size: 0.75rem;
+    height: 2rem;
+    width: 2rem;
   }
 }
 
