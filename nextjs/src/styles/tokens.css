@@ -1,0 +1,19 @@
+:root {
+  --paper: #e7e8e3;
+  --gesso: #f4f5f1;
+  --ink: #0e1013;
+  --steel: #949ba1;
+  --ultra: #1b34f5;
+  --sulfur: #d9ce55;
+  --rule: color-mix(in srgb, var(--steel) 52%, transparent);
+  --font-display: "Archivo Variable", "Arial Narrow", sans-serif;
+  --font-body: "Inter Tight Variable", Arial, sans-serif;
+  --font-mono: "Martian Mono Variable", monospace;
+  --step--1: clamp(.76rem, .73rem + .08vw, .82rem);
+  --step-0: clamp(1rem, .96rem + .18vw, 1.125rem);
+  --step-1: clamp(1.333rem, 1.23rem + .48vw, 1.5rem);
+  --step-2: clamp(1.777rem, 1.5rem + 1.32vw, 2.368rem);
+  --step-3: clamp(2.369rem, 1.75rem + 2.9vw, 3.157rem);
+  --step-4: clamp(3.157rem, 2.2rem + 4.8vw, 5.61rem);
+  --step-5: clamp(4.209rem, 2.7rem + 8vw, 10rem);
+}
