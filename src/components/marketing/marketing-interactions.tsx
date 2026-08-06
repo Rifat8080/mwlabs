@@ -135,7 +135,7 @@ export function MarketingReception() {
   }
 
   return (
-    <div className="fixed bottom-5 right-4 z-50 sm:right-6">
+    <div className="fixed bottom-5 left-4 z-50 sm:left-6">
       {open && (
         <section className="mb-3 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-blue-100 bg-slate-50 shadow-2xl shadow-slate-950/20">
           <header className="flex items-center justify-between border-b border-blue-100 bg-white px-4 py-3">

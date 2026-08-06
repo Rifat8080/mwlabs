@@ -51,7 +51,7 @@ export function MarketingHeader() {
             : "border-white/80 bg-white/72 shadow-[0_12px_45px_rgba(37,99,235,0.08)] backdrop-blur-xl",
         )}
       >
-        <Link href="#top" onClick={closeNavigation} className="relative block h-10 w-40 shrink-0 sm:h-11 sm:w-44" aria-label="M&W Labs home">
+        <Link href="#top" onClick={closeNavigation} className="relative block h-10 w-36 shrink-0 min-[380px]:w-40 sm:h-11 sm:w-44" aria-label="M&W Labs home">
           <Image src="/mw-logo.png" alt="M&W Labs" fill sizes="176px" priority className="object-contain object-left" />
         </Link>
 
