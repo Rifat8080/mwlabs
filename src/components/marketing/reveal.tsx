@@ -21,22 +21,39 @@ export function Reveal({
   useGSAP(
     () => {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduced) return;
+      const element = root.current;
+      if (reduced || !element) return;
 
-      gsap.fromTo(
-        root.current,
-        { y: 28, autoAlpha: 0 },
-        {
+      gsap.set(element, { y: 28, autoAlpha: 0 });
+
+      const reveal = () => {
+        gsap.to(element, {
           y: 0,
           autoAlpha: 1,
           duration: 0.85,
           delay,
           ease: "power3.out",
-          scrollTrigger: undefined,
+        });
+      };
+
+      if (!("IntersectionObserver" in window)) {
+        reveal();
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          reveal();
+          observer.unobserve(element);
         },
+        { threshold: 0.12, rootMargin: "0px 0px -6%" },
       );
+
+      observer.observe(element);
+      return () => observer.disconnect();
     },
-    { scope: root },
+    { scope: root, dependencies: [delay] },
   );
 
   return (

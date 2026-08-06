@@ -1,202 +1,271 @@
+import Image from "next/image";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   ArrowUpRight,
-  BrainCircuit,
+  Bot,
+  BriefcaseBusiness,
+  CalendarCheck2,
   Check,
-  CircleDollarSign,
-  Clock3,
-  FileSignature,
-  Fingerprint,
-  Layers3,
-  MoveUpRight,
-  Radar,
+  Clapperboard,
+  ClipboardList,
+  Code2,
+  Compass,
+  Globe2,
+  Lightbulb,
+  LineChart,
+  Megaphone,
+  MessageSquareQuote,
+  MousePointerClick,
+  PenTool,
+  Rocket,
+  SearchCheck,
+  Send,
   ShieldCheck,
+  Smile,
   Sparkles,
-  Workflow,
+  Trophy,
+  Users,
 } from "lucide-react";
 
 import { HeroScene } from "@/components/marketing/hero-scene";
+import { MarketingReception, ProjectEnquiryForm, TestimonialsCarousel } from "@/components/marketing/marketing-interactions";
 import { Reveal } from "@/components/marketing/reveal";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
-const lifecycle = [
-  { number: "01", label: "Web & software", copy: "Sites, apps, SaaS, systems" },
-  { number: "02", label: "Digital marketing", copy: "SEO, ads, leads, funnels" },
-  { number: "03", label: "Branding & design", copy: "Identity and campaigns" },
-  { number: "04", label: "Video & content", copy: "Reels, ads, motion, stories" },
-  { number: "05", label: "AI & automation", copy: "Agents, workflows, dashboards" },
-  { number: "06", label: "Growth strategy", copy: "Research, positioning, scale" },
+type Service = {
+  icon: LucideIcon;
+  title: string;
+  copy: string;
+  tone: string;
+};
+
+const services: Service[] = [
+  { icon: Code2, title: "Web & Software Development", copy: "Custom websites, web apps, SaaS platforms, dashboards and business systems.", tone: "bg-blue-600 text-white" },
+  { icon: Megaphone, title: "Digital Marketing", copy: "SEO, Google & Meta Ads, lead generation, funnels, email and WhatsApp marketing.", tone: "bg-cyan-50 text-cyan-700" },
+  { icon: PenTool, title: "Branding & Design", copy: "Logo design, brand identity, social media creatives, brochures and more.", tone: "bg-blue-50 text-blue-700" },
+  { icon: Clapperboard, title: "Video Editing & Content", copy: "Reels, YouTube videos, ads, corporate videos, motion graphics and more.", tone: "bg-slate-100 text-slate-700" },
+  { icon: Bot, title: "AI & Automation", copy: "AI chatbots, agents, workflows, dashboards and smart integrations.", tone: "bg-brand-navy text-cyan-300" },
+  { icon: LineChart, title: "Growth Strategy", copy: "Business strategy, market research, competitor analysis and scaling plans.", tone: "bg-indigo-50 text-indigo-700" },
 ];
 
-const checks = [
-  "AI chatbots and agents built around real workflows",
-  "Smart integrations, dashboards, and business automation",
-  "Human approval where decisions affect people or money",
+const benefits = [
+  "Result-driven strategies that bring real business growth",
+  "Creative, modern and conversion-focused solutions",
+  "Transparent communication and on-time delivery",
+  "A dedicated team that cares about your success",
 ];
+
+const stats = [
+  { icon: BriefcaseBusiness, value: "500+", label: "Projects Completed" },
+  { icon: Smile, value: "300+", label: "Happy Clients" },
+  { icon: Trophy, value: "5+", label: "Years of Experience" },
+  { icon: Globe2, value: "20+", label: "Countries Served" },
+];
+
+const process = [
+  { icon: SearchCheck, title: "Discover", copy: "We understand your goals, audience and requirements." },
+  { icon: ClipboardList, title: "Plan", copy: "We create a strategic plan tailored to your business." },
+  { icon: Code2, title: "Build", copy: "Our experts design, develop and create with precision." },
+  { icon: Rocket, title: "Launch", copy: "We test everything and launch for maximum impact." },
+  { icon: LineChart, title: "Grow", copy: "We analyze, optimize and scale your business growth." },
+];
+
+const insights = [
+  { icon: Lightbulb, title: "Every Day Is a Learning Day as an Agency Owner", date: "July 14, 2026", read: "2 min read", tone: "from-blue-600 to-cyan-400" },
+  { icon: Rocket, title: "5 Signs Your Startup Idea Is Ready for an MVP", date: "July 07, 2026", read: "4 min read", tone: "from-brand-navy to-blue-600" },
+  { icon: Users, title: "Technology, Purpose, and Meaningful Global Impact", date: "June 17, 2026", read: "4 min read", tone: "from-blue-500 to-indigo-700" },
+];
+
+function SectionHeading({ eyebrow, children, centered = false, inverse = false }: { eyebrow: string; children: React.ReactNode; centered?: boolean; inverse?: boolean }) {
+  return (
+    <div className={centered ? "mx-auto max-w-3xl text-center" : ""}>
+      <p className={`text-xs font-extrabold uppercase tracking-[0.28em] ${inverse ? "text-cyan-300" : "text-blue-600"}`}>{eyebrow}</p>
+      <h2 className={`mt-4 text-4xl font-black leading-[0.98] tracking-[-0.045em] sm:text-5xl ${inverse ? "text-white" : "text-slate-950"}`}>{children}</h2>
+    </div>
+  );
+}
+
+function ProjectVisual({ variant }: { variant: "builders" | "removal" }) {
+  if (variant === "builders") {
+    return (
+      <div className="relative aspect-video overflow-hidden bg-[linear-gradient(135deg,#eff6ff,#ffffff_50%,#cffafe)] p-5 sm:p-7">
+        <div className="absolute -right-10 -top-14 size-48 rounded-full bg-blue-300/35 blur-3xl" />
+        <div className="relative mx-auto h-full max-w-xl overflow-hidden rounded-xl border border-white/90 bg-white shadow-2xl shadow-blue-900/15">
+          <div className="flex h-7 items-center gap-1.5 border-b border-blue-50 px-3"><span className="size-1.5 rounded-full bg-red-300" /><span className="size-1.5 rounded-full bg-amber-300" /><span className="size-1.5 rounded-full bg-emerald-300" /></div>
+          <div className="grid h-[calc(100%-1.75rem)] grid-cols-[0.9fr_1.1fr]">
+            <div className="flex flex-col justify-center p-4 sm:p-6"><span className="h-2 w-16 rounded-full bg-blue-200" /><span className="mt-3 h-5 w-full rounded bg-slate-900" /><span className="mt-2 h-5 w-3/4 rounded bg-slate-900" /><span className="mt-4 h-2 w-full rounded bg-slate-200" /><span className="mt-2 h-2 w-4/5 rounded bg-slate-200" /><span className="mt-5 h-7 w-24 rounded-lg bg-blue-600" /></div>
+            <div className="m-3 overflow-hidden rounded-lg bg-[linear-gradient(145deg,#155dfc,#02d1fa)] p-4"><div className="h-full rounded-lg border border-white/25 bg-white/10 backdrop-blur"><div className="mx-auto mt-4 h-[75%] w-3/4 rounded-t-full bg-white/15" /></div></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="relative aspect-video overflow-hidden bg-slate-950 p-5 sm:p-7">
+      <div className="absolute -left-10 top-1/2 size-48 -translate-y-1/2 rounded-full bg-blue-600/35 blur-3xl" />
+      <div className="relative mx-auto grid h-full max-w-xl grid-cols-[70px_1fr] overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-2xl backdrop-blur">
+        <div className="border-r border-white/10 p-3"><div className="size-8 rounded-lg bg-cyan-400" /><div className="mt-5 space-y-3">{[1, 2, 3, 4].map((item) => <div key={item} className="h-2 rounded-full bg-white/15" />)}</div></div>
+        <div className="p-4"><div className="flex justify-between"><span className="h-3 w-28 rounded bg-white/80" /><span className="size-6 rounded-full bg-blue-400" /></div><div className="mt-4 grid grid-cols-3 gap-2">{["$82k", "38", "94%"].map((value) => <div key={value} className="rounded-lg bg-white/8 p-2"><p className="text-[9px] font-black text-white">{value}</p><div className="mt-2 h-1 rounded bg-cyan-400/50" /></div>)}</div><div className="mt-3 h-[45%] rounded-lg bg-white/6 p-3"><div className="flex h-full items-end gap-1">{[30, 46, 38, 64, 58, 78, 72, 90].map((height, index) => <div key={index} className="flex-1 rounded-t bg-gradient-to-t from-blue-600 to-cyan-300" style={{ height: `${height}%` }} />)}</div></div></div>
+      </div>
+    </div>
+  );
+}
 
 export default function MarketingPage() {
   return (
     <>
-      <section className="marketing-grid relative min-h-[940px] overflow-hidden border-b border-foreground/10 pt-18 lg:min-h-[900px]">
-        <div className="absolute inset-x-0 top-0 h-[680px] bg-[radial-gradient(circle_at_72%_28%,rgb(2_209_250/0.2),transparent_31%),radial-gradient(circle_at_42%_12%,rgb(21_93_252/0.12),transparent_38%)]" />
-        <div className="relative mx-auto grid max-w-[1440px] gap-10 px-5 pb-20 pt-20 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12 lg:pb-28 lg:pt-26">
-          <div className="relative z-10 max-w-3xl">
+      <section className="relative isolate -mt-[4.6rem] min-h-svh overflow-hidden bg-[radial-gradient(circle_at_12%_20%,rgba(219,234,254,0.95),transparent_31rem),radial-gradient(circle_at_88%_24%,rgba(165,243,252,0.75),transparent_34rem),linear-gradient(180deg,#ffffff_0%,#f5f9ff_100%)] pt-[6.8rem]">
+        <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent" />
+        <div className="marketing-grid pointer-events-none absolute inset-0 -z-20 opacity-45 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+        <div className="pointer-events-none absolute left-[42%] top-24 -z-10 size-72 rounded-full border border-blue-200/60" />
+        <div className="pointer-events-none absolute left-[42%] top-24 -z-10 size-72 animate-[spin_28s_linear_infinite] rounded-full border border-dashed border-cyan-300/60" />
+        <div className="mx-auto grid max-w-[104rem] items-center gap-10 px-4 pb-12 pt-8 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:px-12 lg:pb-16 lg:pt-12 2xl:px-16">
+          <div className="text-center lg:text-left">
             <Reveal>
-              <Badge variant="outline" className="rounded-full border-foreground/15 bg-background/70 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] backdrop-blur">
-                <span className="mr-1.5 size-1.5 rounded-full bg-accent" />
-                Full-service digital agency for growing businesses
-              </Badge>
+              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-4 py-2 text-[0.66rem] font-extrabold uppercase tracking-[0.2em] text-blue-700 shadow-[0_18px_55px_rgba(37,99,235,0.1)] backdrop-blur-xl sm:text-xs lg:mx-0">
+                <span className="relative grid size-5 place-items-center rounded-full bg-blue-600 text-[0.6rem] text-white"><span className="absolute inset-0 animate-ping rounded-full bg-blue-400 opacity-35" />+</span>
+                Independent digital growth studio · Dhaka ↔ Worldwide
+              </div>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-7 max-w-[780px] text-balance text-[clamp(3.5rem,7.4vw,7.5rem)] font-semibold leading-[0.88] tracking-[-0.075em]">
-                Build. Market.
-                <span className="block bg-gradient-to-r from-primary via-brand-electric to-accent bg-clip-text text-transparent">Automate. Grow.</span>
+              <h1 className="hero-title mx-auto mt-7 max-w-4xl font-black text-slate-950 lg:mx-0">
+                Build. Market.<br />Automate. <span className="text-gradient">Grow.</span>
               </h1>
+              <p className="mx-auto mt-7 max-w-xl text-base font-semibold leading-8 text-slate-600 sm:text-lg lg:mx-0">We unite product design, engineering, marketing, and AI automation into one focused growth system—built to turn ambitious ideas into measurable business momentum.</p>
             </Reveal>
-            <Reveal delay={0.16}>
-              <p className="mt-8 max-w-xl text-balance text-lg leading-8 text-muted-foreground sm:text-xl">
-                M&amp;W Labs helps businesses launch, grow, and scale with high-performing websites, software, marketing, brands, content, and AI automation.
-              </p>
+            <Reveal delay={0.14} className="mt-9 flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
+              <Link href="#enquiry" className="button-primary group inline-flex items-center justify-center rounded-2xl px-7 py-4 text-sm font-extrabold">Start Your Project <ArrowRight className="ml-3 size-4 transition group-hover:translate-x-1" /></Link>
+              <Link href="#work" className="button-secondary group inline-flex items-center justify-center rounded-2xl px-7 py-4 text-sm font-extrabold">View Selected Work <ArrowUpRight className="ml-3 size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></Link>
             </Reveal>
-            <Reveal delay={0.22} className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button render={<Link href="https://mwlabs.digital/contact" />} size="lg" className="h-13 rounded-full bg-primary px-7 text-primary-foreground shadow-xl shadow-primary/20 hover:bg-brand-primary-hover">
-                Start your project <ArrowUpRight className="size-4" />
-              </Button>
-              <Button render={<Link href="https://mwlabs.digital/our-work" />} size="lg" variant="outline" className="h-13 rounded-full border-brand-border bg-white/75 px-7 text-brand-primary-hover shadow-sm backdrop-blur hover:bg-brand-surface">
-                View our work <ArrowRight className="size-4" />
-              </Button>
-            </Reveal>
-            <Reveal delay={0.28} className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs font-medium text-muted-foreground">
-              <span className="flex items-center gap-2"><Check className="size-3.5 text-foreground" /> 500+ projects completed</span>
-              <span className="flex items-center gap-2"><Check className="size-3.5 text-foreground" /> 300+ happy clients</span>
-              <span className="flex items-center gap-2"><Check className="size-3.5 text-foreground" /> 20+ countries served</span>
+            <Reveal delay={0.2} className="mt-10 flex flex-col items-center gap-5 sm:flex-row sm:justify-center lg:justify-start">
+              <div className="flex -space-x-3">{["AM", "RS", "TN", "MK", "JL"].map((initials, index) => <span key={initials} className={`grid size-10 place-items-center rounded-full border-2 border-white text-xs font-black shadow-sm ${index % 2 ? "bg-cyan-100 text-cyan-800" : "bg-blue-100 text-blue-800"}`}>{initials}</span>)}</div>
+              <div><div className="flex gap-0.5 text-amber-400">★★★★★</div><p className="mt-1 text-sm font-semibold leading-5 text-slate-600">Trusted by 200+<br />Businesses Worldwide</p></div>
             </Reveal>
           </div>
 
-          <Reveal delay={0.18} className="relative min-h-[470px] lg:min-h-[650px]">
-            <div className="absolute inset-[-12%_-18%_-8%_-10%] rounded-full bg-brand-navy shadow-[0_50px_120px_rgba(21,93,252,0.22)] lg:inset-[-8%_-15%_-5%_-6%]">
-              <HeroScene />
+          <Reveal delay={0.12} className="perspective-stage relative mx-auto min-h-[410px] w-full max-w-3xl sm:min-h-[520px] lg:min-h-[620px]">
+            <div className="hero-stage absolute inset-[6%_0] overflow-hidden rounded-[2.75rem] border border-white/90 bg-white/55 shadow-[0_45px_130px_rgba(15,23,42,0.18)] backdrop-blur-xl">
+              <div className="absolute inset-0 opacity-50"><HeroScene /></div>
+              <Image src="/hero.svg" alt="M&W Labs digital growth system" fill priority sizes="(max-width: 1024px) 100vw, 55vw" className="relative z-10 object-contain mix-blend-multiply" />
+              <div className="pointer-events-none absolute inset-0 z-20 rounded-[inherit] ring-1 ring-inset ring-white/80" />
             </div>
-            <div className="absolute left-0 top-8 rounded-2xl border border-white/12 bg-white/9 p-4 text-white shadow-2xl backdrop-blur-xl lg:-left-8 lg:top-18">
-              <div className="flex items-center gap-3">
-                <span className="grid size-9 place-items-center rounded-xl bg-accent text-accent-foreground"><Radar className="size-4" /></span>
-                <div><p className="text-[10px] uppercase tracking-[0.16em] text-white/45">Launch stack</p><p className="mt-0.5 text-sm font-semibold">Strategy + build + growth</p></div>
-              </div>
-            </div>
-            <div className="absolute bottom-5 right-0 w-[218px] rounded-2xl border border-blue-100/15 bg-brand-navy/82 p-4 text-white shadow-2xl backdrop-blur-xl lg:-right-5 lg:bottom-24">
-              <div className="flex items-center justify-between"><p className="text-[10px] uppercase tracking-[0.16em] text-white/45">Built for outcomes</p><Sparkles className="size-3.5 text-accent" /></div>
-              <p className="mt-3 text-sm leading-5">Creative, technical, and growth expertise in one team.</p>
-              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full w-[92%] rounded-full bg-accent" /></div>
-            </div>
+            <div className="float-card absolute left-0 top-[16%] rounded-2xl border border-blue-100 bg-white/90 p-3.5 shadow-xl shadow-blue-200/40 backdrop-blur-xl sm:left-[2%]"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-blue-600 text-white"><Code2 className="size-4" /></span><div><p className="text-[10px] font-black uppercase tracking-wider text-blue-600">Build</p><p className="text-xs font-black text-slate-900">Web &amp; software</p></div></div></div>
+            <div className="float-card float-card-delay absolute right-0 top-[28%] rounded-2xl border border-cyan-100 bg-white/90 p-3.5 shadow-xl shadow-cyan-200/40 backdrop-blur-xl"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-cyan-500 text-white"><Bot className="size-4" /></span><div><p className="text-[10px] font-black uppercase tracking-wider text-cyan-700">Automate</p><p className="text-xs font-black text-slate-900">AI operations</p></div></div></div>
+            <div className="float-card float-card-delay-2 absolute bottom-[12%] left-[8%] rounded-2xl border border-blue-500/30 bg-brand-navy/95 p-3.5 text-white shadow-xl shadow-blue-900/25 backdrop-blur"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-cyan-400 text-brand-navy"><LineChart className="size-4" /></span><div><p className="text-[10px] font-black uppercase tracking-wider text-cyan-300">Grow</p><p className="text-xs font-black">Measurable results</p></div></div></div>
           </Reveal>
         </div>
 
-        <div className="relative mx-auto grid max-w-[1440px] grid-cols-2 border-x border-t border-foreground/10 bg-background/65 backdrop-blur sm:grid-cols-3 lg:grid-cols-6">
-          {lifecycle.map((item) => (
-            <div key={item.number} className="border-r border-b border-foreground/10 px-5 py-5 last:border-r-0 lg:border-b-0">
-              <span className="font-mono text-[10px] text-muted-foreground">{item.number}</span>
-              <p className="mt-4 text-sm font-semibold">{item.label}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{item.copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="services" className="px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
-        <div className="mx-auto max-w-[1340px]">
-          <Reveal className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">One dedicated digital team</p>
-              <h2 className="mt-5 text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl">From first strategy session to launch—and beyond.</h2>
-            </div>
-            <p className="max-w-xl text-lg leading-8 text-muted-foreground lg:justify-self-end">
-              Developers, marketers, designers, editors, and strategists working as one team around measurable business growth.
-            </p>
-          </Reveal>
-
-          <div className="mt-14 grid gap-4 lg:grid-cols-12">
-            <Reveal className="noise relative min-h-[470px] overflow-hidden rounded-[2rem] bg-brand-ink p-7 text-white shadow-[0_28px_80px_rgba(21,93,252,0.14)] lg:col-span-7 lg:p-10">
-              <div className="relative z-10 max-w-md">
-                <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/45"><Workflow className="size-4 text-accent" />Full-stack execution</div>
-                <h3 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">Strategy, craft, and execution move together.</h3>
-                <p className="mt-4 leading-7 text-white/58">We plan the growth system, build the digital experience, launch the campaign, and keep improving what the data says matters.</p>
-              </div>
-              <div className="absolute -bottom-12 -right-12 grid size-[360px] place-items-center rounded-full border border-white/10 sm:size-[430px]">
-                <div className="grid size-[72%] place-items-center rounded-full border border-accent/40"><div className="grid size-[54%] place-items-center rounded-full bg-[linear-gradient(135deg,#155dfc,#02d1fa)] text-white shadow-[0_0_80px_rgba(2,209,250,0.28)]"><Layers3 className="size-12" /></div></div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.08} className="rounded-[2rem] border bg-white p-7 shadow-[0_24px_80px_rgba(28,35,45,0.06)] lg:col-span-5 lg:p-10">
-              <div className="flex items-start justify-between"><span className="grid size-11 place-items-center rounded-2xl bg-accent/60"><CircleDollarSign className="size-5" /></span><span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Growth systems</span></div>
-              <div className="mt-14 flex items-end justify-between"><div><p className="text-sm text-muted-foreground">Launch optimization</p><p className="mt-2 text-6xl font-semibold tracking-[-0.07em]">98%</p></div><MoveUpRight className="mb-2 size-6 text-emerald-600" /></div>
-              <div className="mt-8 flex h-24 items-end gap-2">
-                {[42, 54, 49, 63, 72, 69, 82, 76, 88, 91, 84, 96].map((height, index) => <div key={index} className="flex-1 rounded-t-sm bg-foreground/10 last:bg-accent" style={{ height: `${height}%` }} />)}
-              </div>
-              <div className="mt-5 flex justify-between text-xs text-muted-foreground"><span>Last 12 weeks</span><span className="font-semibold text-foreground">+8.4%</span></div>
-            </Reveal>
-
-            <Reveal className="rounded-[2rem] border border-brand-border bg-brand-surface p-7 lg:col-span-4 lg:p-9">
-              <Clock3 className="size-6" />
-              <h3 className="mt-16 text-2xl font-semibold tracking-[-0.035em]">Web &amp; software that performs.</h3>
-              <p className="mt-3 leading-7 text-muted-foreground">Custom websites, web apps, SaaS products, dashboards, and internal business systems.</p>
-            </Reveal>
-            <Reveal delay={0.06} className="rounded-[2rem] border border-cyan-100 bg-cyan-50 p-7 lg:col-span-4 lg:p-9">
-              <FileSignature className="size-6" />
-              <h3 className="mt-16 text-2xl font-semibold tracking-[-0.035em]">Marketing and content that earns attention.</h3>
-              <p className="mt-3 leading-7 text-muted-foreground">SEO, ads, funnels, lead generation, social creative, video, and lifecycle campaigns.</p>
-            </Reveal>
-            <Reveal delay={0.12} id="security" className="rounded-[2rem] border border-blue-100 bg-blue-50 p-7 lg:col-span-4 lg:p-9">
-              <ShieldCheck className="size-6" />
-              <h3 className="mt-16 text-2xl font-semibold tracking-[-0.035em]">AI and automation built for the real work.</h3>
-              <p className="mt-3 leading-7 text-muted-foreground">Chatbots, agents, smart workflows, integrations, and decision-ready dashboards.</p>
-            </Reveal>
+        <div className="overflow-hidden border-y border-blue-100/80 bg-white/70 backdrop-blur-xl">
+          <div className="marquee-track flex w-max items-center">
+            {[...services, ...services].map(({ icon: Icon, title }, index) => <div key={`${title}-${index}`} aria-hidden={index >= services.length} className="flex min-w-60 items-center justify-center gap-3 border-r border-blue-100/80 px-8 py-5 text-[0.7rem] font-extrabold uppercase tracking-[0.12em] text-slate-700"><Icon className="size-4 text-blue-600" />{title}</div>)}
           </div>
         </div>
       </section>
 
-      <section id="intelligence" className="noise overflow-hidden bg-brand-ink px-5 py-24 text-white sm:px-8 lg:px-12 lg:py-32">
-        <div className="relative mx-auto grid max-w-[1340px] gap-16 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
+      <section id="about" className="scroll-mt-28 bg-white py-14 sm:py-20">
+        <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+          <Reveal className="relative grid gap-8 overflow-hidden rounded-[2.5rem] border border-blue-100 bg-[radial-gradient(circle_at_top_right,#dbeafe,transparent_30rem),#f8fbff] p-7 shadow-[0_30px_90px_rgba(37,99,235,0.08)] lg:grid-cols-[1fr_auto] lg:items-center lg:p-12">
+            <div className="pointer-events-none absolute -right-16 -top-20 size-48 rounded-full bg-blue-100/70 blur-3xl" />
+            <div className="relative"><p className="text-xs font-extrabold uppercase tracking-[0.28em] text-blue-600">Who We Are</p><h2 className="mt-4 max-w-4xl text-4xl font-black leading-[1.02] tracking-[-0.045em] text-slate-950 sm:text-5xl">A senior digital team that thinks in outcomes, not deliverables.</h2><p className="mt-5 max-w-3xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">M&amp;W Labs brings developers, marketers, designers, and strategists together as one focused team. From the first strategy session to launch and beyond, every decision connects creative quality to measurable growth.</p></div>
+            <div className="relative flex flex-col gap-3 sm:flex-row lg:flex-col"><Link href="#enquiry" className="button-primary inline-flex items-center justify-center rounded-xl px-7 py-4 text-sm font-extrabold">Work With Us <Rocket className="ml-3 size-4" /></Link><Link href="#services" className="button-secondary inline-flex items-center justify-center rounded-xl px-7 py-4 text-sm font-extrabold">Explore Capabilities <Users className="ml-3 size-4" /></Link></div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="services" className="relative scroll-mt-24 overflow-hidden bg-brand-ink py-20 text-white sm:py-28">
+        <div className="absolute -left-28 top-12 size-96 rounded-full bg-blue-600/15 blur-[110px]" /><div className="absolute -right-36 bottom-0 size-[30rem] rounded-full bg-cyan-400/10 blur-[120px]" />
+        <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+          <Reveal><SectionHeading eyebrow="Capabilities / 01—06" centered inverse>One studio. Every discipline needed to <span className="text-gradient-light">move forward.</span></SectionHeading></Reveal>
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {services.map(({ icon: Icon, title, copy, tone }, index) => (
+              <Reveal key={title} delay={index * 0.04} className="h-full">
+                <article className="tilt-card group relative flex h-full min-h-72 flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-7 backdrop-blur transition hover:border-cyan-300/35 hover:bg-white/[0.075]">
+                  <span className="absolute right-6 top-5 text-5xl font-black tracking-[-0.08em] text-white/[0.055]">0{index + 1}</span>
+                  <span className={`grid size-14 place-items-center rounded-2xl shadow-2xl ${tone}`}><Icon className="size-6" /></span>
+                  <h3 className="mt-7 text-2xl font-black leading-snug tracking-[-0.025em] text-white">{title}</h3>
+                  <p className="mt-4 flex-1 text-sm font-semibold leading-7 text-slate-400">{copy}</p>
+                  <Link href="#enquiry" className="mt-7 inline-flex items-center text-sm font-extrabold text-cyan-300">Discuss this capability <ArrowRight className="ml-2 size-4 transition group-hover:translate-x-1" /></Link>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="why" className="scroll-mt-24 bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)] py-20 sm:py-28">
+        <div className="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:px-12 2xl:px-16">
           <Reveal>
-            <Badge className="rounded-full bg-accent text-accent-foreground hover:bg-accent"><BrainCircuit className="size-3.5" /> AI &amp; automation</Badge>
-            <h2 className="mt-7 text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">Automation that compounds the work.</h2>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-white/58">We connect Gemini, your tools, and your operating knowledge to remove repetitive work and surface the next best decision.</p>
-            <div className="mt-8 space-y-3">
-              {checks.map((check) => <div key={check} className="flex items-center gap-3 text-sm text-white/75"><span className="grid size-6 place-items-center rounded-full bg-accent/15 text-accent"><Check className="size-3.5" /></span>{check}</div>)}
-            </div>
+            <SectionHeading eyebrow="Why Choose M&W Labs?">We Don’t Just Deliver Services,<br />We Build <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Growth Systems.</span></SectionHeading>
+            <div className="mt-7 space-y-4">{benefits.map((benefit) => <div key={benefit} className="flex items-start gap-3 text-sm font-bold text-slate-600"><span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/25"><Check className="size-3.5" /></span>{benefit}</div>)}</div>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row"><Link href="#about" className="button-primary inline-flex items-center justify-center rounded-xl px-7 py-4 text-sm font-extrabold">Meet the Studio <ArrowRight className="ml-3 size-4" /></Link><Link href="#enquiry" className="button-secondary inline-flex items-center justify-center rounded-xl px-7 py-4 text-sm font-extrabold">Get Growth Advice <Lightbulb className="ml-3 size-4" /></Link></div>
           </Reveal>
-          <Reveal delay={0.1} className="hairline relative rounded-[2rem] bg-white/5 p-3 shadow-2xl backdrop-blur sm:p-5">
-            <div className="rounded-[1.5rem] border border-blue-100/15 bg-brand-navy p-5 sm:p-7">
-              <div className="flex items-center justify-between border-b border-white/10 pb-5"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-accent text-accent-foreground"><Sparkles className="size-4" /></span><div><p className="text-sm font-semibold">M&amp;W Intelligence</p><p className="text-xs text-white/38">A practical AI layer for your business</p></div></div><span className="size-2 rounded-full bg-emerald-400" /></div>
-              <div className="mt-6 space-y-3">
-                {[
-                  ["Revenue", "Vela Systems is 3× more likely to close if the proposal is revised today.", "$28k"],
-                  ["Delivery", "Halcyon is nearing its budget threshold with 14 hours of open work.", "86%"],
-                  ["Cash", "Two invoices worth $19.4k are due within five days.", "$19.4k"],
-                ].map(([label, copy, value]) => (
-                  <div key={label} className="grid gap-4 rounded-2xl border border-white/8 bg-white/[0.035] p-4 sm:grid-cols-[80px_1fr_auto] sm:items-center"><p className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent">{label}</p><p className="text-sm leading-6 text-white/68">{copy}</p><p className="text-lg font-semibold">{value}</p></div>
-                ))}
-              </div>
-              <div className="mt-4 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-brand-navy"><Sparkles className="size-4 text-primary" /><span className="flex-1 text-sm text-muted-foreground">What can we automate next?</span><span className="rounded-lg bg-primary px-3 py-1.5 text-xs text-white">Ask</span></div>
+          <Reveal delay={0.08} className="space-y-6">
+            <div className="grid gap-3 rounded-[1.75rem] border border-blue-100 bg-white p-4 shadow-[0_30px_80px_rgba(37,99,235,0.08)] sm:grid-cols-2 xl:grid-cols-4">{stats.map(({ icon: Icon, value, label }) => <div key={label} className="flex items-center gap-4 rounded-2xl p-3 transition hover:bg-blue-50/70"><span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-blue-50 text-blue-600"><Icon className="size-5" /></span><div><p className="text-3xl font-black tracking-[-0.04em] text-slate-950">{value}</p><p className="text-xs font-bold text-slate-500">{label}</p></div></div>)}</div>
+            <div className="grid overflow-hidden rounded-[2rem] border border-blue-100 bg-slate-50 shadow-[0_30px_90px_rgba(15,23,42,0.08)] md:grid-cols-[0.42fr_0.58fr]">
+              <div className="relative flex min-h-64 items-end justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-white p-6"><div className="absolute inset-0 opacity-50 [background-image:radial-gradient(circle,#dbeafe_1px,transparent_1.4px)] [background-size:14px_14px]" /><div className="relative grid size-40 place-items-center rounded-full border-[14px] border-white bg-gradient-to-br from-blue-600 to-cyan-400 text-white shadow-2xl"><Users className="size-14" /></div></div>
+              <div className="flex flex-col justify-center p-7 sm:p-10"><MessageSquareQuote className="size-9 text-blue-200" /><blockquote className="mt-4 text-lg font-bold leading-8 text-slate-700">M&amp;W Labs transformed our online presence completely. Their team is professional, creative, and delivers outstanding results!</blockquote><div className="mt-7"><p className="font-black text-slate-950">David Smith</p><p className="text-sm font-semibold text-slate-500">CEO, TechFlow</p></div></div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section id="process" className="px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
-        <div className="mx-auto max-w-[1340px]">
-          <Reveal className="rounded-[2.5rem] bg-[linear-gradient(135deg,#155dfc,#0188ec_55%,#02d1fa)] p-8 text-white shadow-[0_34px_90px_rgba(21,93,252,0.24)] sm:p-12 lg:grid lg:grid-cols-[1fr_auto] lg:items-end lg:p-16">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.17em] text-white/68"><Fingerprint className="size-4" />Discover · Plan · Build · Launch · Grow</div>
-              <h2 className="mt-6 max-w-4xl text-balance text-5xl font-semibold leading-[0.95] tracking-[-0.065em] text-white sm:text-7xl">Tell us what you want to build, market, or automate.</h2>
+      <section id="work" className="scroll-mt-24 bg-white py-20 sm:py-28">
+        <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+          <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><SectionHeading eyebrow="Selected Work / 2026">Digital experiences designed to <span className="text-gradient">perform.</span></SectionHeading><p className="max-w-md text-sm font-semibold leading-7 text-slate-500">A selection of conversion-led platforms and operating systems built around real commercial goals.</p></Reveal>
+          <div className="mt-12 grid gap-7 lg:grid-cols-2">
+            {[
+              { visual: "builders" as const, title: "Builders Website Design London", client: "Ravinder", copy: "A conversion-focused digital experience designed to turn local search traffic into qualified enquiries." },
+              { visual: "removal" as const, title: "Removal System Design", client: "Md Liakat Kawser", copy: "A smarter digital operations system for the UK removal industry, from lead capture to delivery." },
+            ].map((project, index) => <Reveal key={project.title} delay={index * 0.08}><article className="group overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_rgba(37,99,235,0.16)]"><ProjectVisual variant={project.visual} /><div className="p-7 sm:p-8"><div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600"><span className="relative size-2 rounded-full bg-emerald-500"><span className="absolute inset-0 animate-ping rounded-full bg-emerald-400" /></span>Live · Digital Product</div><h3 className="mt-4 text-3xl font-black tracking-[-0.035em] text-slate-950 transition group-hover:text-blue-700">{project.title}</h3><p className="mt-2 text-sm font-bold text-blue-600">{project.client}</p><p className="mt-4 text-sm font-semibold leading-7 text-slate-600">{project.copy}</p><Link href="#enquiry" className="mt-7 inline-flex items-center text-sm font-extrabold text-blue-600">Plan a similar project <ArrowUpRight className="ml-2 size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></Link></div></article></Reveal>)}
+          </div>
+          <Reveal className="mt-10 flex justify-center"><Link href="#enquiry" className="button-primary inline-flex items-center justify-center rounded-xl px-8 py-4 text-sm font-extrabold">Build Something Distinctive <Sparkles className="ml-3 size-4" /></Link></Reveal>
+        </div>
+      </section>
+
+      <section id="process" className="scroll-mt-24 overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#eff6ff_100%)] py-20 sm:py-28">
+        <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+          <Reveal><SectionHeading eyebrow="Process / Clarity at every step">How an idea becomes <span className="text-gradient">impact.</span></SectionHeading></Reveal>
+          <div className="relative mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-5 lg:gap-0">
+            {process.map(({ icon: Icon, title, copy }, index) => <Reveal key={title} delay={index * 0.06} className="group relative rounded-2xl bg-white p-4 lg:p-0 lg:pr-7"><div className="relative z-10 flex items-start gap-4"><span className="grid size-16 shrink-0 place-items-center rounded-full border border-blue-100 bg-white text-blue-600 shadow-[0_18px_45px_rgba(37,99,235,0.12)] ring-8 ring-blue-50/70 transition group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white"><Icon className="size-6" /></span><div className="pt-1"><div className="flex items-center gap-3"><p className="text-sm font-black text-blue-600">0{index + 1}</p><h3 className="font-black text-slate-950">{title}</h3></div><p className="mt-4 max-w-[12rem] text-sm font-semibold leading-7 text-slate-600">{copy}</p></div></div>{index < process.length - 1 && <div className="pointer-events-none absolute left-[5rem] top-8 hidden w-[calc(100%-5rem)] border-t-2 border-dashed border-blue-100 lg:block"><ArrowRight className="absolute -right-1 -top-2 size-4 text-blue-500" /></div>}</Reveal>)}
+          </div>
+          <Reveal className="mt-10 text-center"><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50">Start With a Discovery Call <CalendarCheck2 className="ml-3 size-4" /></Link></Reveal>
+        </div>
+      </section>
+
+      <section id="enquiry" className="relative isolate scroll-mt-24 overflow-hidden bg-white py-20 sm:py-28">
+        <div className="absolute left-0 top-24 -z-10 size-72 rounded-full bg-blue-100/60 blur-3xl" /><div className="absolute bottom-12 right-0 -z-10 size-80 rounded-full bg-cyan-100/55 blur-3xl" />
+        <div className="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:px-12 2xl:px-16">
+          <Reveal>
+            <SectionHeading eyebrow="Start Your Enquiry">Tell us what you want to build, market, or automate.</SectionHeading>
+            <p className="mt-5 max-w-xl text-base font-semibold leading-8 text-slate-600">Use the quick form and we’ll route your request into our CRM, prepare your client workspace, and respond with a clear recommendation, timeline, and next steps.</p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              {[{ icon: MousePointerClick, title: "Quick intake", copy: "Share the essentials in under two minutes." }, { icon: ShieldCheck, title: "Portal access", copy: "New clients get a secure workspace." }, { icon: Compass, title: "Strategic reply", copy: "We respond with a focused next step." }].map(({ icon: Icon, title, copy }) => <div key={title} className="rounded-2xl border border-blue-100 bg-white/80 p-5 shadow-sm backdrop-blur"><span className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-600"><Icon className="size-5" /></span><p className="mt-4 text-sm font-black text-slate-950">{title}</p><p className="mt-2 text-xs font-semibold leading-5 text-slate-500">{copy}</p></div>)}
             </div>
-            <Button render={<Link href="https://mwlabs.digital/contact" />} size="lg" className="mt-10 h-14 rounded-full bg-brand-ink px-8 text-white hover:bg-brand-navy lg:mt-0">
-              Book a free strategy call <ArrowUpRight className="size-4" />
-            </Button>
+          </Reveal>
+          <Reveal delay={0.08}><ProjectEnquiryForm /></Reveal>
+        </div>
+      </section>
+
+      <section id="insights" className="scroll-mt-24 bg-[radial-gradient(circle_at_top_right,#eff6ff,transparent_28rem),linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] py-20 sm:py-28">
+        <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+          <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><div><SectionHeading eyebrow="Studio Notes">Ideas for building smarter, stronger businesses.</SectionHeading><p className="mt-4 max-w-2xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">Practical thinking on product, marketing, branding, automation, and sustainable agency growth.</p></div><Link href="#enquiry" className="button-secondary inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-sm font-extrabold">Request a growth review <ArrowRight className="ml-3 size-4" /></Link></Reveal>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{insights.map(({ icon: Icon, title, date, read, tone }, index) => <Reveal key={title} delay={index * 0.06}><article className="group h-full overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-100/70"><div className={`grid aspect-[16/9] place-items-center bg-gradient-to-br ${tone}`}><div className="grid size-20 place-items-center rounded-3xl border border-white/30 bg-white/15 text-white shadow-2xl backdrop-blur"><Icon className="size-9" /></div></div><div className="p-6"><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-blue-600">Growth Strategy</p><h3 className="mt-3 text-xl font-black leading-snug text-slate-950 transition group-hover:text-blue-700">{title}</h3><div className="mt-5 flex gap-3 text-xs font-bold uppercase tracking-[0.12em] text-slate-500"><span>{date}</span><span>{read}</span></div></div></article></Reveal>)}</div>
+        </div>
+      </section>
+
+      <section id="testimonials" className="scroll-mt-24 bg-white py-20 sm:py-28">
+        <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
+          <Reveal><SectionHeading eyebrow="What Clients Say">Real People. Real <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Results.</span></SectionHeading></Reveal>
+          <Reveal delay={0.08}><TestimonialsCarousel /></Reveal>
+          <Reveal className="relative mt-14 overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 px-7 py-12 text-white shadow-[0_36px_100px_rgba(37,99,235,0.24)] sm:px-12 lg:px-16 lg:py-16">
+            <div className="absolute left-0 top-0 h-full w-40 opacity-20 [background-image:radial-gradient(circle,white_1px,transparent_1px)] [background-size:12px_12px]" /><div className="absolute -right-20 -top-24 size-72 rounded-full bg-cyan-300/30 blur-3xl" /><Send className="absolute right-14 top-1/2 hidden size-24 -translate-y-1/2 text-white/75 lg:block" />
+            <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center lg:pr-36"><div><p className="text-sm font-extrabold text-blue-100">Ready to Grow Your Business?</p><h3 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Let&apos;s Build Something Amazing Together!</h3><p className="mt-4 max-w-2xl text-base font-semibold leading-8 text-blue-50">Book a free strategy call and let&apos;s discuss how we can help you grow.</p></div><div className="flex flex-col gap-4 sm:flex-row"><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-xl transition hover:-translate-y-0.5 hover:bg-blue-50">Book a Free Call <CalendarCheck2 className="ml-3 size-4" /></Link><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-sm font-extrabold text-white backdrop-blur hover:bg-white/20">Request a Quote <ArrowRight className="ml-3 size-4" /></Link></div></div>
           </Reveal>
         </div>
       </section>
+
+      <MarketingReception />
     </>
   );
 }

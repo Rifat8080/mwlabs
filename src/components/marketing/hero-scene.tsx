@@ -1,17 +1,18 @@
 "use client";
 
 import { useRef } from "react";
-import { Float, MeshTransmissionMaterial } from "@react-three/drei";
+import { Float, MeshTransmissionMaterial, Sparkles } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import type { Group } from "three";
+import { MathUtils, type Group } from "three";
 
 function GrowthCore() {
   const group = useRef<Group>(null);
 
   useFrame((state, delta) => {
     if (!group.current) return;
-    group.current.rotation.y += delta * 0.12;
-    group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.12;
+    group.current.rotation.y += delta * 0.1;
+    group.current.rotation.x = MathUtils.damp(group.current.rotation.x, state.pointer.y * 0.18 + Math.sin(state.clock.elapsedTime * 0.3) * 0.08, 3, delta);
+    group.current.rotation.z = MathUtils.damp(group.current.rotation.z, -state.pointer.x * 0.12, 3, delta);
   });
 
   return (
@@ -53,8 +54,9 @@ export function HeroScene() {
       <Canvas camera={{ position: [0, 0, 6.4], fov: 42 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }}>
         <ambientLight intensity={1.4} />
         <directionalLight position={[3, 4, 5]} intensity={4} color="#ffffff" />
-        <pointLight position={[-3, -2, 3]} intensity={45} color="#02d1fa" />
-        <GrowthCore />
+      <pointLight position={[-3, -2, 3]} intensity={45} color="#02d1fa" />
+      <Sparkles count={42} scale={[5.5, 4.2, 3]} size={1.5} speed={0.25} color="#155dfc" opacity={0.45} />
+      <GrowthCore />
       </Canvas>
     </div>
   );
