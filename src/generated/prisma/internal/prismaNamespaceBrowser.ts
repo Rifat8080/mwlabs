@@ -104,6 +104,12 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  accountType: 'accountType',
+  company: 'company',
+  phone: 'phone',
+  serviceInterest: 'serviceInterest',
+  budgetRange: 'budgetRange',
+  projectBrief: 'projectBrief',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -221,6 +227,7 @@ export type TeamMemberScalarFieldEnum = (typeof TeamMemberScalarFieldEnum)[keyof
 export const LeadScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  userId: 'userId',
   name: 'name',
   company: 'company',
   email: 'email',
@@ -548,7 +555,13 @@ export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  image: 'image'
+  image: 'image',
+  accountType: 'accountType',
+  company: 'company',
+  phone: 'phone',
+  serviceInterest: 'serviceInterest',
+  budgetRange: 'budgetRange',
+  projectBrief: 'projectBrief'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -646,6 +659,7 @@ export type TeamMemberOrderByRelevanceFieldEnum = (typeof TeamMemberOrderByRelev
 export const LeadOrderByRelevanceFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  userId: 'userId',
   name: 'name',
   company: 'company',
   email: 'email',

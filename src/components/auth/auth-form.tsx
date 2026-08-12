@@ -26,7 +26,7 @@ function makeSlug(value: string) {
   return `${normalized || "agency"}-${crypto.randomUUID().slice(0, 5)}`;
 }
 
-export function AuthForm({ mode, googleEnabled, nextPath = "/app" }: AuthFormProps) {
+export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: AuthFormProps) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -61,6 +61,7 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/app" }: AuthFormPro
           throw new Error(workspace.error?.message ?? "Could not create the workspace.");
         }
         await authClient.organization.setActive({ organizationId: workspace.data.id });
+        await fetch("/api/registrations/owner", { method: "POST" });
         toast.success("Your agency workspace is ready");
         router.push("/app");
       } else {
@@ -87,7 +88,7 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/app" }: AuthFormPro
     const result = await authClient.signIn.social({
       provider: "google",
       callbackURL: nextPath,
-      newUserCallbackURL: "/sign-up?step=workspace",
+      newUserCallbackURL: "/auth/continue",
     });
     if (result?.error) {
       setPending(false);
@@ -171,9 +172,9 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/app" }: AuthFormPro
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            {signUpMode ? "Already have access?" : "Need access?"}{" "}
-            <Link href={signUpMode ? "/sign-in" : "mailto:hello@mwlabs.digital?subject=M%26W%20Command%20access"} className="font-semibold text-foreground underline underline-offset-4">
-              {signUpMode ? "Sign in" : "Ask an owner"}
+            {signUpMode ? "Already have access?" : "Planning a project?"}{" "}
+            <Link href={signUpMode ? "/sign-in" : "/register"} className="font-semibold text-foreground underline underline-offset-4">
+              {signUpMode ? "Sign in" : "Register with M&W"}
             </Link>
           </p>
           <p className="mt-7 flex items-center justify-center gap-2 text-xs text-muted-foreground">

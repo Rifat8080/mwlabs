@@ -4,6 +4,7 @@ import { prismaAdapter } from "@better-auth/prisma-adapter";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { organization } from "better-auth/plugins";
+import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { seedWorkspace } from "@/lib/seed-workspace";
@@ -17,9 +18,52 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(db, { provider: "mysql" }),
+  user: {
+    additionalFields: {
+      accountType: {
+        type: "string",
+        required: true,
+        input: false,
+        returned: false,
+        defaultValue: "prospect",
+      },
+      company: {
+        type: "string",
+        required: false,
+        returned: false,
+        validator: { input: z.string().trim().max(160) },
+      },
+      phone: {
+        type: "string",
+        required: false,
+        returned: false,
+        validator: { input: z.string().trim().max(40) },
+      },
+      serviceInterest: {
+        type: "string",
+        required: false,
+        returned: false,
+        validator: { input: z.string().trim().max(120) },
+      },
+      budgetRange: {
+        type: "string",
+        required: false,
+        returned: false,
+        validator: { input: z.string().trim().max(80) },
+      },
+      projectBrief: {
+        type: "string",
+        required: false,
+        returned: false,
+        validator: { input: z.string().trim().max(4_000) },
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
-    disableSignUp: process.env.ALLOW_INITIAL_SIGNUP !== "true",
+    // Public accounts are prospects only. Agency access still requires an
+    // explicit organization membership and is enforced independently.
+    disableSignUp: false,
     autoSignIn: true,
     minPasswordLength: 10,
     maxPasswordLength: 128,

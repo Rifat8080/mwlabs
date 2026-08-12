@@ -25,28 +25,28 @@ const footerGroups = [
   {
     title: "Capabilities",
     links: [
-      { label: "Web & Software", href: "#services" },
-      { label: "Digital Marketing", href: "#services" },
-      { label: "Brand Systems", href: "#services" },
-      { label: "AI & Automation", href: "#services" },
+      { label: "Web & Software", href: "/#services" },
+      { label: "Digital Marketing", href: "/#services" },
+      { label: "Brand Systems", href: "/#services" },
+      { label: "AI & Automation", href: "/#services" },
     ],
   },
   {
     title: "Discover",
     links: [
-      { label: "About the Studio", href: "#about" },
-      { label: "Selected Work", href: "#work" },
-      { label: "Our Process", href: "#process" },
-      { label: "Studio Insights", href: "#insights" },
+      { label: "About the Studio", href: "/#about" },
+      { label: "Selected Work", href: "/#work" },
+      { label: "Our Process", href: "/#process" },
+      { label: "Studio Insights", href: "/#insights" },
     ],
   },
   {
     title: "Workspace",
     links: [
       { label: "Agency Login", href: "/sign-in" },
-      { label: "Start a Project", href: "#enquiry" },
-      { label: "Client Stories", href: "#testimonials" },
-      { label: "Contact", href: "#contact-details" },
+      { label: "Register a Project", href: "/register" },
+      { label: "Client Stories", href: "/#testimonials" },
+      { label: "Contact", href: "/#contact-details" },
     ],
   },
 ];
@@ -80,7 +80,7 @@ export function MarketingFooter() {
               <h2 className="footer-title mt-5 max-w-5xl font-black">Tell us what needs to <span className="text-gradient-light">move forward.</span></h2>
               <p className="mt-5 max-w-2xl text-sm font-semibold leading-7 text-slate-400 sm:text-base sm:leading-8">A product to launch, a brand to reposition, a pipeline to improve, or repetitive work to automate—we will help identify the highest-leverage next step.</p>
               <div className="mt-7 grid gap-3 min-[430px]:grid-cols-2 sm:flex sm:flex-wrap">
-                <Link href="#enquiry" className="group inline-flex min-h-13 items-center justify-center rounded-2xl bg-white px-5 text-sm font-black text-brand-ink transition hover:-translate-y-1 hover:bg-cyan-300 sm:px-7">Start a project <ArrowRight className="ml-3 size-4 transition group-hover:translate-x-1" /></Link>
+                <Link href="/register" className="group inline-flex min-h-13 items-center justify-center rounded-2xl bg-white px-5 text-sm font-black text-brand-ink transition hover:-translate-y-1 hover:bg-cyan-300 sm:px-7">Register your project <ArrowRight className="ml-3 size-4 transition group-hover:translate-x-1" /></Link>
                 <Link href="https://wa.me/442037697100" target="_blank" rel="noreferrer" className="inline-flex min-h-13 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] px-5 text-sm font-black text-white transition hover:-translate-y-1 hover:border-emerald-300/40 hover:bg-emerald-400/10 sm:px-7"><MessageCircle className="mr-3 size-4 text-emerald-300" />Chat on WhatsApp</Link>
               </div>
             </div>
@@ -154,7 +154,7 @@ export function MarketingFooter() {
 
         <div className="flex flex-col gap-4 pt-6 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-slate-600 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 M&amp;W Labs · Built locally · All rights reserved</p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2"><Link href="/sign-in" className="transition hover:text-slate-300">Private workspace</Link><Link href="#top" className="inline-flex items-center text-slate-400 transition hover:text-cyan-300">Return to top <ArrowUp className="ml-2 size-3.5" /></Link></div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2"><Link href="/sign-in" className="transition hover:text-slate-300">Private workspace</Link><Link href="/#top" className="inline-flex items-center text-slate-400 transition hover:text-cyan-300">Return to top <ArrowUp className="ml-2 size-3.5" /></Link></div>
         </div>
       </div>
     </footer>

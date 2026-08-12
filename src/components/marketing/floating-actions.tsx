@@ -47,7 +47,7 @@ export function FloatingActions() {
           </Link>
         ))}
         <span className="my-1 h-px w-5 bg-blue-100" />
-        <Link href="#enquiry" aria-label="Start a project" className="grid size-10 place-items-center rounded-full bg-blue-600 text-white transition hover:scale-105 hover:bg-blue-700"><MessageCircle className="size-4" /></Link>
+        <Link href="/register" aria-label="Register a project" className="grid size-10 place-items-center rounded-full bg-blue-600 text-white transition hover:scale-105 hover:bg-blue-700"><MessageCircle className="size-4" /></Link>
       </aside>
 
       <div className="fixed bottom-5 right-4 z-[60] flex flex-col items-end gap-2 lg:hidden">

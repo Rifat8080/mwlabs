@@ -206,6 +206,18 @@
     letter-spacing: -0.068em;
     text-wrap: balance;
   }
+  .hero-original-title {
+    font-size: clamp(2.55rem, 12vw, 4.2rem);
+    line-height: 0.91;
+    letter-spacing: -0.064em;
+    text-wrap: balance;
+  }
+  .hero-reference-title {
+    font-size: clamp(2.62rem, 13vw, 4.35rem);
+    line-height: 0.9;
+    letter-spacing: -0.068em;
+    text-wrap: balance;
+  }
   .experience-stage {
     isolation: isolate;
   }
@@ -223,6 +235,12 @@
   }
   .hero-aurora-delay {
     animation-delay: -6.5s;
+  }
+  .hero-orbit-dot {
+    animation: hero-orbit-pulse 5s ease-in-out infinite;
+  }
+  .hero-orbit-dot-delay {
+    animation-delay: -2.5s;
   }
   .hero-statement {
     font-size: clamp(2.75rem, 14.5vw, 3.7rem);
@@ -321,6 +339,16 @@
 }
 
 @media (min-width: 640px) {
+  .hero-reference-title {
+    font-size: clamp(4.35rem, 9vw, 5.7rem);
+    line-height: 0.88;
+    letter-spacing: -0.074em;
+  }
+  .hero-original-title {
+    font-size: clamp(4rem, 8.3vw, 5.3rem);
+    line-height: 0.88;
+    letter-spacing: -0.07em;
+  }
   .experience-title {
     font-size: clamp(4rem, 7.5vw, 5.6rem);
     line-height: 0.82;
@@ -343,6 +371,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .hero-reference-title {
+    font-size: clamp(3.15rem, 4.85vw, 6.25rem);
+  }
+}
+
 @media (min-width: 768px) {
   .hero-stage {
     transform: rotateY(-1.5deg) rotateX(0.6deg);
@@ -353,6 +387,9 @@
 }
 
 @media (min-width: 1024px) {
+  .hero-original-title {
+    font-size: clamp(4.35rem, 4.8vw, 5.35rem);
+  }
   .experience-title {
     font-size: clamp(4.4rem, 5.2vw, 6rem);
   }
@@ -375,6 +412,9 @@
 }
 
 @media (max-width: 359px) {
+  .hero-original-title {
+    font-size: 2.42rem;
+  }
   .experience-title {
     font-size: 3rem;
   }
@@ -407,6 +447,11 @@
 @keyframes hero-aurora-drift {
   0%, 100% { transform: translate3d(0, 0, 0) scale(0.96); opacity: 0.7; }
   50% { transform: translate3d(-2.5rem, 1.5rem, 0) scale(1.06); opacity: 1; }
+}
+
+@keyframes hero-orbit-pulse {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(0.9); opacity: 0.72; }
+  50% { transform: translate3d(0, -8px, 0) scale(1.15); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

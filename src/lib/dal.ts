@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-function hasTrustedMutationOrigin(request: Request) {
+export function hasTrustedMutationOrigin(request: Request) {
   if (["GET", "HEAD", "OPTIONS"].includes(request.method)) return true;
   if (request.headers.get("sec-fetch-site") === "cross-site") return false;
 
@@ -55,7 +55,7 @@ export const getWorkspaceContext = cache(async () => {
     },
   });
 
-  if (!membership) redirect("/sign-up?step=workspace");
+  if (!membership) redirect("/portal");
 
   return {
     user: {

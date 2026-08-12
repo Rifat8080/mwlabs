@@ -6,8 +6,11 @@ export const metadata: Metadata = { title: "Sign in" };
 
 export default async function SignInPage({ searchParams }: PageProps<"/sign-in">) {
   const params = await searchParams;
-  const requested = typeof params.next === "string" ? params.next : "/app";
-  const nextPath = requested.startsWith("/app") ? requested : "/app";
+  const requested = typeof params.next === "string" ? params.next : "/auth/continue";
+  const nextPath =
+    requested.startsWith("/app") || requested === "/portal"
+      ? requested
+      : "/auth/continue";
 
   return (
     <AuthForm

@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     "agency finance",
     "AI operations",
   ],
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml", sizes: "any" }],
+    shortcut: ["/favicon.svg"],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "192x192" }],
+  },
 };
 
 export const viewport: Viewport = {

@@ -3,16 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, ChevronDown, Menu, PhoneCall, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Menu, UserPlus, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Studio", href: "#about" },
-  { label: "Work", href: "#work" },
-  { label: "Process", href: "#process" },
-  { label: "Insights", href: "#insights" },
-  { label: "Contact", href: "#enquiry" },
+  { label: "Studio", href: "/#about" },
+  { label: "Work", href: "/#work" },
+  { label: "Process", href: "/#process" },
+  { label: "Insights", href: "/#insights" },
+  { label: "Contact", href: "/#enquiry" },
 ];
 
 const services = [
@@ -51,7 +51,7 @@ export function MarketingHeader() {
             : "border-white/80 bg-white/72 shadow-[0_12px_45px_rgba(37,99,235,0.08)] backdrop-blur-xl",
         )}
       >
-        <Link href="#top" onClick={closeNavigation} className="relative block h-10 w-36 shrink-0 min-[380px]:w-40 sm:h-11 sm:w-44" aria-label="M&W Labs home">
+        <Link href="/" onClick={closeNavigation} className="relative block h-10 w-36 shrink-0 min-[380px]:w-40 sm:h-11 sm:w-44" aria-label="M&W Labs home">
           <Image src="/mw-logo.png" alt="M&W Labs" fill sizes="176px" priority className="object-contain object-left" />
         </Link>
 
@@ -86,7 +86,7 @@ export function MarketingHeader() {
               {servicesOpen && (
                 <div className="z-50 mt-1 w-full rounded-2xl border border-blue-100 bg-white p-2 shadow-[0_24px_70px_rgba(15,23,42,0.16)] lg:absolute lg:left-1/2 lg:w-64 lg:-translate-x-1/2">
                   {services.map((service) => (
-                    <Link key={service} href="#services" onClick={closeNavigation} className="block rounded-xl px-3 py-2.5 text-xs normal-case tracking-normal text-slate-600 transition hover:bg-blue-50 hover:text-blue-700">
+                    <Link key={service} href="/#services" onClick={closeNavigation} className="block rounded-xl px-3 py-2.5 text-xs normal-case tracking-normal text-slate-600 transition hover:bg-blue-50 hover:text-blue-700">
                       {service}
                     </Link>
                   ))}
@@ -102,10 +102,10 @@ export function MarketingHeader() {
 
           <div className="mt-3 flex flex-col gap-2 border-t border-blue-100 pt-3 lg:mt-0 lg:flex-row lg:items-center lg:border-0 lg:pt-0">
             <Link href="/sign-in" onClick={closeNavigation} className="inline-flex items-center justify-center rounded-xl border border-blue-100 bg-white px-4 py-3 text-xs font-extrabold text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
-              Command Center <ArrowUpRight className="ml-2 size-3.5" />
+              Sign in <ArrowUpRight className="ml-2 size-3.5" />
             </Link>
-            <Link href="#enquiry" onClick={closeNavigation} className="inline-flex items-center justify-center rounded-xl bg-brand-ink px-5 py-3 text-xs font-extrabold text-white shadow-lg shadow-blue-950/15 transition hover:-translate-y-0.5 hover:bg-blue-600">
-              Start a Project <PhoneCall className="ml-2 size-3.5" />
+            <Link href="/register" onClick={closeNavigation} className="inline-flex items-center justify-center rounded-xl bg-brand-ink px-5 py-3 text-xs font-extrabold text-white shadow-lg shadow-blue-950/15 transition hover:-translate-y-0.5 hover:bg-blue-600">
+              Register Project <UserPlus className="ml-2 size-3.5" />
             </Link>
           </div>
         </div>
