@@ -28,12 +28,12 @@ const flowingServices = [
 ];
 
 const serviceLabelPositions = [
-  { left: "9%", top: "70%" },
-  { left: "75%", top: "49%" },
-  { left: "16%", top: "17%" },
-  { left: "66%", top: "73%" },
-  { left: "73%", top: "16%" },
-  { left: "43%", top: "84%" },
+  { left: "10%", top: "69%" },
+  { left: "65%", top: "51%" },
+  { left: "14%", top: "16%" },
+  { left: "61%", top: "73%" },
+  { left: "66%", top: "17%" },
+  { left: "42%", top: "84%" },
 ];
 const CURVE_SAMPLES = 320;
 const RIBBON_SEGMENTS = 420;
@@ -313,8 +313,10 @@ function ExactLogoMark({ activeId, activeIndex }: { activeId: string; activeInde
   const { viewport } = useThree();
   const curve = useMemo(() => createLogoCurve(), []);
   const geometry = useMemo(() => createLogoRibbon(curve), [curve]);
-  const responsiveScale = Math.min(1.12, viewport.width / 8.25);
   const compact = viewport.width < 6;
+  const responsiveScale = compact
+    ? Math.min(0.72, viewport.width / 9.35)
+    : Math.min(0.88, viewport.width / 10.35);
 
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -362,35 +364,41 @@ function ExactLogoMark({ activeId, activeIndex }: { activeId: string; activeInde
   );
 }
 
-function ServiceLabels({ activeIndex }: { activeIndex: number }) {
+function ServiceLabels({ activeIndex, onActivate }: { activeIndex: number; onActivate: (index: number) => void }) {
   const activeService = flowingServices[activeIndex];
   const ActiveIcon = activeService.icon;
 
   return (
     <>
-      <div className="pointer-events-none absolute inset-0 z-20 hidden lg:block" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-0 z-20 hidden xl:block">
         {flowingServices.map((service, index) => {
           const active = index === activeIndex;
           const Icon = service.icon;
           const position = serviceLabelPositions[index];
 
           return (
-            <div
+            <button
+              type="button"
               key={service.id}
-              className={`absolute flex w-[10.5rem] items-center gap-2.5 rounded-[1.15rem] border bg-white/94 p-2.5 pr-3 text-slate-900 backdrop-blur-xl transition-[transform,border-color,box-shadow] duration-500 xl:w-[12rem] xl:gap-3 xl:p-3 ${active ? "-translate-y-1 border-blue-200 shadow-[0_20px_46px_rgba(37,99,235,0.18)] ring-1 ring-blue-100" : "border-white shadow-[0_14px_38px_rgba(15,23,42,0.1)]"}`}
+              className={`pointer-events-auto absolute flex w-[13rem] items-center gap-3 rounded-[1.15rem] border bg-white/94 p-3 pr-4 text-slate-900 backdrop-blur-xl transition-[transform,border-color,box-shadow] duration-500 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-600 ${active ? "-translate-y-1.5 border-blue-200 shadow-[0_22px_50px_rgba(37,99,235,0.2)] ring-1 ring-blue-100" : "border-white shadow-[0_14px_38px_rgba(15,23,42,0.1)] hover:-translate-y-1 hover:border-blue-100 hover:shadow-[0_18px_42px_rgba(37,99,235,0.14)]"}`}
               style={{ left: position.left, top: position.top }}
+              onPointerEnter={() => onActivate(index)}
+              onFocus={() => onActivate(index)}
+              onClick={() => onActivate(index)}
+              aria-pressed={active}
+              aria-label={`Explore ${service.label}`}
             >
-              <span className={`grid size-9 shrink-0 place-items-center rounded-xl transition-colors duration-500 xl:size-10 ${active ? "bg-blue-600 text-white shadow-[0_8px_20px_rgba(37,99,235,0.24)]" : "bg-blue-50 text-blue-600"}`}>
-                <Icon className="size-4 xl:size-[1.1rem]" strokeWidth={2.3} />
+              <span className={`grid size-10 shrink-0 place-items-center rounded-xl transition-colors duration-500 ${active ? "bg-blue-600 text-white shadow-[0_8px_20px_rgba(37,99,235,0.24)]" : "bg-blue-50 text-blue-600"}`}>
+                <Icon className="size-[1.1rem]" strokeWidth={2.3} />
               </span>
-              <span className="min-w-0 truncate text-left text-[0.7rem] font-black leading-tight tracking-[-0.025em] xl:text-[0.78rem]">
+              <span className="whitespace-nowrap text-left text-[0.78rem] font-black leading-tight tracking-[-0.025em]">
                 {service.label}
               </span>
-            </div>
+            </button>
           );
         })}
 
-        <div className="absolute left-[1%] top-[44%] flex min-w-[12.8rem] items-center gap-3 rounded-[1.15rem] border border-white bg-white/95 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.11)] backdrop-blur-xl">
+        <div className="absolute left-[2%] top-[45%] flex min-w-[13.5rem] items-center gap-3 rounded-[1.15rem] border border-white bg-white/95 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.11)] backdrop-blur-xl">
           <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-[0_8px_22px_rgba(37,99,235,0.24)]">
             <Zap className="size-[1.05rem] fill-current" />
           </span>
@@ -400,14 +408,19 @@ function ServiceLabels({ activeIndex }: { activeIndex: number }) {
           </span>
         </div>
 
-        <div className="absolute right-[1%] top-[39%] rounded-[1.1rem] bg-slate-900 px-4 py-3.5 text-white shadow-[0_20px_45px_rgba(15,23,42,0.2)]">
+        <div className="absolute right-[5%] top-[40%] rounded-[1.1rem] bg-slate-900 px-4 py-3.5 text-white shadow-[0_20px_45px_rgba(15,23,42,0.2)]">
           <span className="block text-[0.47rem] font-black uppercase tracking-[0.18em] text-cyan-200">Optimized</span>
           <span className="mt-1 block text-[1.5rem] font-black leading-none tracking-[-0.05em]">98<span className="text-[0.72rem]">%</span></span>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-4 bottom-3 z-20 lg:hidden">
-        <div className="flex items-center gap-3 rounded-2xl border border-white/95 bg-white/94 p-2.5 pr-3 shadow-[0_16px_45px_rgba(37,99,235,0.13)]">
+      <div className="pointer-events-none absolute inset-x-4 bottom-3 z-20 xl:hidden">
+        <button
+          type="button"
+          className="pointer-events-auto flex w-full items-center gap-3 rounded-2xl border border-white/95 bg-white/94 p-2.5 pr-3 shadow-[0_16px_45px_rgba(37,99,235,0.13)] transition hover:border-blue-100 hover:shadow-[0_20px_50px_rgba(37,99,235,0.16)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-600"
+          onClick={() => onActivate((activeIndex + 1) % flowingServices.length)}
+          aria-label={`Showing ${activeService.label}. Show next connected service`}
+        >
           <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-linear-to-br from-blue-600 to-cyan-400 text-white shadow-[0_8px_22px_rgba(34,211,238,0.22)]">
             <ActiveIcon className="size-4" strokeWidth={2.2} />
           </span>
@@ -420,7 +433,7 @@ function ServiceLabels({ activeIndex }: { activeIndex: number }) {
           <span className="text-[0.46rem] font-black tabular-nums tracking-[0.12em] text-slate-400">
             0{activeIndex + 1}/06
           </span>
-        </div>
+        </button>
       </div>
     </>
   );
@@ -466,7 +479,7 @@ export function HeroScene() {
         <ExactLogoMark activeId={activeService.id} activeIndex={activeIndex} />
         <ContactShadows position={[-0.2, -2.12, -0.72]} opacity={0.08} scale={9} blur={3.2} far={4.5} color="#1d4ed8" />
       </Canvas>
-      <ServiceLabels activeIndex={activeIndex} />
+      <ServiceLabels activeIndex={activeIndex} onActivate={setActiveIndex} />
     </div>
   );
 }

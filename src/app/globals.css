@@ -373,7 +373,8 @@
 
 @media (min-width: 1024px) {
   .hero-reference-title {
-    font-size: clamp(3.15rem, 4.85vw, 6.25rem);
+    font-size: clamp(3.15rem, 4.45vw, 5.55rem);
+    line-height: 0.91;
   }
 }
 

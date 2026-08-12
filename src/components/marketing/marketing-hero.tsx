@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, MousePointer2, Star } from "lucide-react";
 
 import { HeroScene } from "@/components/marketing/hero-scene";
 import { Reveal } from "@/components/marketing/reveal";
@@ -19,8 +19,8 @@ export function MarketingHero() {
       <div className="marketing-grid pointer-events-none absolute inset-0 -z-20 opacity-25 [mask-image:linear-gradient(to_bottom,black,transparent_92%)]" />
       <div className="hero-aurora pointer-events-none absolute -right-44 top-16 -z-10 size-[40rem] rounded-full bg-cyan-200/25 blur-[125px]" />
 
-      <div className="mx-auto grid min-h-[calc(100svh-5.25rem)] max-w-[112rem] items-center gap-10 px-4 pb-14 pt-14 sm:px-7 sm:pb-16 sm:pt-16 lg:grid-cols-[0.83fr_1.17fr] lg:gap-6 lg:px-12 lg:pb-20 lg:pt-12 xl:gap-10 2xl:px-16">
-        <div className="relative z-20 mx-auto max-w-[43rem] text-center lg:mx-0 lg:text-left">
+      <div className="mx-auto grid max-w-[112rem] items-center gap-10 px-4 pb-12 pt-14 sm:px-7 sm:pb-14 sm:pt-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:px-12 lg:pb-16 lg:pt-16 xl:gap-10 xl:pt-20 2xl:px-16">
+        <div className="relative z-20 mx-auto max-w-[46rem] text-center lg:mx-0 lg:text-left">
           <Reveal>
             <div className="mx-auto inline-flex max-w-full items-center gap-2.5 rounded-full border border-blue-100 bg-white/88 px-3.5 py-2.5 text-[0.56rem] font-black uppercase leading-4 tracking-[0.15em] text-blue-700 shadow-[0_14px_42px_rgba(37,99,235,0.09)] backdrop-blur-xl sm:px-4 sm:text-[0.65rem] sm:tracking-[0.19em] lg:mx-0">
               <span className="grid size-5 shrink-0 place-items-center rounded-full bg-blue-600 text-[0.68rem] leading-none text-white shadow-[0_0_0_5px_rgba(37,99,235,0.09)]">+</span>
@@ -29,9 +29,9 @@ export function MarketingHero() {
           </Reveal>
 
           <Reveal delay={0.07}>
-            <h1 className="hero-reference-title mx-auto mt-8 font-black lg:mx-0">
-              <span className="block text-slate-950">Build. Market.</span>
-              <span className="block text-slate-950">
+            <h1 className="hero-reference-title mx-auto mt-8 font-black lg:mx-0" aria-label="Build. Market. Automate. Grow.">
+              <span className="block text-slate-950 lg:whitespace-nowrap">Build. Market.</span>
+              <span className="block text-slate-950 lg:whitespace-nowrap">
                 Automate. <span className="text-gradient">Grow.</span>
               </span>
             </h1>
@@ -43,14 +43,14 @@ export function MarketingHero() {
           <Reveal delay={0.13} className="mt-8 grid gap-3 min-[420px]:grid-cols-2 sm:flex sm:justify-center lg:justify-start">
             <Link
               href="/register"
-              className="group inline-flex min-h-16 items-center justify-center rounded-2xl bg-blue-600 px-7 text-sm font-black text-white shadow-[0_20px_45px_rgba(37,99,235,0.28)] transition duration-300 hover:-translate-y-1 hover:bg-blue-700 hover:shadow-[0_25px_55px_rgba(37,99,235,0.34)]"
+              className="group inline-flex min-h-[3.75rem] items-center justify-center rounded-2xl bg-blue-600 px-7 text-sm font-black text-white shadow-[0_20px_45px_rgba(37,99,235,0.28)] transition duration-300 hover:-translate-y-1 hover:bg-blue-700 hover:shadow-[0_25px_55px_rgba(37,99,235,0.34)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
             >
               Start Your Project
               <ArrowRight className="ml-4 size-4 transition group-hover:translate-x-1" />
             </Link>
             <Link
               href="/#work"
-              className="group inline-flex min-h-16 items-center justify-center rounded-2xl border border-blue-200 bg-white/86 px-7 text-sm font-black text-blue-700 shadow-[0_14px_35px_rgba(37,99,235,0.07)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-blue-300 hover:bg-white"
+              className="group inline-flex min-h-[3.75rem] items-center justify-center rounded-2xl border border-blue-200 bg-white/86 px-7 text-sm font-black text-blue-700 shadow-[0_14px_35px_rgba(37,99,235,0.07)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-blue-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
             >
               View Our Work
               <ArrowRight className="ml-4 size-4 transition group-hover:translate-x-1" />
@@ -83,21 +83,28 @@ export function MarketingHero() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.1} className="hero-visual relative mx-auto min-h-[31rem] w-full max-w-[64rem] sm:min-h-[39rem] lg:min-h-[44rem] xl:min-h-[48rem]">
-          <div className="pointer-events-none absolute left-[9%] top-[4%] size-[82%] rounded-[50%] border border-blue-200/65" />
-          <div className="pointer-events-none absolute left-[3%] top-[24%] h-[49%] w-[94%] -rotate-3 rounded-[50%] border border-indigo-300/50" />
-          <div className="pointer-events-none absolute left-[12%] top-[27%] h-[44%] w-[85%] rotate-[8deg] rounded-[50%] border border-cyan-300/45" />
+        <Reveal delay={0.1} className="hero-visual relative mx-auto min-h-[31rem] w-full max-w-[62rem] sm:min-h-[36rem] lg:min-h-[40rem] xl:min-h-[44rem]">
+          <div className="pointer-events-none absolute left-[10%] top-[5%] size-[80%] rounded-[50%] border border-blue-200/60" />
+          <div className="pointer-events-none absolute left-[4%] top-[25%] h-[47%] w-[92%] -rotate-3 rounded-[50%] border border-indigo-300/45" />
+          <div className="pointer-events-none absolute left-[13%] top-[28%] h-[42%] w-[82%] rotate-[8deg] rounded-[50%] border border-cyan-300/40" />
           <div className="pointer-events-none absolute right-[5%] top-[20%] size-[42%] rounded-full bg-cyan-200/30 blur-[70px]" />
-          <div className="pointer-events-none absolute left-[12%] top-[32%] h-[40%] w-[80%] -rotate-[8deg] rounded-[2rem] border border-white/90 bg-white/48 shadow-[0_35px_70px_rgba(15,23,42,0.1)] backdrop-blur-sm" />
-          <div className="absolute -inset-x-[4%] inset-y-0">
+          <div className="pointer-events-none absolute left-[13%] top-[33%] h-[37%] w-[77%] -rotate-[8deg] rounded-[2rem] border border-white/90 bg-white/48 shadow-[0_35px_70px_rgba(15,23,42,0.09)] backdrop-blur-sm" />
+          <div className="pointer-events-none absolute right-[13%] top-[6%] hidden items-center gap-2 rounded-full border border-blue-100/80 bg-white/70 px-3 py-2 text-[0.5rem] font-black uppercase tracking-[0.16em] text-slate-400 shadow-sm backdrop-blur-xl xl:flex">
+            <MousePointer2 className="size-3.5 text-blue-600" /> Move to explore
+          </div>
+          <div className="absolute inset-0">
             <HeroScene />
           </div>
         </Reveal>
       </div>
 
       <div className="relative z-20 mx-auto max-w-[112rem] px-4 sm:px-7 lg:px-12 2xl:px-16">
-        <div className="rounded-t-[1.75rem] border border-b-0 border-blue-100/90 bg-white/76 px-6 py-7 text-center shadow-[0_-10px_50px_rgba(37,99,235,0.06)] backdrop-blur-xl sm:rounded-t-[2rem]">
-          <p className="text-[0.62rem] font-black uppercase tracking-[0.28em] text-slate-500 sm:text-xs">Trusted by businesses of all sizes</p>
+        <div className="rounded-t-[1.75rem] border border-b-0 border-blue-100/90 bg-white/76 px-6 py-6 text-center shadow-[0_-10px_50px_rgba(37,99,235,0.06)] backdrop-blur-xl sm:rounded-t-[2rem]">
+          <div className="mx-auto flex max-w-2xl items-center gap-4 sm:gap-7">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-blue-200" />
+            <p className="shrink-0 text-[0.58rem] font-black uppercase tracking-[0.22em] text-slate-500 sm:text-xs sm:tracking-[0.28em]">Trusted by businesses of all sizes</p>
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-blue-200" />
+          </div>
         </div>
       </div>
     </section>
