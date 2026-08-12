@@ -441,12 +441,19 @@ function ServiceLabels({ activeIndex, onActivate }: { activeIndex: number; onAct
 
 export function HeroScene() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const interactionPauseUntil = useRef(0);
   const activeService = flowingServices[activeIndex];
+
+  function activateService(index: number) {
+    interactionPauseUntil.current = Date.now() + 6000;
+    setActiveIndex(index);
+  }
 
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (preference.matches) return;
     const interval = window.setInterval(() => {
+      if (Date.now() < interactionPauseUntil.current) return;
       setActiveIndex((current) => (current + 1) % flowingServices.length);
     }, 2400);
     return () => window.clearInterval(interval);
@@ -479,7 +486,7 @@ export function HeroScene() {
         <ExactLogoMark activeId={activeService.id} activeIndex={activeIndex} />
         <ContactShadows position={[-0.2, -2.12, -0.72]} opacity={0.08} scale={9} blur={3.2} far={4.5} color="#1d4ed8" />
       </Canvas>
-      <ServiceLabels activeIndex={activeIndex} onActivate={setActiveIndex} />
+      <ServiceLabels activeIndex={activeIndex} onActivate={activateService} />
     </div>
   );
 }
