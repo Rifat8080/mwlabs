@@ -1,13 +1,29 @@
-import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 
 import { getAgencyContext, saveAiExchange } from "@/lib/ai-context";
 import { requireApiSession } from "@/lib/dal";
+import { getGeminiClient } from "@/lib/gemini";
+
+export const runtime = "nodejs";
 
 const requestSchema = z.object({
   message: z.string().trim().min(2).max(4_000),
   threadId: z.string().max(191).optional(),
 });
+
+const aiRequests = new Map<string, { count: number; resetAt: number }>();
+
+function withinAiRateLimit(key: string) {
+  const now = Date.now();
+  const current = aiRequests.get(key);
+  if (!current || current.resetAt <= now) {
+    aiRequests.set(key, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  if (current.count >= 12) return false;
+  current.count += 1;
+  return true;
+}
 
 const systemInstruction = `You are M&W Intelligence, the internal operating partner for M&W Labs.
 M&W Labs is a full-service digital agency covering web and software development, digital marketing, branding and design, video and content, AI and automation, and growth strategy.
@@ -51,6 +67,9 @@ _Gemini is not configured in this environment, so this briefing was generated fr
 export async function POST(request: Request) {
   const session = await requireApiSession(request);
   if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!withinAiRateLimit(`${session.organizationId}:${session.userId}`)) {
+    return Response.json({ error: "Too many AI requests. Please wait a minute and try again." }, { status: 429 });
+  }
 
   const parsed = requestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Enter a clear question under 4,000 characters." }, { status: 400 });
@@ -58,11 +77,11 @@ export async function POST(request: Request) {
   const context = await getAgencyContext(session.organizationId);
   let answer: string;
 
-  if (!process.env.GEMINI_API_KEY) {
+  const ai = getGeminiClient();
+  if (!ai) {
     answer = offlineBrief(parsed.data.message, context);
   } else {
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const result = await ai.models.generateContent({
         model: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
         contents: [
@@ -80,7 +99,11 @@ export async function POST(request: Request) {
         },
       });
       answer = result.text?.trim() || "I could not produce a useful answer from the available context.";
-    } catch {
+    } catch (error) {
+      console.error("Gemini request failed", {
+        name: error instanceof Error ? error.name : "UnknownError",
+        organizationId: session.organizationId,
+      });
       answer = `${offlineBrief(parsed.data.message, context)}\n\n_Gemini was temporarily unavailable, so M&W Intelligence used the local agency rules instead._`;
     }
   }

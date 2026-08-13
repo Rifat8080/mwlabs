@@ -1,7 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MousePointer2, Star } from "lucide-react";
+import { ArrowRight, Bot, Clapperboard, Code2, Megaphone, Palette, Star, Target } from "lucide-react";
 
-import { HeroScene } from "@/components/marketing/hero-scene";
 import { Reveal } from "@/components/marketing/reveal";
 
 const clientInitials = [
@@ -10,6 +10,15 @@ const clientInitials = [
   { label: "TN", className: "bg-cyan-100 text-cyan-700" },
   { label: "MK", className: "bg-indigo-100 text-indigo-700" },
   { label: "JL", className: "bg-rose-100 text-rose-600" },
+];
+
+const heroServices = [
+  { label: "Web Development", icon: Code2, position: "left-[10%] top-[17%]" },
+  { label: "Digital Marketing", icon: Megaphone, position: "right-[3%] top-[18%]" },
+  { label: "Branding & Design", icon: Palette, position: "right-[2%] top-[52%]" },
+  { label: "Video Editing", icon: Clapperboard, position: "right-[12%] top-[76%]" },
+  { label: "Growth Strategy", icon: Target, position: "left-[4%] top-[70%]" },
+  { label: "AI Automation", icon: Bot, position: "left-[43%] top-[84%]" },
 ];
 
 export function MarketingHero() {
@@ -83,17 +92,52 @@ export function MarketingHero() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.1} className="hero-visual relative mx-auto min-h-[31rem] w-full max-w-[62rem] sm:min-h-[36rem] lg:min-h-[40rem] xl:min-h-[44rem]">
-          <div className="pointer-events-none absolute left-[10%] top-[5%] size-[80%] rounded-[50%] border border-blue-200/60" />
-          <div className="pointer-events-none absolute left-[4%] top-[25%] h-[47%] w-[92%] -rotate-3 rounded-[50%] border border-indigo-300/45" />
-          <div className="pointer-events-none absolute left-[13%] top-[28%] h-[42%] w-[82%] rotate-[8deg] rounded-[50%] border border-cyan-300/40" />
-          <div className="pointer-events-none absolute right-[5%] top-[20%] size-[42%] rounded-full bg-cyan-200/30 blur-[70px]" />
-          <div className="pointer-events-none absolute left-[13%] top-[33%] h-[37%] w-[77%] -rotate-[8deg] rounded-[2rem] border border-white/90 bg-white/48 shadow-[0_35px_70px_rgba(15,23,42,0.09)] backdrop-blur-sm" />
-          <div className="pointer-events-none absolute right-[13%] top-[6%] hidden items-center gap-2 rounded-full border border-blue-100/80 bg-white/70 px-3 py-2 text-[0.5rem] font-black uppercase tracking-[0.16em] text-slate-400 shadow-sm backdrop-blur-xl xl:flex">
-            <MousePointer2 className="size-3.5 text-blue-600" /> Move to explore
+        <Reveal delay={0.1} className="hero-visual relative mx-auto min-h-[32rem] w-full max-w-[62rem] sm:min-h-[37rem] lg:min-h-[40rem] xl:min-h-[44rem]">
+          <div className="pointer-events-none absolute right-[5%] top-[18%] size-[44%] rounded-full bg-cyan-200/30 blur-[75px]" />
+          <div className="pointer-events-none absolute left-[8%] top-[15%] size-[45%] rounded-full bg-violet-200/20 blur-[85px]" />
+          <div className="pointer-events-none absolute left-[12%] top-[33%] h-[36%] w-[78%] -rotate-[8deg] rounded-[2rem] border border-white/90 bg-white/42 shadow-[0_35px_75px_rgba(15,23,42,0.08)] backdrop-blur-sm" />
+
+          <div className="absolute inset-x-[2%] top-[2%] bottom-[27%] sm:inset-x-[5%] sm:top-[5%] sm:bottom-[22%] xl:inset-[7%]">
+            <Image
+              src="/hero.svg"
+              alt="M&amp;W Labs infinity ribbon connecting strategy, technology, marketing, design, content and AI automation"
+              fill
+              preload
+              unoptimized
+              sizes="(max-width: 1023px) 100vw, 55vw"
+              className="object-contain drop-shadow-[0_32px_42px_rgba(19,54,139,0.18)]"
+            />
           </div>
-          <div className="absolute inset-0">
-            <HeroScene />
+
+          <div className="absolute inset-0 z-10 hidden xl:block" aria-label="Connected agency services">
+            {heroServices.map((service) => {
+              const Icon = service.icon;
+              return (
+                <div
+                  key={service.label}
+                  className={`absolute flex min-w-[12rem] items-center gap-3 rounded-[1.15rem] border border-white bg-white/94 p-3 pr-4 text-slate-900 shadow-[0_16px_42px_rgba(15,23,42,0.11)] backdrop-blur-xl ${service.position}`}
+                >
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-600">
+                    <Icon className="size-[1.1rem]" strokeWidth={2.3} />
+                  </span>
+                  <span className="whitespace-nowrap text-[0.78rem] font-black tracking-[-0.025em]">{service.label}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="absolute inset-x-3 bottom-3 z-10 grid grid-cols-2 gap-2 sm:inset-x-[8%] xl:hidden" aria-label="Connected agency services">
+            {heroServices.map((service) => {
+              const Icon = service.icon;
+              return (
+                <div key={service.label} className="flex min-w-0 items-center gap-2 rounded-xl border border-white bg-white/90 p-2 text-slate-800 shadow-[0_10px_30px_rgba(37,99,235,0.09)] backdrop-blur-xl">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600">
+                    <Icon className="size-3.5" strokeWidth={2.3} />
+                  </span>
+                  <span className="truncate text-[0.62rem] font-black sm:text-[0.7rem]">{service.label}</span>
+                </div>
+              );
+            })}
           </div>
         </Reveal>
       </div>

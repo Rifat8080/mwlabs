@@ -34,6 +34,14 @@ yarn-error.log*
 .env*
 !.env.example
 
+# secret-manager and credential exports
+*.secret
+*.secrets
+*.credentials
+*.credentials.json
+service-account*.json
+google-credentials*.json
+
 # vercel
 .vercel
 

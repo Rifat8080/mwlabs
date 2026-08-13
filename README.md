@@ -17,7 +17,7 @@ The private operating system for M&W Labs. M&W Command covers lead capture, qual
 Requirements: Node.js 20.19+ and Docker Desktop (or an existing MySQL 8 server).
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 docker compose up -d mysql
 npm install
 npm run db:migrate
@@ -27,6 +27,14 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000). For initial setup only, set `ALLOW_INITIAL_SIGNUP=true`, create the first owner account, then set it back to `false`. Set `SEED_DEMO_DATA=true` only when you want sample records in a development workspace.
 
 The included development database uses a non-root `mwlabs_app` user and a separate `mwlabs_shadow` database for Prisma Migrate. Replace every credential and secret before deploying.
+
+### Secret handling
+
+- Keep local credentials in `.env.local`; all real `.env*` files are ignored except the placeholder-only `.env.example`.
+- Keep `GEMINI_API_KEY`, database passwords, auth secrets, and OAuth secrets server-only. Never use a `NEXT_PUBLIC_` prefix for them.
+- Configure production credentials through the deployment platform's encrypted secret manager, then redeploy after rotating a credential.
+- Run `npm run security:check` before pushing. GitHub Actions also rejects tracked key patterns and credential files.
+- If a provider or GitHub reports a leaked key, revoke it first. Removing it from code does not make the leaked value safe again.
 
 ## Environment
 
@@ -49,6 +57,7 @@ Production should use TLS for MySQL, an application-specific database user, mana
 ```bash
 npm run typecheck
 npm run lint
+npm run security:check
 npm run build
 ```
 
