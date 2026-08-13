@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Bot, Clapperboard, Code2, Megaphone, Palette, Star, Target } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 
+import { HeroArtwork } from "@/components/marketing/hero-artwork";
 import { Reveal } from "@/components/marketing/reveal";
 
 const clientInitials = [
@@ -10,15 +10,6 @@ const clientInitials = [
   { label: "TN", className: "bg-cyan-100 text-cyan-700" },
   { label: "MK", className: "bg-indigo-100 text-indigo-700" },
   { label: "JL", className: "bg-rose-100 text-rose-600" },
-];
-
-const heroServices = [
-  { label: "Web Development", icon: Code2, position: "left-[10%] top-[17%]" },
-  { label: "Digital Marketing", icon: Megaphone, position: "right-[3%] top-[18%]" },
-  { label: "Branding & Design", icon: Palette, position: "right-[2%] top-[52%]" },
-  { label: "Video Editing", icon: Clapperboard, position: "right-[12%] top-[76%]" },
-  { label: "Growth Strategy", icon: Target, position: "left-[4%] top-[70%]" },
-  { label: "AI Automation", icon: Bot, position: "left-[43%] top-[84%]" },
 ];
 
 export function MarketingHero() {
@@ -32,7 +23,7 @@ export function MarketingHero() {
         <div className="relative z-20 mx-auto max-w-[46rem] text-center lg:mx-0 lg:text-left">
           <Reveal>
             <div className="mx-auto inline-flex max-w-full items-center gap-2.5 rounded-full border border-blue-100 bg-white/88 px-3.5 py-2.5 text-[0.56rem] font-black uppercase leading-4 tracking-[0.15em] text-blue-700 shadow-[0_14px_42px_rgba(37,99,235,0.09)] backdrop-blur-xl sm:px-4 sm:text-[0.65rem] sm:tracking-[0.19em] lg:mx-0">
-              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-blue-600 text-[0.68rem] leading-none text-white shadow-[0_0_0_5px_rgba(37,99,235,0.09)]">+</span>
+              <span className="hero-badge-pulse grid size-5 shrink-0 place-items-center rounded-full bg-blue-600 text-[0.68rem] leading-none text-white shadow-[0_0_0_5px_rgba(37,99,235,0.09)]">+</span>
               <span>Full-service digital agency for growing businesses</span>
             </div>
           </Reveal>
@@ -41,7 +32,7 @@ export function MarketingHero() {
             <h1 className="hero-reference-title mx-auto mt-8 font-black lg:mx-0" aria-label="Build. Market. Automate. Grow.">
               <span className="block text-slate-950 lg:whitespace-nowrap">Build. Market.</span>
               <span className="block text-slate-950 lg:whitespace-nowrap">
-                Automate. <span className="text-gradient">Grow.</span>
+                Automate. <span className="hero-growth-word text-gradient">Grow.</span>
               </span>
             </h1>
             <p className="mx-auto mt-7 max-w-[41rem] text-[0.94rem] font-semibold leading-7 text-slate-600 sm:text-lg sm:leading-8 lg:mx-0 xl:text-[1.05rem]">
@@ -52,14 +43,14 @@ export function MarketingHero() {
           <Reveal delay={0.13} className="mt-8 grid gap-3 min-[420px]:grid-cols-2 sm:flex sm:justify-center lg:justify-start">
             <Link
               href="/register"
-              className="group inline-flex min-h-[3.75rem] items-center justify-center rounded-2xl bg-blue-600 px-7 text-sm font-black text-white shadow-[0_20px_45px_rgba(37,99,235,0.28)] transition duration-300 hover:-translate-y-1 hover:bg-blue-700 hover:shadow-[0_25px_55px_rgba(37,99,235,0.34)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+              className="hero-primary-cta group inline-flex min-h-[3.75rem] items-center justify-center overflow-hidden rounded-2xl bg-blue-600 px-7 text-sm font-black text-white shadow-[0_20px_45px_rgba(37,99,235,0.28)] transition duration-300 hover:-translate-y-1 hover:bg-blue-700 hover:shadow-[0_25px_55px_rgba(37,99,235,0.34)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
             >
               Start Your Project
               <ArrowRight className="ml-4 size-4 transition group-hover:translate-x-1" />
             </Link>
             <Link
               href="/#work"
-              className="group inline-flex min-h-[3.75rem] items-center justify-center rounded-2xl border border-blue-200 bg-white/86 px-7 text-sm font-black text-blue-700 shadow-[0_14px_35px_rgba(37,99,235,0.07)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-blue-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+              className="hero-secondary-cta group inline-flex min-h-[3.75rem] items-center justify-center rounded-2xl border border-blue-200 bg-white/86 px-7 text-sm font-black text-blue-700 shadow-[0_14px_35px_rgba(37,99,235,0.07)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-blue-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
             >
               View Our Work
               <ArrowRight className="ml-4 size-4 transition group-hover:translate-x-1" />
@@ -72,7 +63,7 @@ export function MarketingHero() {
                 {clientInitials.map((client) => (
                   <span
                     key={client.label}
-                    className={`grid size-10 place-items-center rounded-full border-2 border-white text-[0.6rem] font-black shadow-sm ${client.className}`}
+                    className={`hero-trust-avatar grid size-10 place-items-center rounded-full border-2 border-white text-[0.6rem] font-black shadow-sm ${client.className}`}
                   >
                     {client.label}
                   </span>
@@ -85,60 +76,15 @@ export function MarketingHero() {
                   ))}
                 </div>
                 <p className="mt-1 max-w-52 text-xs font-extrabold leading-4 text-slate-600 sm:text-sm">
-                  Trusted by 200+<br className="hidden sm:block" /> Businesses Worldwide
+                  Trusted by 30+<br className="hidden sm:block" /> Businesses Worldwide
                 </p>
               </div>
             </div>
           </Reveal>
         </div>
 
-        <Reveal delay={0.1} className="hero-visual relative mx-auto min-h-[32rem] w-full max-w-[62rem] sm:min-h-[37rem] lg:min-h-[40rem] xl:min-h-[44rem]">
-          <div className="pointer-events-none absolute right-[5%] top-[18%] size-[44%] rounded-full bg-cyan-200/30 blur-[75px]" />
-          <div className="pointer-events-none absolute left-[8%] top-[15%] size-[45%] rounded-full bg-violet-200/20 blur-[85px]" />
-          <div className="pointer-events-none absolute left-[12%] top-[33%] h-[36%] w-[78%] -rotate-[8deg] rounded-[2rem] border border-white/90 bg-white/42 shadow-[0_35px_75px_rgba(15,23,42,0.08)] backdrop-blur-sm" />
-
-          <div className="absolute inset-x-[2%] top-[2%] bottom-[27%] sm:inset-x-[5%] sm:top-[5%] sm:bottom-[22%] xl:inset-[7%]">
-            <Image
-              src="/hero.svg"
-              alt="M&amp;W Labs infinity ribbon connecting strategy, technology, marketing, design, content and AI automation"
-              fill
-              preload
-              unoptimized
-              sizes="(max-width: 1023px) 100vw, 55vw"
-              className="object-contain drop-shadow-[0_32px_42px_rgba(19,54,139,0.18)]"
-            />
-          </div>
-
-          <div className="absolute inset-0 z-10 hidden xl:block" aria-label="Connected agency services">
-            {heroServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <div
-                  key={service.label}
-                  className={`absolute flex min-w-[12rem] items-center gap-3 rounded-[1.15rem] border border-white bg-white/94 p-3 pr-4 text-slate-900 shadow-[0_16px_42px_rgba(15,23,42,0.11)] backdrop-blur-xl ${service.position}`}
-                >
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-600">
-                    <Icon className="size-[1.1rem]" strokeWidth={2.3} />
-                  </span>
-                  <span className="whitespace-nowrap text-[0.78rem] font-black tracking-[-0.025em]">{service.label}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="absolute inset-x-3 bottom-3 z-10 grid grid-cols-2 gap-2 sm:inset-x-[8%] xl:hidden" aria-label="Connected agency services">
-            {heroServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <div key={service.label} className="flex min-w-0 items-center gap-2 rounded-xl border border-white bg-white/90 p-2 text-slate-800 shadow-[0_10px_30px_rgba(37,99,235,0.09)] backdrop-blur-xl">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600">
-                    <Icon className="size-3.5" strokeWidth={2.3} />
-                  </span>
-                  <span className="truncate text-[0.62rem] font-black sm:text-[0.7rem]">{service.label}</span>
-                </div>
-              );
-            })}
-          </div>
+        <Reveal delay={0.1}>
+          <HeroArtwork />
         </Reveal>
       </div>
 

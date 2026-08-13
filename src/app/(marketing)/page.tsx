@@ -57,10 +57,10 @@ const benefits = [
 ];
 
 const stats = [
-  { icon: BriefcaseBusiness, value: "500+", label: "Projects Completed" },
-  { icon: Smile, value: "300+", label: "Happy Clients" },
+  { icon: BriefcaseBusiness, value: "50+", label: "Projects Completed" },
+  { icon: Smile, value: "30+", label: "Happy Clients" },
   { icon: Trophy, value: "5+", label: "Years of Experience" },
-  { icon: Globe2, value: "20+", label: "Countries Served" },
+  { icon: Globe2, value: "5+", label: "Countries Served" },
 ];
 
 const process = [
