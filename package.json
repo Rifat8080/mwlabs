@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "security:secrets": "node scripts/check-secrets.mjs",
     "security:check": "npm run security:secrets && npm audit --audit-level=high",
     "db:generate": "prisma generate",

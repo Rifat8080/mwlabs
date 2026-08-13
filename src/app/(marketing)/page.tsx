@@ -10,7 +10,6 @@ import {
   Clapperboard,
   ClipboardList,
   Code2,
-  Compass,
   Globe2,
   Lightbulb,
   LineChart,
@@ -189,7 +188,7 @@ export default function MarketingPage() {
           <div className="relative mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-5 lg:gap-0">
             {process.map(({ icon: Icon, title, copy }, index) => <Reveal key={title} delay={index * 0.06} className="group relative rounded-2xl bg-white p-4 lg:p-0 lg:pr-7"><div className="relative z-10 flex items-start gap-4"><span className="grid size-16 shrink-0 place-items-center rounded-full border border-blue-100 bg-white text-blue-600 shadow-[0_18px_45px_rgba(37,99,235,0.12)] ring-8 ring-blue-50/70 transition group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white"><Icon className="size-6" /></span><div className="pt-1"><div className="flex items-center gap-3"><p className="text-sm font-black text-blue-600">0{index + 1}</p><h3 className="font-black text-slate-950">{title}</h3></div><p className="mt-4 max-w-[12rem] text-sm font-semibold leading-7 text-slate-600">{copy}</p></div></div>{index < process.length - 1 && <div className="pointer-events-none absolute left-[5rem] top-8 hidden w-[calc(100%-5rem)] border-t-2 border-dashed border-blue-100 lg:block"><ArrowRight className="absolute -right-1 -top-2 size-4 text-blue-500" /></div>}</Reveal>)}
           </div>
-          <Reveal className="mt-10 text-center"><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50">Start With a Discovery Call <CalendarCheck2 className="ml-3 size-4" /></Link></Reveal>
+          <Reveal className="mt-10 text-center"><Link href="/book" className="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50">Start With a Discovery Call <CalendarCheck2 className="ml-3 size-4" /></Link></Reveal>
         </div>
       </section>
 
@@ -198,9 +197,9 @@ export default function MarketingPage() {
         <div className="mx-auto grid max-w-[104rem] gap-10 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:px-12 2xl:px-16">
           <Reveal>
             <SectionHeading eyebrow="Start Your Enquiry">Tell us what you want to build, market, or automate.</SectionHeading>
-            <p className="mt-5 max-w-xl text-base font-semibold leading-8 text-slate-600">Use the quick form and we’ll route your request into our CRM, prepare your client workspace, and respond with a clear recommendation, timeline, and next steps.</p>
+            <p className="mt-5 max-w-xl text-base font-semibold leading-8 text-slate-600">Use the quick form and we’ll route your request into our CRM, prefill discovery scheduling, and keep every confirmed next step visible in your client workspace.</p>
             <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              {[{ icon: MousePointerClick, title: "Quick intake", copy: "Share the essentials in under two minutes." }, { icon: ShieldCheck, title: "Portal access", copy: "New clients get a secure workspace." }, { icon: Compass, title: "Strategic reply", copy: "We respond with a focused next step." }].map(({ icon: Icon, title, copy }) => <div key={title} className="rounded-2xl border border-blue-100 bg-white/80 p-5 shadow-sm backdrop-blur"><span className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-600"><Icon className="size-5" /></span><p className="mt-4 text-sm font-black text-slate-950">{title}</p><p className="mt-2 text-xs font-semibold leading-5 text-slate-500">{copy}</p></div>)}
+              {[{ icon: MousePointerClick, title: "Quick intake", copy: "Share the essentials in under two minutes." }, { icon: CalendarCheck2, title: "Instant scheduling", copy: "Choose a discovery time without waiting for email." }, { icon: ShieldCheck, title: "Connected portal", copy: "Bookings and next steps stay in one secure workflow." }].map(({ icon: Icon, title, copy }) => <div key={title} className="rounded-2xl border border-blue-100 bg-white/80 p-5 shadow-sm backdrop-blur"><span className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-600"><Icon className="size-5" /></span><p className="mt-4 text-sm font-black text-slate-950">{title}</p><p className="mt-2 text-xs font-semibold leading-5 text-slate-500">{copy}</p></div>)}
             </div>
           </Reveal>
           <Reveal delay={0.08}><ProjectEnquiryForm /></Reveal>
@@ -220,7 +219,7 @@ export default function MarketingPage() {
           <Reveal delay={0.08}><TestimonialsCarousel /></Reveal>
           <Reveal className="relative mt-14 overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 px-7 py-12 text-white shadow-[0_36px_100px_rgba(37,99,235,0.24)] sm:px-12 lg:px-16 lg:py-16">
             <div className="absolute left-0 top-0 h-full w-40 opacity-20 [background-image:radial-gradient(circle,white_1px,transparent_1px)] [background-size:12px_12px]" /><div className="absolute -right-20 -top-24 size-72 rounded-full bg-cyan-300/30 blur-3xl" /><Send className="absolute right-14 top-1/2 hidden size-24 -translate-y-1/2 text-white/75 lg:block" />
-            <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center lg:pr-36"><div><p className="text-sm font-extrabold text-blue-100">Ready to Grow Your Business?</p><h3 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Let&apos;s Build Something Amazing Together!</h3><p className="mt-4 max-w-2xl text-base font-semibold leading-8 text-blue-50">Book a free strategy call and let&apos;s discuss how we can help you grow.</p></div><div className="flex flex-col gap-4 sm:flex-row"><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-xl transition hover:-translate-y-0.5 hover:bg-blue-50">Book a Free Call <CalendarCheck2 className="ml-3 size-4" /></Link><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-sm font-extrabold text-white backdrop-blur hover:bg-white/20">Request a Quote <ArrowRight className="ml-3 size-4" /></Link></div></div>
+            <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center lg:pr-36"><div><p className="text-sm font-extrabold text-blue-100">Ready to Grow Your Business?</p><h3 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Let&apos;s Build Something Amazing Together!</h3><p className="mt-4 max-w-2xl text-base font-semibold leading-8 text-blue-50">Book a free strategy call and let&apos;s discuss how we can help you grow.</p></div><div className="flex flex-col gap-4 sm:flex-row"><Link href="/book" className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-4 text-sm font-extrabold text-blue-700 shadow-xl transition hover:-translate-y-0.5 hover:bg-blue-50">Book a Free Call <CalendarCheck2 className="ml-3 size-4" /></Link><Link href="#enquiry" className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-sm font-extrabold text-white backdrop-blur hover:bg-white/20">Request a Quote <ArrowRight className="ml-3 size-4" /></Link></div></div>
           </Reveal>
         </div>
       </section>

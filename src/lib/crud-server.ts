@@ -31,6 +31,29 @@ const optionalDate = z.preprocess(
   z.union([z.string().date(), z.string().datetime(), z.date(), z.null()]).transform((value) => value ? value instanceof Date ? value : new Date(value) : null).optional(),
 );
 const requiredDate = z.union([z.string().date(), z.string().datetime(), z.date()]).transform((value) => value instanceof Date ? value : new Date(value));
+const optionalDateTime = z.preprocess(
+  (value) => value === "" || value === undefined ? null : value,
+  z.union([z.null(), z.coerce.date()]).optional(),
+);
+const requiredDateTime = z.coerce.date();
+const optionalSlug = z.preprocess(
+  (value) => value === "" ? undefined : value,
+  z.string().trim().toLowerCase().min(2).max(191).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers, and hyphens only").optional(),
+);
+const optionalUrl = z.preprocess(
+  (value) => value === "" ? null : value,
+  z.string().trim().max(4_000).refine((value) => value.startsWith("/") || /^https?:\/\//i.test(value), "Use an absolute http(s) URL or a site-relative path").nullable().optional(),
+);
+const publicationStatus = z.enum(["Draft", "Published", "Archived"]);
+const contentResources = new Set(["blog-posts", "work-posts", "seo-pages"]);
+const reservedPageSlugs = new Set(["app", "api", "auth", "blog", "portal", "register", "robots.txt", "sign-in", "sign-up", "sitemap.xml", "work", "_next"]);
+
+function validationMessage(error: z.ZodError) {
+  const issue = error.issues[0];
+  if (!issue) return "Invalid record details";
+  const field = issue.path[0];
+  return field ? `${String(field)}: ${issue.message}` : issue.message;
+}
 
 const specs: Record<string, CrudSpec> = {
   leads: {
@@ -68,6 +91,12 @@ const specs: Record<string, CrudSpec> = {
     scope: "organization",
     schema: z.object({ title: shortText(240), description: optionalText(10_000), projectId: optionalId, assigneeId: optionalId, status: shortText(40), priority: shortText(30), dueDate: optionalDate, estimatedMinutes: z.coerce.number().int().min(0).max(1_000_000).optional(), trackedMinutes: z.coerce.number().int().min(0).max(1_000_000).optional() }),
     fields: ["title", "description", "projectId", "assigneeId", "status", "priority", "dueDate", "estimatedMinutes", "trackedMinutes", "createdAt", "updatedAt"],
+  },
+  "calendar-events": {
+    delegate: "calendarEvent",
+    scope: "organization",
+    schema: z.object({ title: shortText(191), leadId: optionalId, inviteeName: optionalText(120), inviteeEmail: z.preprocess((value) => value === "" ? null : value, z.email().max(191).nullable().optional()), inviteePhone: optionalText(40), inviteeCompany: optionalText(160), startAt: requiredDateTime, endAt: optionalDateTime, timezone: optionalText(100), location: optionalText(2_000), status: z.enum(["Scheduled", "Completed", "Canceled", "No show"]), cancellationReason: optionalText(2_000), notes: optionalText(10_000) }),
+    fields: ["title", "leadId", "bookingTypeId", "source", "bookingReference", "inviteeName", "inviteeEmail", "inviteePhone", "inviteeCompany", "startAt", "endAt", "timezone", "location", "status", "rescheduled", "cancellationReason", "notes", "createdAt", "updatedAt"],
   },
   "time-entries": {
     delegate: "timeEntry",
@@ -116,6 +145,24 @@ const specs: Record<string, CrudSpec> = {
     scope: "organization",
     schema: z.object({ title: shortText(240), content: shortText(100_000), source: optionalText(2_000), tags: optionalText(2_000) }),
     fields: ["title", "content", "source", "tags", "createdAt", "updatedAt"],
+  },
+  "blog-posts": {
+    delegate: "blogPost",
+    scope: "organization",
+    schema: z.object({ title: shortText(191), slug: optionalSlug, excerpt: optionalText(5_000), content: shortText(200_000), coverImage: optionalUrl, category: shortText(120), authorName: shortText(120), status: publicationStatus, featured: z.boolean().optional(), publishedAt: optionalDate, metaTitle: optionalText(191), metaDescription: optionalText(500), canonicalUrl: optionalUrl, ogImage: optionalUrl }),
+    fields: ["title", "slug", "excerpt", "content", "coverImage", "category", "authorName", "status", "featured", "publishedAt", "metaTitle", "metaDescription", "canonicalUrl", "ogImage", "createdAt", "updatedAt"],
+  },
+  "work-posts": {
+    delegate: "workPost",
+    scope: "organization",
+    schema: z.object({ title: shortText(191), slug: optionalSlug, clientName: optionalText(160), industry: optionalText(120), services: optionalText(2_000), summary: shortText(5_000), challenge: optionalText(100_000), solution: shortText(100_000), results: optionalText(100_000), coverImage: optionalUrl, projectUrl: optionalUrl, status: publicationStatus, featured: z.boolean().optional(), completedAt: optionalDate, publishedAt: optionalDate, metaTitle: optionalText(191), metaDescription: optionalText(500), canonicalUrl: optionalUrl, ogImage: optionalUrl }),
+    fields: ["title", "slug", "clientName", "industry", "services", "summary", "challenge", "solution", "results", "coverImage", "projectUrl", "status", "featured", "completedAt", "publishedAt", "metaTitle", "metaDescription", "canonicalUrl", "ogImage", "createdAt", "updatedAt"],
+  },
+  "seo-pages": {
+    delegate: "seoPage",
+    scope: "organization",
+    schema: z.object({ title: shortText(191), slug: optionalSlug, eyebrow: optionalText(120), summary: shortText(5_000), content: shortText(200_000), heroImage: optionalUrl, primaryKeyword: optionalText(191), status: publicationStatus, noIndex: z.boolean().optional(), publishedAt: optionalDate, metaTitle: optionalText(191), metaDescription: optionalText(500), canonicalUrl: optionalUrl, ogImage: optionalUrl }),
+    fields: ["title", "slug", "eyebrow", "summary", "content", "heroImage", "primaryKeyword", "status", "noIndex", "publishedAt", "metaTitle", "metaDescription", "canonicalUrl", "ogImage", "createdAt", "updatedAt"],
   },
   milestones: {
     delegate: "milestone",
@@ -192,6 +239,48 @@ function normalizeRecord(record: Record<string, unknown>) {
   }));
 }
 
+function slugify(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 191);
+}
+
+function prepareContentData(
+  resource: string,
+  data: Record<string, unknown>,
+  options: { creating: boolean; existingPublishedAt?: unknown },
+) {
+  if (!contentResources.has(resource)) return;
+
+  if (options.creating && !data.slug && typeof data.title === "string") data.slug = slugify(data.title);
+  if (!data.slug && options.creating) throw new Error("The title must produce a valid URL slug.");
+  if (resource === "seo-pages" && typeof data.slug === "string" && reservedPageSlugs.has(data.slug)) {
+    throw new Error("That page slug is reserved by the website. Choose a different URL slug.");
+  }
+  if (data.status === "Published" && !data.publishedAt && !options.existingPublishedAt) data.publishedAt = new Date();
+}
+
+function prepareCalendarData(
+  resource: string,
+  data: Record<string, unknown>,
+  options: { creating: boolean; existingStartAt?: unknown; existingEndAt?: unknown },
+) {
+  if (resource !== "calendar-events") return;
+  if (options.creating && data.startAt instanceof Date && !data.endAt) {
+    data.endAt = new Date(data.startAt.getTime() + 30 * 60 * 1_000);
+  }
+  const startAt = data.startAt instanceof Date ? data.startAt : options.existingStartAt;
+  const endAt = data.endAt instanceof Date ? data.endAt : data.endAt === null ? null : options.existingEndAt;
+  if (startAt instanceof Date && endAt instanceof Date && endAt <= startAt) {
+    throw new Error("endAt: The end time must be later than the start time.");
+  }
+}
+
 export function supportsCrudResource(resource: string) {
   return Boolean(getSpec(resource));
 }
@@ -199,7 +288,16 @@ export function supportsCrudResource(resource: string) {
 export async function listCrudRecords(resource: string, organizationId: string) {
   const spec = getSpec(resource);
   if (!spec) throw new Error("Unsupported resource");
-  const records = await getDelegate(spec).findMany({ where: ownershipWhere(spec, organizationId), select: selectFields(spec), take: 250 });
+  const records = await getDelegate(spec).findMany({
+    where: ownershipWhere(spec, organizationId),
+    select: selectFields(spec),
+    ...(contentResources.has(resource)
+      ? { orderBy: { updatedAt: "desc" } }
+      : resource === "calendar-events"
+        ? { orderBy: { startAt: "asc" } }
+        : {}),
+    take: 250,
+  });
   return records.map(normalizeRecord);
 }
 
@@ -207,8 +305,10 @@ export async function createCrudRecord(resource: string, organizationId: string,
   const spec = getSpec(resource);
   if (!spec) throw new Error("Unsupported resource");
   const parsed = spec.schema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? "Invalid record details");
+  if (!parsed.success) throw new Error(validationMessage(parsed.error));
   const data: Record<string, unknown> = { ...parsed.data };
+  prepareContentData(resource, data, { creating: true });
+  prepareCalendarData(resource, data, { creating: true });
   if (resource === "activities" && data.occurredAt === null) delete data.occurredAt;
   if (resource === "payments" && data.processedAt === null) delete data.processedAt;
   await validateRelations(data, organizationId);
@@ -221,11 +321,20 @@ export async function createCrudRecord(resource: string, organizationId: string,
 export async function updateCrudRecord(resource: string, id: string, organizationId: string, input: unknown) {
   const spec = getSpec(resource);
   if (!spec) throw new Error("Unsupported resource");
-  const existing = await getDelegate(spec).findFirst({ where: ownershipWhere(spec, organizationId, id), select: { id: true } });
+  const existing = await getDelegate(spec).findFirst({
+    where: ownershipWhere(spec, organizationId, id),
+    select: contentResources.has(resource)
+      ? { id: true, publishedAt: true }
+      : resource === "calendar-events"
+        ? { id: true, startAt: true, endAt: true }
+        : { id: true },
+  });
   if (!existing) return null;
   const parsed = spec.schema.partial().safeParse(input);
-  if (!parsed.success || Object.keys(parsed.data).length === 0) throw new Error(parsed.success ? "No changes supplied" : parsed.error.issues[0]?.message ?? "Invalid record details");
+  if (!parsed.success || Object.keys(parsed.data).length === 0) throw new Error(parsed.success ? "No changes supplied" : validationMessage(parsed.error));
   const data = { ...parsed.data } as Record<string, unknown>;
+  prepareContentData(resource, data, { creating: false, existingPublishedAt: existing.publishedAt });
+  prepareCalendarData(resource, data, { creating: false, existingStartAt: existing.startAt, existingEndAt: existing.endAt });
   await validateRelations(data, organizationId);
   const record = await getDelegate(spec).update({ where: { id }, data, select: selectFields(spec) });
   return normalizeRecord(record);
@@ -234,7 +343,10 @@ export async function updateCrudRecord(resource: string, id: string, organizatio
 export async function deleteCrudRecord(resource: string, id: string, organizationId: string) {
   const spec = getSpec(resource);
   if (!spec) throw new Error("Unsupported resource");
-  const existing = await getDelegate(spec).findFirst({ where: ownershipWhere(spec, organizationId, id), select: { id: true } });
+  const existing = await getDelegate(spec).findFirst({
+    where: ownershipWhere(spec, organizationId, id),
+    select: { id: true },
+  });
   if (!existing) return false;
   await getDelegate(spec).delete({ where: { id } });
   return true;

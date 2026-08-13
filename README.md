@@ -43,14 +43,29 @@ The included development database uses a non-root `mwlabs_app` user and a separa
 | `DATABASE_URL` | MySQL application connection string |
 | `SHADOW_DATABASE_URL` | MySQL shadow database used by development migrations |
 | `BETTER_AUTH_URL` | Canonical application URL |
+| `NEXT_PUBLIC_SITE_URL` | Optional public canonical URL for metadata, sitemap, and robots (defaults to `BETTER_AUTH_URL`) |
 | `BETTER_AUTH_SECRET` | High-entropy auth secret (`openssl rand -base64 32`) |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Optional Google OAuth |
 | `GEMINI_API_KEY` | Server-only Gemini credential |
 | `GEMINI_MODEL` | Gemini model, default `gemini-3.5-flash` |
 | `ALLOW_INITIAL_SIGNUP` | Temporary owner bootstrap gate; keep `false` after setup |
 | `SEED_DEMO_DATA` | Adds sample records to a new development workspace when `true` |
+| `MWLABS_UPLOAD_DIR` | Optional persistent directory for CMS image uploads (defaults to `.data/uploads`) |
 
 Production should use TLS for MySQL, an application-specific database user, managed secret storage, and a transaction email provider before requiring email verification.
+
+## Native scheduling workflow
+
+Scheduling is built into M&W Command and has no third-party account, token, webhook, or paid-plan dependency. Owners and administrators configure it under `/app/scheduling`.
+
+The workflow is:
+
+1. Website enquiries enter the CRM and receive a signed, prefilled booking path.
+2. Public availability is calculated from active meeting types, weekly working hours, minimum notice, booking horizon, duration, buffers, and existing CRM calendar conflicts.
+3. Confirming a slot atomically creates a CRM calendar event, links or creates the lead, advances early-stage leads to Discovery, updates qualification signals, and records activity/audit history.
+4. Each online booking receives a private signed management link for rescheduling and cancellation, plus an `.ics` calendar file.
+5. Meeting times are stored as UTC instants and automatically displayed in each visitor's browser-detected IANA timezone, including daylight-saving changes. Visitors can override the detected timezone before booking or rescheduling.
+6. Portal users can book and manage meetings without re-entering their profile, while owners manage every appointment in the agency calendar.
 
 ## Quality checks
 

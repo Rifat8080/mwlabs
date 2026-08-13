@@ -75,11 +75,17 @@ export const ModelName = {
   Retainer: 'Retainer',
   Document: 'Document',
   Activity: 'Activity',
+  CalendarEvent: 'CalendarEvent',
+  BookingType: 'BookingType',
+  AvailabilityRule: 'AvailabilityRule',
   Automation: 'Automation',
   AiThread: 'AiThread',
   AiMessage: 'AiMessage',
   KnowledgeItem: 'KnowledgeItem',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  BlogPost: 'BlogPost',
+  WorkPost: 'WorkPost',
+  SeoPage: 'SeoPage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -468,6 +474,71 @@ export const ActivityScalarFieldEnum = {
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
+export const CalendarEventScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  leadId: 'leadId',
+  bookingTypeId: 'bookingTypeId',
+  source: 'source',
+  bookingReference: 'bookingReference',
+  slotKey: 'slotKey',
+  title: 'title',
+  inviteeName: 'inviteeName',
+  inviteeEmail: 'inviteeEmail',
+  inviteePhone: 'inviteePhone',
+  inviteeCompany: 'inviteeCompany',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  timezone: 'timezone',
+  location: 'location',
+  status: 'status',
+  rescheduled: 'rescheduled',
+  cancellationReason: 'cancellationReason',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CalendarEventScalarFieldEnum = (typeof CalendarEventScalarFieldEnum)[keyof typeof CalendarEventScalarFieldEnum]
+
+
+export const BookingTypeScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  durationMinutes: 'durationMinutes',
+  slotIntervalMinutes: 'slotIntervalMinutes',
+  bufferBeforeMinutes: 'bufferBeforeMinutes',
+  bufferAfterMinutes: 'bufferAfterMinutes',
+  minimumNoticeHours: 'minimumNoticeHours',
+  maximumAdvanceDays: 'maximumAdvanceDays',
+  timezone: 'timezone',
+  location: 'location',
+  color: 'color',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BookingTypeScalarFieldEnum = (typeof BookingTypeScalarFieldEnum)[keyof typeof BookingTypeScalarFieldEnum]
+
+
+export const AvailabilityRuleScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  weekday: 'weekday',
+  startMinute: 'startMinute',
+  endMinute: 'endMinute',
+  enabled: 'enabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AvailabilityRuleScalarFieldEnum = (typeof AvailabilityRuleScalarFieldEnum)[keyof typeof AvailabilityRuleScalarFieldEnum]
+
+
 export const AutomationScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -533,6 +604,83 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  coverImage: 'coverImage',
+  category: 'category',
+  authorName: 'authorName',
+  status: 'status',
+  featured: 'featured',
+  publishedAt: 'publishedAt',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const WorkPostScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  clientName: 'clientName',
+  industry: 'industry',
+  services: 'services',
+  summary: 'summary',
+  challenge: 'challenge',
+  solution: 'solution',
+  results: 'results',
+  coverImage: 'coverImage',
+  projectUrl: 'projectUrl',
+  status: 'status',
+  featured: 'featured',
+  completedAt: 'completedAt',
+  publishedAt: 'publishedAt',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkPostScalarFieldEnum = (typeof WorkPostScalarFieldEnum)[keyof typeof WorkPostScalarFieldEnum]
+
+
+export const SeoPageScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  eyebrow: 'eyebrow',
+  summary: 'summary',
+  content: 'content',
+  heroImage: 'heroImage',
+  primaryKeyword: 'primaryKeyword',
+  status: 'status',
+  noIndex: 'noIndex',
+  publishedAt: 'publishedAt',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SeoPageScalarFieldEnum = (typeof SeoPageScalarFieldEnum)[keyof typeof SeoPageScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -838,6 +986,51 @@ export const ActivityOrderByRelevanceFieldEnum = {
 export type ActivityOrderByRelevanceFieldEnum = (typeof ActivityOrderByRelevanceFieldEnum)[keyof typeof ActivityOrderByRelevanceFieldEnum]
 
 
+export const CalendarEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  leadId: 'leadId',
+  bookingTypeId: 'bookingTypeId',
+  source: 'source',
+  bookingReference: 'bookingReference',
+  slotKey: 'slotKey',
+  title: 'title',
+  inviteeName: 'inviteeName',
+  inviteeEmail: 'inviteeEmail',
+  inviteePhone: 'inviteePhone',
+  inviteeCompany: 'inviteeCompany',
+  timezone: 'timezone',
+  location: 'location',
+  status: 'status',
+  cancellationReason: 'cancellationReason',
+  notes: 'notes'
+} as const
+
+export type CalendarEventOrderByRelevanceFieldEnum = (typeof CalendarEventOrderByRelevanceFieldEnum)[keyof typeof CalendarEventOrderByRelevanceFieldEnum]
+
+
+export const BookingTypeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  timezone: 'timezone',
+  location: 'location',
+  color: 'color'
+} as const
+
+export type BookingTypeOrderByRelevanceFieldEnum = (typeof BookingTypeOrderByRelevanceFieldEnum)[keyof typeof BookingTypeOrderByRelevanceFieldEnum]
+
+
+export const AvailabilityRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId'
+} as const
+
+export type AvailabilityRuleOrderByRelevanceFieldEnum = (typeof AvailabilityRuleOrderByRelevanceFieldEnum)[keyof typeof AvailabilityRuleOrderByRelevanceFieldEnum]
+
+
 export const AutomationOrderByRelevanceFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -894,4 +1087,68 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const BlogPostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  coverImage: 'coverImage',
+  category: 'category',
+  authorName: 'authorName',
+  status: 'status',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage'
+} as const
+
+export type BlogPostOrderByRelevanceFieldEnum = (typeof BlogPostOrderByRelevanceFieldEnum)[keyof typeof BlogPostOrderByRelevanceFieldEnum]
+
+
+export const WorkPostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  clientName: 'clientName',
+  industry: 'industry',
+  services: 'services',
+  summary: 'summary',
+  challenge: 'challenge',
+  solution: 'solution',
+  results: 'results',
+  coverImage: 'coverImage',
+  projectUrl: 'projectUrl',
+  status: 'status',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage'
+} as const
+
+export type WorkPostOrderByRelevanceFieldEnum = (typeof WorkPostOrderByRelevanceFieldEnum)[keyof typeof WorkPostOrderByRelevanceFieldEnum]
+
+
+export const SeoPageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  eyebrow: 'eyebrow',
+  summary: 'summary',
+  content: 'content',
+  heroImage: 'heroImage',
+  primaryKeyword: 'primaryKeyword',
+  status: 'status',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage'
+} as const
+
+export type SeoPageOrderByRelevanceFieldEnum = (typeof SeoPageOrderByRelevanceFieldEnum)[keyof typeof SeoPageOrderByRelevanceFieldEnum]
 

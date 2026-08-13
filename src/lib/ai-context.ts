@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "@/lib/db";
 
 export async function getAgencyContext(organizationId: string) {
-  const [leads, projects, tasks, invoices, knowledge, automations] = await Promise.all([
+  const [leads, projects, tasks, invoices, knowledge, automations, upcomingMeetings] = await Promise.all([
     db.lead.findMany({
       where: { organizationId },
       orderBy: { score: "desc" },
@@ -37,6 +37,24 @@ export async function getAgencyContext(organizationId: string) {
       where: { organizationId, enabled: true },
       select: { name: true, trigger: true, action: true },
     }),
+    db.calendarEvent.findMany({
+      where: {
+        organizationId,
+        status: "Scheduled",
+        startAt: { gte: new Date() },
+      },
+      orderBy: { startAt: "asc" },
+      take: 12,
+      select: {
+        title: true,
+        startAt: true,
+        endAt: true,
+        source: true,
+        inviteeName: true,
+        timezone: true,
+        lead: { select: { company: true, stage: true } },
+      },
+    }),
   ]);
 
   return {
@@ -47,6 +65,7 @@ export async function getAgencyContext(organizationId: string) {
     invoices: invoices.map((invoice) => ({ ...invoice, total: Number(invoice.total) })),
     approvedKnowledge: knowledge,
     enabledAutomations: automations,
+    upcomingMeetings,
   };
 }
 

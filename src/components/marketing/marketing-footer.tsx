@@ -35,9 +35,9 @@ const footerGroups = [
     title: "Discover",
     links: [
       { label: "About the Studio", href: "/#about" },
-      { label: "Selected Work", href: "/#work" },
+      { label: "Selected Work", href: "/work" },
       { label: "Our Process", href: "/#process" },
-      { label: "Studio Insights", href: "/#insights" },
+      { label: "Studio Insights", href: "/blog" },
     ],
   },
   {

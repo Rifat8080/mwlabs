@@ -7,6 +7,7 @@ import { organization } from "better-auth/plugins";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
+import { ensureSchedulingDefaults } from "@/lib/scheduling";
 import { seedWorkspace } from "@/lib/seed-workspace";
 
 const googleEnabled = Boolean(
@@ -107,6 +108,7 @@ export const auth = betterAuth({
       requireEmailVerificationOnInvitation: true,
       organizationHooks: {
         afterCreateOrganization: async ({ organization: created }) => {
+          await ensureSchedulingDefaults(created.id);
           if (process.env.SEED_DEMO_DATA === "true") {
             await seedWorkspace(created.id);
           }

@@ -216,6 +216,12 @@ export type OrganizationWhereInput = {
   aiThreads?: Prisma.AiThreadListRelationFilter
   knowledgeItems?: Prisma.KnowledgeItemListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  calendarEvents?: Prisma.CalendarEventListRelationFilter
+  bookingTypes?: Prisma.BookingTypeListRelationFilter
+  availability?: Prisma.AvailabilityRuleListRelationFilter
+  blogPosts?: Prisma.BlogPostListRelationFilter
+  workPosts?: Prisma.WorkPostListRelationFilter
+  seoPages?: Prisma.SeoPageListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -244,6 +250,12 @@ export type OrganizationOrderByWithRelationInput = {
   aiThreads?: Prisma.AiThreadOrderByRelationAggregateInput
   knowledgeItems?: Prisma.KnowledgeItemOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  calendarEvents?: Prisma.CalendarEventOrderByRelationAggregateInput
+  bookingTypes?: Prisma.BookingTypeOrderByRelationAggregateInput
+  availability?: Prisma.AvailabilityRuleOrderByRelationAggregateInput
+  blogPosts?: Prisma.BlogPostOrderByRelationAggregateInput
+  workPosts?: Prisma.WorkPostOrderByRelationAggregateInput
+  seoPages?: Prisma.SeoPageOrderByRelationAggregateInput
   _relevance?: Prisma.OrganizationOrderByRelevanceInput
 }
 
@@ -276,6 +288,12 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   aiThreads?: Prisma.AiThreadListRelationFilter
   knowledgeItems?: Prisma.KnowledgeItemListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  calendarEvents?: Prisma.CalendarEventListRelationFilter
+  bookingTypes?: Prisma.BookingTypeListRelationFilter
+  availability?: Prisma.AvailabilityRuleListRelationFilter
+  blogPosts?: Prisma.BlogPostListRelationFilter
+  workPosts?: Prisma.WorkPostListRelationFilter
+  seoPages?: Prisma.SeoPageListRelationFilter
 }, "id" | "slug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -330,6 +348,12 @@ export type OrganizationCreateInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -358,6 +382,12 @@ export type OrganizationUncheckedCreateInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -386,6 +416,12 @@ export type OrganizationUpdateInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -414,6 +450,12 @@ export type OrganizationUncheckedUpdateInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -683,6 +725,48 @@ export type OrganizationUpdateOneRequiredWithoutActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutActivitiesInput, Prisma.OrganizationUpdateWithoutActivitiesInput>, Prisma.OrganizationUncheckedUpdateWithoutActivitiesInput>
 }
 
+export type OrganizationCreateNestedOneWithoutCalendarEventsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutCalendarEventsInput, Prisma.OrganizationUncheckedCreateWithoutCalendarEventsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutCalendarEventsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutCalendarEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutCalendarEventsInput, Prisma.OrganizationUncheckedCreateWithoutCalendarEventsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutCalendarEventsInput
+  upsert?: Prisma.OrganizationUpsertWithoutCalendarEventsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutCalendarEventsInput, Prisma.OrganizationUpdateWithoutCalendarEventsInput>, Prisma.OrganizationUncheckedUpdateWithoutCalendarEventsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutBookingTypesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBookingTypesInput, Prisma.OrganizationUncheckedCreateWithoutBookingTypesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBookingTypesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutBookingTypesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBookingTypesInput, Prisma.OrganizationUncheckedCreateWithoutBookingTypesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBookingTypesInput
+  upsert?: Prisma.OrganizationUpsertWithoutBookingTypesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutBookingTypesInput, Prisma.OrganizationUpdateWithoutBookingTypesInput>, Prisma.OrganizationUncheckedUpdateWithoutBookingTypesInput>
+}
+
+export type OrganizationCreateNestedOneWithoutAvailabilityInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAvailabilityInput, Prisma.OrganizationUncheckedCreateWithoutAvailabilityInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAvailabilityInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutAvailabilityNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAvailabilityInput, Prisma.OrganizationUncheckedCreateWithoutAvailabilityInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAvailabilityInput
+  upsert?: Prisma.OrganizationUpsertWithoutAvailabilityInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAvailabilityInput, Prisma.OrganizationUpdateWithoutAvailabilityInput>, Prisma.OrganizationUncheckedUpdateWithoutAvailabilityInput>
+}
+
 export type OrganizationCreateNestedOneWithoutAutomationsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAutomationsInput, Prisma.OrganizationUncheckedCreateWithoutAutomationsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAutomationsInput
@@ -739,6 +823,48 @@ export type OrganizationUpdateOneRequiredWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.OrganizationUpdateWithoutAuditLogsInput>, Prisma.OrganizationUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type OrganizationCreateNestedOneWithoutBlogPostsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBlogPostsInput, Prisma.OrganizationUncheckedCreateWithoutBlogPostsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBlogPostsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutBlogPostsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBlogPostsInput, Prisma.OrganizationUncheckedCreateWithoutBlogPostsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBlogPostsInput
+  upsert?: Prisma.OrganizationUpsertWithoutBlogPostsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutBlogPostsInput, Prisma.OrganizationUpdateWithoutBlogPostsInput>, Prisma.OrganizationUncheckedUpdateWithoutBlogPostsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutWorkPostsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutWorkPostsInput, Prisma.OrganizationUncheckedCreateWithoutWorkPostsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutWorkPostsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutWorkPostsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutWorkPostsInput, Prisma.OrganizationUncheckedCreateWithoutWorkPostsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutWorkPostsInput
+  upsert?: Prisma.OrganizationUpsertWithoutWorkPostsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutWorkPostsInput, Prisma.OrganizationUpdateWithoutWorkPostsInput>, Prisma.OrganizationUncheckedUpdateWithoutWorkPostsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutSeoPagesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSeoPagesInput, Prisma.OrganizationUncheckedCreateWithoutSeoPagesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSeoPagesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutSeoPagesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSeoPagesInput, Prisma.OrganizationUncheckedCreateWithoutSeoPagesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSeoPagesInput
+  upsert?: Prisma.OrganizationUpsertWithoutSeoPagesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutSeoPagesInput, Prisma.OrganizationUpdateWithoutSeoPagesInput>, Prisma.OrganizationUncheckedUpdateWithoutSeoPagesInput>
+}
+
 export type OrganizationCreateWithoutMembersInput = {
   id: string
   name: string
@@ -764,6 +890,12 @@ export type OrganizationCreateWithoutMembersInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -791,6 +923,12 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -834,6 +972,12 @@ export type OrganizationUpdateWithoutMembersInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -861,6 +1005,12 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvitationsInput = {
@@ -888,6 +1038,12 @@ export type OrganizationCreateWithoutInvitationsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -915,6 +1071,12 @@ export type OrganizationUncheckedCreateWithoutInvitationsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -958,6 +1120,12 @@ export type OrganizationUpdateWithoutInvitationsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -985,6 +1153,12 @@ export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTeamsInput = {
@@ -1012,6 +1186,12 @@ export type OrganizationCreateWithoutTeamsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTeamsInput = {
@@ -1039,6 +1219,12 @@ export type OrganizationUncheckedCreateWithoutTeamsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTeamsInput = {
@@ -1082,6 +1268,12 @@ export type OrganizationUpdateWithoutTeamsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTeamsInput = {
@@ -1109,6 +1301,12 @@ export type OrganizationUncheckedUpdateWithoutTeamsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLeadsInput = {
@@ -1136,6 +1334,12 @@ export type OrganizationCreateWithoutLeadsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLeadsInput = {
@@ -1163,6 +1367,12 @@ export type OrganizationUncheckedCreateWithoutLeadsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLeadsInput = {
@@ -1206,6 +1416,12 @@ export type OrganizationUpdateWithoutLeadsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLeadsInput = {
@@ -1233,6 +1449,12 @@ export type OrganizationUncheckedUpdateWithoutLeadsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientsInput = {
@@ -1260,6 +1482,12 @@ export type OrganizationCreateWithoutClientsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientsInput = {
@@ -1287,6 +1515,12 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientsInput = {
@@ -1330,6 +1564,12 @@ export type OrganizationUpdateWithoutClientsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientsInput = {
@@ -1357,6 +1597,12 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProposalsInput = {
@@ -1384,6 +1630,12 @@ export type OrganizationCreateWithoutProposalsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProposalsInput = {
@@ -1411,6 +1663,12 @@ export type OrganizationUncheckedCreateWithoutProposalsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProposalsInput = {
@@ -1454,6 +1712,12 @@ export type OrganizationUpdateWithoutProposalsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProposalsInput = {
@@ -1481,6 +1745,12 @@ export type OrganizationUncheckedUpdateWithoutProposalsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutContractsInput = {
@@ -1508,6 +1778,12 @@ export type OrganizationCreateWithoutContractsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutContractsInput = {
@@ -1535,6 +1811,12 @@ export type OrganizationUncheckedCreateWithoutContractsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutContractsInput = {
@@ -1578,6 +1860,12 @@ export type OrganizationUpdateWithoutContractsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutContractsInput = {
@@ -1605,6 +1893,12 @@ export type OrganizationUncheckedUpdateWithoutContractsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectsInput = {
@@ -1632,6 +1926,12 @@ export type OrganizationCreateWithoutProjectsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectsInput = {
@@ -1659,6 +1959,12 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectsInput = {
@@ -1702,6 +2008,12 @@ export type OrganizationUpdateWithoutProjectsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectsInput = {
@@ -1729,6 +2041,12 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTasksInput = {
@@ -1756,6 +2074,12 @@ export type OrganizationCreateWithoutTasksInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTasksInput = {
@@ -1783,6 +2107,12 @@ export type OrganizationUncheckedCreateWithoutTasksInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTasksInput = {
@@ -1826,6 +2156,12 @@ export type OrganizationUpdateWithoutTasksInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTasksInput = {
@@ -1853,6 +2189,12 @@ export type OrganizationUncheckedUpdateWithoutTasksInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvoicesInput = {
@@ -1880,6 +2222,12 @@ export type OrganizationCreateWithoutInvoicesInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvoicesInput = {
@@ -1907,6 +2255,12 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvoicesInput = {
@@ -1950,6 +2304,12 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
@@ -1977,6 +2337,12 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExpensesInput = {
@@ -2004,6 +2370,12 @@ export type OrganizationCreateWithoutExpensesInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExpensesInput = {
@@ -2031,6 +2403,12 @@ export type OrganizationUncheckedCreateWithoutExpensesInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExpensesInput = {
@@ -2074,6 +2452,12 @@ export type OrganizationUpdateWithoutExpensesInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExpensesInput = {
@@ -2101,6 +2485,12 @@ export type OrganizationUncheckedUpdateWithoutExpensesInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutRetainersInput = {
@@ -2128,6 +2518,12 @@ export type OrganizationCreateWithoutRetainersInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutRetainersInput = {
@@ -2155,6 +2551,12 @@ export type OrganizationUncheckedCreateWithoutRetainersInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutRetainersInput = {
@@ -2198,6 +2600,12 @@ export type OrganizationUpdateWithoutRetainersInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutRetainersInput = {
@@ -2225,6 +2633,12 @@ export type OrganizationUncheckedUpdateWithoutRetainersInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDocumentsInput = {
@@ -2252,6 +2666,12 @@ export type OrganizationCreateWithoutDocumentsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDocumentsInput = {
@@ -2279,6 +2699,12 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDocumentsInput = {
@@ -2322,6 +2748,12 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
@@ -2349,6 +2781,12 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutActivitiesInput = {
@@ -2376,6 +2814,12 @@ export type OrganizationCreateWithoutActivitiesInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutActivitiesInput = {
@@ -2403,6 +2847,12 @@ export type OrganizationUncheckedCreateWithoutActivitiesInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutActivitiesInput = {
@@ -2446,6 +2896,12 @@ export type OrganizationUpdateWithoutActivitiesInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutActivitiesInput = {
@@ -2473,6 +2929,456 @@ export type OrganizationUncheckedUpdateWithoutActivitiesInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutCalendarEventsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutCalendarEventsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutCalendarEventsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutCalendarEventsInput, Prisma.OrganizationUncheckedCreateWithoutCalendarEventsInput>
+}
+
+export type OrganizationUpsertWithoutCalendarEventsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutCalendarEventsInput, Prisma.OrganizationUncheckedUpdateWithoutCalendarEventsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutCalendarEventsInput, Prisma.OrganizationUncheckedCreateWithoutCalendarEventsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutCalendarEventsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutCalendarEventsInput, Prisma.OrganizationUncheckedUpdateWithoutCalendarEventsInput>
+}
+
+export type OrganizationUpdateWithoutCalendarEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutCalendarEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutBookingTypesInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutBookingTypesInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutBookingTypesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBookingTypesInput, Prisma.OrganizationUncheckedCreateWithoutBookingTypesInput>
+}
+
+export type OrganizationUpsertWithoutBookingTypesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutBookingTypesInput, Prisma.OrganizationUncheckedUpdateWithoutBookingTypesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBookingTypesInput, Prisma.OrganizationUncheckedCreateWithoutBookingTypesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutBookingTypesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutBookingTypesInput, Prisma.OrganizationUncheckedUpdateWithoutBookingTypesInput>
+}
+
+export type OrganizationUpdateWithoutBookingTypesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutBookingTypesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutAvailabilityInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutAvailabilityInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutAvailabilityInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAvailabilityInput, Prisma.OrganizationUncheckedCreateWithoutAvailabilityInput>
+}
+
+export type OrganizationUpsertWithoutAvailabilityInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutAvailabilityInput, Prisma.OrganizationUncheckedUpdateWithoutAvailabilityInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAvailabilityInput, Prisma.OrganizationUncheckedCreateWithoutAvailabilityInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutAvailabilityInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutAvailabilityInput, Prisma.OrganizationUncheckedUpdateWithoutAvailabilityInput>
+}
+
+export type OrganizationUpdateWithoutAvailabilityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutAvailabilityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAutomationsInput = {
@@ -2500,6 +3406,12 @@ export type OrganizationCreateWithoutAutomationsInput = {
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAutomationsInput = {
@@ -2527,6 +3439,12 @@ export type OrganizationUncheckedCreateWithoutAutomationsInput = {
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAutomationsInput = {
@@ -2570,6 +3488,12 @@ export type OrganizationUpdateWithoutAutomationsInput = {
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAutomationsInput = {
@@ -2597,6 +3521,12 @@ export type OrganizationUncheckedUpdateWithoutAutomationsInput = {
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAiThreadsInput = {
@@ -2624,6 +3554,12 @@ export type OrganizationCreateWithoutAiThreadsInput = {
   automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAiThreadsInput = {
@@ -2651,6 +3587,12 @@ export type OrganizationUncheckedCreateWithoutAiThreadsInput = {
   automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAiThreadsInput = {
@@ -2694,6 +3636,12 @@ export type OrganizationUpdateWithoutAiThreadsInput = {
   automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAiThreadsInput = {
@@ -2721,6 +3669,12 @@ export type OrganizationUncheckedUpdateWithoutAiThreadsInput = {
   automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutKnowledgeItemsInput = {
@@ -2748,6 +3702,12 @@ export type OrganizationCreateWithoutKnowledgeItemsInput = {
   automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutKnowledgeItemsInput = {
@@ -2775,6 +3735,12 @@ export type OrganizationUncheckedCreateWithoutKnowledgeItemsInput = {
   automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutKnowledgeItemsInput = {
@@ -2818,6 +3784,12 @@ export type OrganizationUpdateWithoutKnowledgeItemsInput = {
   automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutKnowledgeItemsInput = {
@@ -2845,6 +3817,12 @@ export type OrganizationUncheckedUpdateWithoutKnowledgeItemsInput = {
   automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAuditLogsInput = {
@@ -2872,6 +3850,12 @@ export type OrganizationCreateWithoutAuditLogsInput = {
   automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
   aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
@@ -2899,6 +3883,12 @@ export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
   automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
   aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAuditLogsInput = {
@@ -2942,6 +3932,12 @@ export type OrganizationUpdateWithoutAuditLogsInput = {
   automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
   aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
@@ -2969,6 +3965,456 @@ export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
   automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
   aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
   knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutBlogPostsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutBlogPostsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutBlogPostsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBlogPostsInput, Prisma.OrganizationUncheckedCreateWithoutBlogPostsInput>
+}
+
+export type OrganizationUpsertWithoutBlogPostsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutBlogPostsInput, Prisma.OrganizationUncheckedUpdateWithoutBlogPostsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBlogPostsInput, Prisma.OrganizationUncheckedCreateWithoutBlogPostsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutBlogPostsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutBlogPostsInput, Prisma.OrganizationUncheckedUpdateWithoutBlogPostsInput>
+}
+
+export type OrganizationUpdateWithoutBlogPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutBlogPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutWorkPostsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutWorkPostsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutWorkPostsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutWorkPostsInput, Prisma.OrganizationUncheckedCreateWithoutWorkPostsInput>
+}
+
+export type OrganizationUpsertWithoutWorkPostsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutWorkPostsInput, Prisma.OrganizationUncheckedUpdateWithoutWorkPostsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutWorkPostsInput, Prisma.OrganizationUncheckedCreateWithoutWorkPostsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutWorkPostsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutWorkPostsInput, Prisma.OrganizationUncheckedUpdateWithoutWorkPostsInput>
+}
+
+export type OrganizationUpdateWithoutWorkPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutWorkPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutSeoPagesInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutSeoPagesInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutSeoPagesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSeoPagesInput, Prisma.OrganizationUncheckedCreateWithoutSeoPagesInput>
+}
+
+export type OrganizationUpsertWithoutSeoPagesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutSeoPagesInput, Prisma.OrganizationUncheckedUpdateWithoutSeoPagesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutSeoPagesInput, Prisma.OrganizationUncheckedCreateWithoutSeoPagesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutSeoPagesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutSeoPagesInput, Prisma.OrganizationUncheckedUpdateWithoutSeoPagesInput>
+}
+
+export type OrganizationUpdateWithoutSeoPagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutSeoPagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -2995,6 +4441,12 @@ export type OrganizationCountOutputType = {
   aiThreads: number
   knowledgeItems: number
   auditLogs: number
+  calendarEvents: number
+  bookingTypes: number
+  availability: number
+  blogPosts: number
+  workPosts: number
+  seoPages: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3016,6 +4468,12 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   aiThreads?: boolean | OrganizationCountOutputTypeCountAiThreadsArgs
   knowledgeItems?: boolean | OrganizationCountOutputTypeCountKnowledgeItemsArgs
   auditLogs?: boolean | OrganizationCountOutputTypeCountAuditLogsArgs
+  calendarEvents?: boolean | OrganizationCountOutputTypeCountCalendarEventsArgs
+  bookingTypes?: boolean | OrganizationCountOutputTypeCountBookingTypesArgs
+  availability?: boolean | OrganizationCountOutputTypeCountAvailabilityArgs
+  blogPosts?: boolean | OrganizationCountOutputTypeCountBlogPostsArgs
+  workPosts?: boolean | OrganizationCountOutputTypeCountWorkPostsArgs
+  seoPages?: boolean | OrganizationCountOutputTypeCountSeoPagesArgs
 }
 
 /**
@@ -3154,6 +4612,48 @@ export type OrganizationCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtim
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountCalendarEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarEventWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountBookingTypesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookingTypeWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountAvailabilityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AvailabilityRuleWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountBlogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BlogPostWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountWorkPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkPostWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountSeoPagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SeoPageWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3181,6 +4681,12 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   aiThreads?: boolean | Prisma.Organization$aiThreadsArgs<ExtArgs>
   knowledgeItems?: boolean | Prisma.Organization$knowledgeItemsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Organization$auditLogsArgs<ExtArgs>
+  calendarEvents?: boolean | Prisma.Organization$calendarEventsArgs<ExtArgs>
+  bookingTypes?: boolean | Prisma.Organization$bookingTypesArgs<ExtArgs>
+  availability?: boolean | Prisma.Organization$availabilityArgs<ExtArgs>
+  blogPosts?: boolean | Prisma.Organization$blogPostsArgs<ExtArgs>
+  workPosts?: boolean | Prisma.Organization$workPostsArgs<ExtArgs>
+  seoPages?: boolean | Prisma.Organization$seoPagesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -3216,6 +4722,12 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   aiThreads?: boolean | Prisma.Organization$aiThreadsArgs<ExtArgs>
   knowledgeItems?: boolean | Prisma.Organization$knowledgeItemsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Organization$auditLogsArgs<ExtArgs>
+  calendarEvents?: boolean | Prisma.Organization$calendarEventsArgs<ExtArgs>
+  bookingTypes?: boolean | Prisma.Organization$bookingTypesArgs<ExtArgs>
+  availability?: boolean | Prisma.Organization$availabilityArgs<ExtArgs>
+  blogPosts?: boolean | Prisma.Organization$blogPostsArgs<ExtArgs>
+  workPosts?: boolean | Prisma.Organization$workPostsArgs<ExtArgs>
+  seoPages?: boolean | Prisma.Organization$seoPagesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -3240,6 +4752,12 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     aiThreads: Prisma.$AiThreadPayload<ExtArgs>[]
     knowledgeItems: Prisma.$KnowledgeItemPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    calendarEvents: Prisma.$CalendarEventPayload<ExtArgs>[]
+    bookingTypes: Prisma.$BookingTypePayload<ExtArgs>[]
+    availability: Prisma.$AvailabilityRulePayload<ExtArgs>[]
+    blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
+    workPosts: Prisma.$WorkPostPayload<ExtArgs>[]
+    seoPages: Prisma.$SeoPagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3607,6 +5125,12 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   aiThreads<T extends Prisma.Organization$aiThreadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$aiThreadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   knowledgeItems<T extends Prisma.Organization$knowledgeItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$knowledgeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Organization$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  calendarEvents<T extends Prisma.Organization$calendarEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$calendarEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bookingTypes<T extends Prisma.Organization$bookingTypesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$bookingTypesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingTypePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  availability<T extends Prisma.Organization$availabilityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$availabilityArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AvailabilityRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blogPosts<T extends Prisma.Organization$blogPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  workPosts<T extends Prisma.Organization$workPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$workPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  seoPages<T extends Prisma.Organization$seoPagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$seoPagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SeoPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4420,6 +5944,150 @@ export type Organization$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Organization.calendarEvents
+ */
+export type Organization$calendarEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarEvent
+   */
+  select?: Prisma.CalendarEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarEvent
+   */
+  omit?: Prisma.CalendarEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarEventInclude<ExtArgs> | null
+  where?: Prisma.CalendarEventWhereInput
+  orderBy?: Prisma.CalendarEventOrderByWithRelationInput | Prisma.CalendarEventOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarEventScalarFieldEnum | Prisma.CalendarEventScalarFieldEnum[]
+}
+
+/**
+ * Organization.bookingTypes
+ */
+export type Organization$bookingTypesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BookingType
+   */
+  select?: Prisma.BookingTypeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BookingType
+   */
+  omit?: Prisma.BookingTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookingTypeInclude<ExtArgs> | null
+  where?: Prisma.BookingTypeWhereInput
+  orderBy?: Prisma.BookingTypeOrderByWithRelationInput | Prisma.BookingTypeOrderByWithRelationInput[]
+  cursor?: Prisma.BookingTypeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookingTypeScalarFieldEnum | Prisma.BookingTypeScalarFieldEnum[]
+}
+
+/**
+ * Organization.availability
+ */
+export type Organization$availabilityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AvailabilityRule
+   */
+  select?: Prisma.AvailabilityRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AvailabilityRule
+   */
+  omit?: Prisma.AvailabilityRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityRuleInclude<ExtArgs> | null
+  where?: Prisma.AvailabilityRuleWhereInput
+  orderBy?: Prisma.AvailabilityRuleOrderByWithRelationInput | Prisma.AvailabilityRuleOrderByWithRelationInput[]
+  cursor?: Prisma.AvailabilityRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AvailabilityRuleScalarFieldEnum | Prisma.AvailabilityRuleScalarFieldEnum[]
+}
+
+/**
+ * Organization.blogPosts
+ */
+export type Organization$blogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BlogPost
+   */
+  select?: Prisma.BlogPostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BlogPost
+   */
+  omit?: Prisma.BlogPostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BlogPostInclude<ExtArgs> | null
+  where?: Prisma.BlogPostWhereInput
+  orderBy?: Prisma.BlogPostOrderByWithRelationInput | Prisma.BlogPostOrderByWithRelationInput[]
+  cursor?: Prisma.BlogPostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BlogPostScalarFieldEnum | Prisma.BlogPostScalarFieldEnum[]
+}
+
+/**
+ * Organization.workPosts
+ */
+export type Organization$workPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkPost
+   */
+  select?: Prisma.WorkPostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkPost
+   */
+  omit?: Prisma.WorkPostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkPostInclude<ExtArgs> | null
+  where?: Prisma.WorkPostWhereInput
+  orderBy?: Prisma.WorkPostOrderByWithRelationInput | Prisma.WorkPostOrderByWithRelationInput[]
+  cursor?: Prisma.WorkPostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkPostScalarFieldEnum | Prisma.WorkPostScalarFieldEnum[]
+}
+
+/**
+ * Organization.seoPages
+ */
+export type Organization$seoPagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SeoPage
+   */
+  select?: Prisma.SeoPageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SeoPage
+   */
+  omit?: Prisma.SeoPageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SeoPageInclude<ExtArgs> | null
+  where?: Prisma.SeoPageWhereInput
+  orderBy?: Prisma.SeoPageOrderByWithRelationInput | Prisma.SeoPageOrderByWithRelationInput[]
+  cursor?: Prisma.SeoPageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SeoPageScalarFieldEnum | Prisma.SeoPageScalarFieldEnum[]
 }
 
 /**

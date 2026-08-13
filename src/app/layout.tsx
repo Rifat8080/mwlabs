@@ -4,8 +4,13 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
+const canonicalSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.BETTER_AUTH_URL?.startsWith("http") ? process.env.BETTER_AUTH_URL : undefined) ??
+  "https://mwlabs.digital";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(canonicalSiteUrl),
   title: {
     default: "M&W Labs — Build. Market. Automate. Grow.",
     template: "%s · M&W Labs",

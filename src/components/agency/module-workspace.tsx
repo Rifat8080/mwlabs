@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
-import { Check, Edit3, Filter, LoaderCircle, MoreHorizontal, Plus, Search, Sparkles, Trash2, Upload } from "lucide-react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Check, Edit3, ExternalLink, Filter, ImageIcon, LoaderCircle, MoreHorizontal, Plus, Search, Sparkles, Trash2, Upload, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -39,24 +39,105 @@ function inputDate(value: unknown) {
   return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
 }
 
-function formatCell(value: unknown, format?: "currency" | "date" | "percent" | "boolean", currency = "GBP") {
+function inputDateTime(value: unknown) {
+  if (!value) return "";
+  const date = new Date(String(value));
+  if (Number.isNaN(date.getTime())) return "";
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+
+function formatCell(value: unknown, format?: "currency" | "date" | "datetime" | "percent" | "boolean", currency = "GBP") {
   if (value === null || value === undefined || value === "") return "—";
   if (format === "currency") return new Intl.NumberFormat("en-GB", { style: "currency", currency, maximumFractionDigits: 0 }).format(Number(value));
   if (format === "date") {
     const date = new Date(String(value));
     return Number.isNaN(date.getTime()) ? "—" : new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(date);
   }
+  if (format === "datetime") {
+    const date = new Date(String(value));
+    return Number.isNaN(date.getTime()) ? "—" : new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(date);
+  }
   if (format === "percent") return `${Number(value)}%`;
   if (format === "boolean") return value ? "Yes" : "No";
   return String(value);
+}
+
+function ImageUploadControl({ field, initial }: { field: CrudField; initial?: CrudRecord }) {
+  const id = `${field.key}-${initial?.id ?? "new"}`;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState(initial?.[field.key] ? String(initial[field.key]) : "");
+  const [uploading, setUploading] = useState(false);
+  const previewable = value.startsWith("/") || /^https?:\/\//i.test(value);
+
+  async function uploadImage(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    inputRef.current?.setCustomValidity("Please wait for the image upload to finish.");
+    try {
+      const form = new FormData();
+      form.set("file", file);
+      const response = await fetch("/api/uploads", { method: "POST", body: form });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.url) throw new Error(result?.error ?? "The image could not be uploaded.");
+      setValue(String(result.url));
+      toast.success("Image uploaded", { description: "The new image is ready to save with this content." });
+    } catch (error) {
+      toast.error("Image upload failed", { description: error instanceof Error ? error.message : "Choose another image and try again." });
+    } finally {
+      setUploading(false);
+      inputRef.current?.setCustomValidity("");
+      event.target.value = "";
+    }
+  }
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-input bg-muted/20">
+      <div
+        role="img"
+        aria-label={value ? `${field.label} preview` : "No image selected"}
+        style={previewable ? { backgroundImage: `linear-gradient(rgb(2 6 24 / 0.06), rgb(2 6 24 / 0.06)), url(${JSON.stringify(value)})` } : undefined}
+        className="relative grid aspect-[16/6] place-items-center bg-[linear-gradient(135deg,#eff6ff,#f8fafc_55%,#ecfeff)] bg-cover bg-center"
+      >
+        {!previewable && <div className="text-center text-muted-foreground"><ImageIcon className="mx-auto size-7 text-blue-400" /><p className="mt-2 text-[11px] font-medium">Upload a JPG, PNG, WebP, or AVIF image</p></div>}
+        {uploading && <div className="absolute inset-0 grid place-items-center bg-white/80 backdrop-blur-sm"><div className="text-center"><LoaderCircle className="mx-auto size-6 animate-spin text-blue-600" /><p className="mt-2 text-[11px] font-semibold text-slate-600">Uploading image…</p></div></div>}
+      </div>
+      <div className="space-y-2 border-t bg-white p-3">
+        <Input
+          ref={inputRef}
+          id={id}
+          name={field.key}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          required={field.required}
+          placeholder={field.placeholder}
+          className="bg-white"
+        />
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor={`${id}-upload`} className={cn("inline-flex h-8 cursor-pointer items-center justify-center rounded-lg bg-blue-600 px-3 text-[11px] font-semibold text-white shadow-sm transition hover:bg-blue-700", uploading && "pointer-events-none opacity-60")}>
+            <UploadCloud className="mr-2 size-3.5" />{value ? "Replace image" : "Upload image"}
+          </label>
+          <input id={`${id}-upload`} type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={uploadImage} disabled={uploading} className="sr-only" />
+          {value && <button type="button" onClick={() => setValue("")} className="inline-flex h-8 items-center rounded-lg px-3 text-[11px] font-semibold text-slate-500 transition hover:bg-rose-50 hover:text-rose-600"><X className="mr-1.5 size-3.5" />Remove</button>}
+          <span className="ml-auto text-[10px] text-muted-foreground">Maximum 8 MB</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function FieldControl({ field, initial, relations }: { field: CrudField; initial?: CrudRecord; relations: RelationOptions }) {
   const id = `${field.key}-${initial?.id ?? "new"}`;
   const initialValue = initial?.[field.key];
 
+  if (field.type === "image") {
+    return <ImageUploadControl field={field} initial={initial} />;
+  }
+
   if (field.type === "textarea") {
-    return <Textarea id={id} name={field.key} defaultValue={initialValue ? String(initialValue) : ""} required={field.required} placeholder={field.placeholder} className="min-h-24 resize-y" />;
+    return <Textarea id={id} name={field.key} defaultValue={initialValue ? String(initialValue) : ""} required={field.required} placeholder={field.placeholder} rows={field.rows ?? 4} className="min-h-24 resize-y" />;
   }
 
   if (field.type === "select" || field.type === "relation") {
@@ -73,8 +154,8 @@ function FieldControl({ field, initial, relations }: { field: CrudField; initial
   if (field.type === "checkbox") {
     return (
       <label htmlFor={id} className="flex h-9 cursor-pointer items-center gap-3 rounded-lg border border-input px-3 text-sm">
-        <input id={id} name={field.key} type="checkbox" defaultChecked={initialValue === undefined ? true : Boolean(initialValue)} className="size-4 accent-blue-600" />
-        <span>Active</span>
+        <input id={id} name={field.key} type="checkbox" defaultChecked={initialValue === undefined ? Boolean(field.defaultChecked) : Boolean(initialValue)} className="size-4 accent-blue-600" />
+        <span>{field.checkboxLabel ?? "Enabled"}</span>
       </label>
     );
   }
@@ -83,8 +164,8 @@ function FieldControl({ field, initial, relations }: { field: CrudField; initial
     <Input
       id={id}
       name={field.key}
-      type={field.type === "date" ? "date" : field.type}
-      defaultValue={field.type === "date" ? inputDate(initialValue) : initialValue === null || initialValue === undefined ? "" : String(initialValue)}
+      type={field.type === "date" ? "date" : field.type === "datetime" ? "datetime-local" : field.type}
+      defaultValue={field.type === "date" ? inputDate(initialValue) : field.type === "datetime" ? inputDateTime(initialValue) : initialValue === null || initialValue === undefined ? "" : String(initialValue)}
       required={field.required}
       placeholder={field.placeholder}
       min={field.min}
@@ -109,6 +190,7 @@ function RecordDialog({ crud, initial, relations, onSaved, trigger }: { crud: Cr
       const value = form.get(field.key);
       if (field.type === "checkbox") data[field.key] = value === "on";
       else if (field.type === "number" && value !== "") data[field.key] = Number(value);
+      else if (field.type === "datetime" && typeof value === "string" && value) data[field.key] = new Date(value).toISOString();
       else data[field.key] = value ?? "";
     }
 
@@ -133,14 +215,14 @@ function RecordDialog({ crud, initial, relations, onSaved, trigger }: { crud: Cr
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={trigger} />
-      <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className={cn("max-h-[90svh] overflow-y-auto", crud.fields.some((field) => (field.rows ?? 0) > 8) ? "sm:max-w-4xl" : "sm:max-w-2xl")}>
         <DialogHeader>
           <DialogTitle>{editing ? `Edit ${crud.singular}` : `Create ${crud.singular}`}</DialogTitle>
           <DialogDescription>{editing ? "Update the record and keep the workspace source of truth current." : "Add a live record to this agency workspace."}</DialogDescription>
         </DialogHeader>
         <form id={formId} onSubmit={submit} className="grid gap-4 py-2 sm:grid-cols-2">
           {crud.fields.map((field) => (
-            <div key={field.key} className={cn("space-y-2", field.type === "textarea" && "sm:col-span-2")}>
+            <div key={field.key} className={cn("space-y-2", ["textarea", "image"].includes(field.type) && "sm:col-span-2")}>
               <Label htmlFor={`${field.key}-${initial?.id ?? "new"}`}>{field.label}{field.required && <span className="ml-1 text-destructive">*</span>}</Label>
               <FieldControl field={field} initial={initial} relations={relations} />
             </div>
@@ -254,7 +336,10 @@ export function ModuleWorkspace({ moduleKey, config }: { moduleKey: string; conf
                     const value = formatCell(record[column.key], column.format, typeof record.currency === "string" ? record.currency : "GBP");
                     return <TableCell key={column.key} className={cn("max-w-72 truncate whitespace-nowrap px-4 text-xs text-muted-foreground", cellIndex === 0 && "font-semibold text-foreground")}>{["status", "stage", "priority"].includes(column.key) ? <Badge variant="outline" className="rounded-full bg-muted/45 text-[9px] font-semibold">{value}</Badge> : value}</TableCell>;
                   })}
-                  <TableCell className="sticky right-0 bg-white px-3"><div className="flex justify-end gap-1"><RecordDialog crud={crud} initial={record} relations={relations} onSaved={saveRecord} trigger={<Button variant="ghost" size="icon-sm" aria-label={`Edit ${crud.singular}`}><Edit3 className="size-3.5" /></Button>} /><Button variant="ghost" size="icon-sm" className="text-muted-foreground hover:bg-rose-50 hover:text-rose-600" onClick={() => void deleteRecord(record)} aria-label={`Delete ${crud.singular}`}><Trash2 className="size-3.5" /></Button></div></TableCell>
+                  <TableCell className="sticky right-0 bg-white px-3"><div className="flex justify-end gap-1">
+                    {crud.publicRoute && record.status === "Published" && typeof record.slug === "string" && <Button nativeButton={false} render={<a href={crud.publicRoute === "root" ? `/${record.slug}` : `/${crud.publicRoute}/${record.slug}`} target="_blank" rel="noreferrer" />} variant="ghost" size="icon-sm" aria-label={`View published ${crud.singular}`}><ExternalLink className="size-3.5" /></Button>}
+                    <><RecordDialog crud={crud} initial={record} relations={relations} onSaved={saveRecord} trigger={<Button variant="ghost" size="icon-sm" aria-label={`Edit ${crud.singular}`}><Edit3 className="size-3.5" /></Button>} /><Button variant="ghost" size="icon-sm" className="text-muted-foreground hover:bg-rose-50 hover:text-rose-600" onClick={() => void deleteRecord(record)} aria-label={`Delete ${crud.singular}`}><Trash2 className="size-3.5" /></Button></>
+                  </div></TableCell>
                 </TableRow>
               ))}
               {!loading && crud && filteredRecords.length === 0 && <TableRow><TableCell colSpan={crud.columns.length + 1} className="h-32 text-center text-xs text-muted-foreground">No records found. Create the first {crud.singular} to get started.</TableCell></TableRow>}

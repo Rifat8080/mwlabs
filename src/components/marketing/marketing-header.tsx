@@ -7,6 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   Bot,
+  CalendarCheck2,
   ChevronDown,
   Clapperboard,
   Code2,
@@ -278,6 +279,13 @@ export function MarketingHeader() {
 
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           <Link
+            href="/book"
+            onClick={() => closeNavigation()}
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 text-[0.78rem] font-extrabold text-emerald-700 shadow-[0_8px_20px_rgba(16,185,129,0.10)] transition hover:-translate-y-0.5 hover:border-emerald-300 hover:from-emerald-100 hover:to-cyan-100 hover:text-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+          >
+            <CalendarCheck2 className="mr-2 size-3.5" /> Book a call
+          </Link>
+          <Link
             href="/sign-in"
             onClick={() => closeNavigation()}
             className="inline-flex h-11 items-center justify-center rounded-xl border border-cyan-200/80 bg-gradient-to-br from-cyan-50 via-white to-blue-50 px-4 text-[0.78rem] font-extrabold text-blue-700 shadow-[0_8px_20px_rgba(14,165,233,0.10)] transition hover:-translate-y-0.5 hover:border-cyan-300 hover:from-cyan-100 hover:to-blue-100 hover:text-blue-800 hover:shadow-[0_12px_26px_rgba(14,165,233,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
@@ -384,6 +392,13 @@ export function MarketingHeader() {
               </div>
 
               <div className="mt-2 grid grid-cols-[0.78fr_1.22fr] gap-2 border-t border-slate-200 pt-2.5">
+                <Link
+                  href="/book"
+                  onClick={() => closeNavigation()}
+                  className="col-span-2 inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-cyan-50 px-4 text-xs font-extrabold text-emerald-700 shadow-sm transition hover:border-emerald-300 hover:from-emerald-100 hover:to-cyan-100 focus-visible:outline-2 focus-visible:outline-emerald-600"
+                >
+                  <CalendarCheck2 className="mr-2 size-3.5" /> Book a discovery call
+                </Link>
                 <Link
                   href="/sign-in"
                   onClick={() => closeNavigation()}

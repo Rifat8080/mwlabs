@@ -110,6 +110,12 @@ model Organization {
   aiThreads      AiThread[]
   knowledgeItems KnowledgeItem[]
   auditLogs      AuditLog[]
+  calendarEvents CalendarEvent[]
+  bookingTypes   BookingType[]
+  availability   AvailabilityRule[]
+  blogPosts      BlogPost[]
+  workPosts      WorkPost[]
+  seoPages       SeoPage[]
 
   @@map("organization")
 }
@@ -193,6 +199,7 @@ model Lead {
   user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
   proposals      Proposal[]
   activities     Activity[]
+  calendarEvents CalendarEvent[]
 
   @@index([organizationId, stage])
 }
@@ -449,6 +456,79 @@ model Activity {
   @@index([organizationId, occurredAt])
 }
 
+model CalendarEvent {
+  id                 String       @id @default(cuid())
+  organizationId     String
+  leadId             String?
+  bookingTypeId      String?
+  source             String       @default("Manual")
+  bookingReference   String?      @unique
+  slotKey            String?      @unique
+  title              String
+  inviteeName        String?
+  inviteeEmail       String?
+  inviteePhone       String?
+  inviteeCompany     String?
+  startAt            DateTime
+  endAt              DateTime?
+  timezone           String?
+  location           String?      @db.Text
+  status             String       @default("Scheduled")
+  rescheduled        Boolean      @default(false)
+  cancellationReason String?      @db.Text
+  notes              String?      @db.Text
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  lead               Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  bookingType        BookingType? @relation(fields: [bookingTypeId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, startAt])
+  @@index([organizationId, status, startAt])
+  @@index([leadId, startAt])
+  @@index([bookingTypeId, startAt])
+}
+
+model BookingType {
+  id                  String          @id @default(cuid())
+  organizationId      String
+  title               String
+  slug                String
+  description         String?         @db.Text
+  durationMinutes     Int             @default(30)
+  slotIntervalMinutes Int             @default(30)
+  bufferBeforeMinutes Int             @default(15)
+  bufferAfterMinutes  Int             @default(15)
+  minimumNoticeHours  Int             @default(12)
+  maximumAdvanceDays  Int             @default(60)
+  timezone            String          @default("Asia/Dhaka")
+  location            String?         @db.Text
+  color                String          @default("#2563eb")
+  active               Boolean         @default(true)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  organization        Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  calendarEvents      CalendarEvent[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId, active])
+}
+
+model AvailabilityRule {
+  id             String       @id @default(cuid())
+  organizationId String
+  weekday        Int
+  startMinute    Int          @default(540)
+  endMinute      Int          @default(1020)
+  enabled        Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, weekday])
+  @@index([organizationId, enabled])
+}
+
 model Automation {
   id             String       @id @default(cuid())
   organizationId String
@@ -517,4 +597,81 @@ model AuditLog {
   user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, createdAt])
+}
+
+model BlogPost {
+  id              String       @id @default(cuid())
+  organizationId  String
+  title           String
+  slug            String       @unique
+  excerpt         String?      @db.Text
+  content         String       @db.LongText
+  coverImage      String?      @db.Text
+  category        String       @default("Growth Strategy")
+  authorName      String       @default("M&W Labs")
+  status          String       @default("Draft")
+  featured        Boolean      @default(false)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?      @db.Text
+  canonicalUrl    String?      @db.Text
+  ogImage         String?      @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status, publishedAt])
+}
+
+model WorkPost {
+  id              String       @id @default(cuid())
+  organizationId  String
+  title           String
+  slug            String       @unique
+  clientName      String?
+  industry        String?
+  services        String?      @db.Text
+  summary         String       @db.Text
+  challenge       String?      @db.LongText
+  solution        String       @db.LongText
+  results         String?      @db.LongText
+  coverImage      String?      @db.Text
+  projectUrl      String?      @db.Text
+  status          String       @default("Draft")
+  featured        Boolean      @default(false)
+  completedAt     DateTime?
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?      @db.Text
+  canonicalUrl    String?      @db.Text
+  ogImage         String?      @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status, publishedAt])
+}
+
+model SeoPage {
+  id              String       @id @default(cuid())
+  organizationId  String
+  title           String
+  slug            String       @unique
+  eyebrow         String?
+  summary         String       @db.Text
+  content         String       @db.LongText
+  heroImage       String?      @db.Text
+  primaryKeyword  String?
+  status          String       @default("Draft")
+  noIndex         Boolean      @default(false)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?      @db.Text
+  canonicalUrl    String?      @db.Text
+  ogImage         String?      @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status, publishedAt])
 }

@@ -1,4 +1,4 @@
-export type CrudFieldType = "text" | "email" | "number" | "date" | "textarea" | "select" | "checkbox" | "relation";
+export type CrudFieldType = "text" | "email" | "number" | "date" | "datetime" | "textarea" | "select" | "checkbox" | "relation" | "image";
 
 export type CrudField = {
   key: string;
@@ -11,17 +11,21 @@ export type CrudField = {
   min?: number;
   max?: number;
   step?: number;
+  rows?: number;
+  checkboxLabel?: string;
+  defaultChecked?: boolean;
 };
 
 export type CrudColumn = {
   key: string;
   label: string;
-  format?: "currency" | "date" | "percent" | "boolean";
+  format?: "currency" | "date" | "datetime" | "percent" | "boolean";
 };
 
 export type CrudUiConfig = {
   resource: string;
   singular: string;
+  publicRoute?: "blog" | "work" | "root";
   fields: CrudField[];
   columns: CrudColumn[];
 };
@@ -151,17 +155,24 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
     columns: [{ key: "title", label: "Task" }, { key: "status", label: "Status" }, { key: "priority", label: "Priority" }, { key: "dueDate", label: "Due", format: "date" }, { key: "estimatedMinutes", label: "Estimate" }, { key: "trackedMinutes", label: "Tracked" }],
   },
   calendar: {
-    resource: "tasks",
-    singular: "scheduled task",
+    resource: "calendar-events",
+    singular: "calendar event",
     fields: [
       { key: "title", label: "Event title", type: "text", required: true },
-      { key: "projectId", label: "Project", type: "relation", relationResource: "projects" },
-      { key: "status", label: "Status", type: "select", options: ["Backlog", "Today", "In progress", "Review", "Done"], required: true },
-      { key: "priority", label: "Priority", type: "select", options: ["Low", "Medium", "High", "Urgent"], required: true },
-      { key: "dueDate", label: "Scheduled date", type: "date", required: true },
-      { key: "description", label: "Notes", type: "textarea" },
+      { key: "leadId", label: "Related lead", type: "relation", relationResource: "leads" },
+      { key: "inviteeName", label: "Invitee name", type: "text" },
+      { key: "inviteeEmail", label: "Invitee email", type: "email" },
+      { key: "inviteePhone", label: "Invitee phone", type: "text" },
+      { key: "inviteeCompany", label: "Invitee company", type: "text" },
+      { key: "startAt", label: "Starts", type: "datetime", required: true },
+      { key: "endAt", label: "Ends", type: "datetime" },
+      { key: "timezone", label: "Timezone", type: "text", placeholder: "Europe/London" },
+      { key: "location", label: "Location or meeting link", type: "text" },
+      { key: "status", label: "Status", type: "select", options: ["Scheduled", "Completed", "Canceled", "No show"], required: true },
+      { key: "cancellationReason", label: "Cancellation reason", type: "textarea" },
+      { key: "notes", label: "Notes", type: "textarea" },
     ],
-    columns: [{ key: "title", label: "Event" }, { key: "dueDate", label: "Date", format: "date" }, { key: "status", label: "Status" }, { key: "priority", label: "Priority" }],
+    columns: [{ key: "title", label: "Event" }, { key: "startAt", label: "Starts", format: "datetime" }, { key: "inviteeName", label: "Invitee" }, { key: "source", label: "Source" }, { key: "status", label: "Status" }, { key: "bookingReference", label: "Reference" }],
   },
   time: {
     resource: "time-entries",
@@ -171,7 +182,7 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "taskId", label: "Task", type: "relation", relationResource: "tasks" },
       { key: "description", label: "Description", type: "text" },
       { key: "minutes", label: "Minutes", type: "number", min: 1, required: true },
-      { key: "billable", label: "Billable", type: "checkbox" },
+      { key: "billable", label: "Billable", type: "checkbox", checkboxLabel: "Include this entry in billing", defaultChecked: true },
       { key: "hourlyRate", label: "Hourly rate", type: "number", min: 0, step: 1 },
       { key: "date", label: "Date", type: "date", required: true },
     ],
@@ -221,11 +232,82 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "name", label: "Automation name", type: "text", required: true },
       { key: "trigger", label: "Trigger", type: "text", required: true },
       { key: "action", label: "Action", type: "textarea", required: true },
-      { key: "enabled", label: "Enabled", type: "checkbox" },
+      { key: "enabled", label: "Enabled", type: "checkbox", checkboxLabel: "Run this automation", defaultChecked: true },
       { key: "runCount", label: "Run count", type: "number", min: 0 },
       { key: "lastRunAt", label: "Last run", type: "date" },
     ],
     columns: [{ key: "name", label: "Automation" }, { key: "trigger", label: "Trigger" }, { key: "action", label: "Action" }, { key: "enabled", label: "Enabled", format: "boolean" }, { key: "runCount", label: "Runs" }, { key: "lastRunAt", label: "Last run", format: "date" }],
+  },
+  blog: {
+    resource: "blog-posts",
+    singular: "blog post",
+    publicRoute: "blog",
+    fields: [
+      { key: "title", label: "Post title", type: "text", required: true, placeholder: "A clear, search-friendly headline" },
+      { key: "slug", label: "URL slug", type: "text", placeholder: "Generated from the title when left blank" },
+      { key: "excerpt", label: "Excerpt", type: "textarea", rows: 3, placeholder: "A concise summary for listing pages and search results" },
+      { key: "content", label: "Article content", type: "textarea", rows: 14, required: true, placeholder: "Write the complete article. Separate paragraphs with blank lines." },
+      { key: "coverImage", label: "Cover image", type: "image", placeholder: "Upload an image or paste an image URL" },
+      { key: "category", label: "Category", type: "text", required: true, placeholder: "Growth Strategy" },
+      { key: "authorName", label: "Author", type: "text", required: true, placeholder: "M&W Labs" },
+      { key: "status", label: "Publication status", type: "select", options: ["Draft", "Published", "Archived"], required: true },
+      { key: "featured", label: "Featured post", type: "checkbox", checkboxLabel: "Feature this post on listing pages" },
+      { key: "publishedAt", label: "Publish date", type: "date" },
+      { key: "metaTitle", label: "SEO title", type: "text", placeholder: "Defaults to the post title" },
+      { key: "metaDescription", label: "SEO description", type: "textarea", rows: 3, placeholder: "Aim for a concise search snippet" },
+      { key: "canonicalUrl", label: "Canonical URL", type: "text", placeholder: "Optional; defaults to this post URL" },
+      { key: "ogImage", label: "Social sharing image", type: "image", placeholder: "Optional 1200 × 630 Open Graph image" },
+    ],
+    columns: [{ key: "title", label: "Post" }, { key: "status", label: "Status" }, { key: "category", label: "Category" }, { key: "slug", label: "Slug" }, { key: "featured", label: "Featured", format: "boolean" }, { key: "publishedAt", label: "Published", format: "date" }],
+  },
+  work: {
+    resource: "work-posts",
+    singular: "work post",
+    publicRoute: "work",
+    fields: [
+      { key: "title", label: "Case study title", type: "text", required: true, placeholder: "Project or outcome-led title" },
+      { key: "slug", label: "URL slug", type: "text", placeholder: "Generated from the title when left blank" },
+      { key: "clientName", label: "Client name", type: "text" },
+      { key: "industry", label: "Industry", type: "text" },
+      { key: "services", label: "Services delivered", type: "textarea", rows: 3, placeholder: "Web development, SEO, automation…" },
+      { key: "summary", label: "Project summary", type: "textarea", rows: 4, required: true },
+      { key: "challenge", label: "The challenge", type: "textarea", rows: 8 },
+      { key: "solution", label: "The solution", type: "textarea", rows: 10, required: true },
+      { key: "results", label: "Results and proof", type: "textarea", rows: 8, placeholder: "Use specific, verifiable outcomes." },
+      { key: "coverImage", label: "Cover image", type: "image", placeholder: "Upload an image or paste an image URL" },
+      { key: "projectUrl", label: "Live project URL", type: "text" },
+      { key: "status", label: "Publication status", type: "select", options: ["Draft", "Published", "Archived"], required: true },
+      { key: "featured", label: "Featured work", type: "checkbox", checkboxLabel: "Feature this project on listing pages" },
+      { key: "completedAt", label: "Completion date", type: "date" },
+      { key: "publishedAt", label: "Publish date", type: "date" },
+      { key: "metaTitle", label: "SEO title", type: "text", placeholder: "Defaults to the case study title" },
+      { key: "metaDescription", label: "SEO description", type: "textarea", rows: 3 },
+      { key: "canonicalUrl", label: "Canonical URL", type: "text" },
+      { key: "ogImage", label: "Social sharing image", type: "image", placeholder: "Optional 1200 × 630 Open Graph image" },
+    ],
+    columns: [{ key: "title", label: "Case study" }, { key: "status", label: "Status" }, { key: "clientName", label: "Client" }, { key: "industry", label: "Industry" }, { key: "featured", label: "Featured", format: "boolean" }, { key: "publishedAt", label: "Published", format: "date" }],
+  },
+  "seo-pages": {
+    resource: "seo-pages",
+    singular: "SEO page",
+    publicRoute: "root",
+    fields: [
+      { key: "title", label: "Page title", type: "text", required: true, placeholder: "Service or location landing page title" },
+      { key: "slug", label: "URL slug", type: "text", placeholder: "Generated from the title when left blank" },
+      { key: "eyebrow", label: "Eyebrow", type: "text", placeholder: "Optional section label" },
+      { key: "summary", label: "Hero summary", type: "textarea", rows: 4, required: true },
+      { key: "content", label: "Page content", type: "textarea", rows: 14, required: true, placeholder: "Create useful, original content. Separate paragraphs with blank lines." },
+      { key: "heroImage", label: "Hero image", type: "image", placeholder: "Upload an image or paste an image URL" },
+      { key: "primaryKeyword", label: "Primary keyword", type: "text" },
+      { key: "status", label: "Publication status", type: "select", options: ["Draft", "Published", "Archived"], required: true },
+      { key: "noIndex", label: "Search indexing", type: "checkbox", checkboxLabel: "Prevent search engines from indexing this page" },
+      { key: "publishedAt", label: "Publish date", type: "date" },
+      { key: "metaTitle", label: "SEO title", type: "text", placeholder: "Defaults to the page title" },
+      { key: "metaDescription", label: "Meta description", type: "textarea", rows: 3, placeholder: "Optional; the hero summary is used when left blank" },
+      { key: "canonicalUrl", label: "Canonical URL", type: "text", placeholder: "Optional; defaults to this page URL" },
+      { key: "ogImage", label: "Social sharing image", type: "image", placeholder: "Optional 1200 × 630 Open Graph image" },
+    ],
+    columns: [{ key: "title", label: "Page" }, { key: "status", label: "Status" }, { key: "slug", label: "URL" }, { key: "primaryKeyword", label: "Primary keyword" }, { key: "noIndex", label: "No index", format: "boolean" }, { key: "updatedAt", label: "Updated", format: "date" }],
   },
 };
 

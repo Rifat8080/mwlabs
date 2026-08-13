@@ -146,7 +146,7 @@ export function LeadRegistrationForm({
       }
 
       toast.success(profileOnly ? "Your project profile is complete" : "Registration complete", {
-        description: "Your project is now in the M&W lead workflow.",
+        description: "Your project is in the workflow; you can book discovery from the portal.",
       });
       router.push("/portal");
       router.refresh();
@@ -183,14 +183,14 @@ export function LeadRegistrationForm({
             Turn your idea into a <span className="text-gradient">clear next step.</span>
           </h1>
           <p className="mt-6 max-w-xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-            Register once, share the essentials, and follow your opportunity from initial review to discovery and proposal.
+            Register once, share the essentials, book discovery, and follow your opportunity from initial review to proposal.
           </p>
 
           <div className="mt-9 space-y-3">
             {[
               { icon: UserRoundCheck, title: "Create your secure profile", copy: "Your details stay connected to one CRM record." },
               { icon: Target, title: "We qualify the opportunity", copy: "The right specialist reviews scope, fit and urgency." },
-              { icon: Workflow, title: "Move through a clear pipeline", copy: "Discovery, proposal and next actions stay visible." },
+              { icon: Workflow, title: "Book and track discovery", copy: "Meetings, proposals, and next actions stay visible in one workflow." },
             ].map(({ icon: Icon, title, copy }, index) => (
               <div key={title} className="flex gap-4 rounded-2xl border border-white/90 bg-white/60 p-4 shadow-[0_16px_45px_rgba(37,99,235,0.06)] backdrop-blur-xl">
                 <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-slate-950 text-white">

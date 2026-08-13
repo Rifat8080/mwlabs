@@ -324,6 +324,7 @@ export type LeadWhereInput = {
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   proposals?: Prisma.ProposalListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
+  calendarEvents?: Prisma.CalendarEventListRelationFilter
 }
 
 export type LeadOrderByWithRelationInput = {
@@ -348,6 +349,7 @@ export type LeadOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   proposals?: Prisma.ProposalOrderByRelationAggregateInput
   activities?: Prisma.ActivityOrderByRelationAggregateInput
+  calendarEvents?: Prisma.CalendarEventOrderByRelationAggregateInput
   _relevance?: Prisma.LeadOrderByRelevanceInput
 }
 
@@ -376,6 +378,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   proposals?: Prisma.ProposalListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
+  calendarEvents?: Prisma.CalendarEventListRelationFilter
 }, "id" | "userId">
 
 export type LeadOrderByWithAggregationInput = {
@@ -446,6 +449,7 @@ export type LeadCreateInput = {
   user?: Prisma.UserCreateNestedOneWithoutLeadInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutLeadInput
   activities?: Prisma.ActivityCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateInput = {
@@ -468,6 +472,7 @@ export type LeadUncheckedCreateInput = {
   updatedAt?: Date | string
   proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutLeadInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUpdateInput = {
@@ -490,6 +495,7 @@ export type LeadUpdateInput = {
   user?: Prisma.UserUpdateOneWithoutLeadNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutLeadNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateInput = {
@@ -512,6 +518,7 @@ export type LeadUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposals?: Prisma.ProposalUncheckedUpdateManyWithoutLeadNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyInput = {
@@ -787,6 +794,22 @@ export type LeadUpdateOneWithoutActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutActivitiesInput, Prisma.LeadUpdateWithoutActivitiesInput>, Prisma.LeadUncheckedUpdateWithoutActivitiesInput>
 }
 
+export type LeadCreateNestedOneWithoutCalendarEventsInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutCalendarEventsInput, Prisma.LeadUncheckedCreateWithoutCalendarEventsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutCalendarEventsInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneWithoutCalendarEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutCalendarEventsInput, Prisma.LeadUncheckedCreateWithoutCalendarEventsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutCalendarEventsInput
+  upsert?: Prisma.LeadUpsertWithoutCalendarEventsInput
+  disconnect?: Prisma.LeadWhereInput | boolean
+  delete?: Prisma.LeadWhereInput | boolean
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutCalendarEventsInput, Prisma.LeadUpdateWithoutCalendarEventsInput>, Prisma.LeadUncheckedUpdateWithoutCalendarEventsInput>
+}
+
 export type LeadCreateWithoutUserInput = {
   id?: string
   name: string
@@ -806,6 +829,7 @@ export type LeadCreateWithoutUserInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutLeadInput
   activities?: Prisma.ActivityCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutUserInput = {
@@ -827,6 +851,7 @@ export type LeadUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutLeadInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutUserInput = {
@@ -864,6 +889,7 @@ export type LeadUpdateWithoutUserInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutLeadNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutUserInput = {
@@ -885,6 +911,7 @@ export type LeadUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposals?: Prisma.ProposalUncheckedUpdateManyWithoutLeadNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutOrganizationInput = {
@@ -906,6 +933,7 @@ export type LeadCreateWithoutOrganizationInput = {
   user?: Prisma.UserCreateNestedOneWithoutLeadInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutLeadInput
   activities?: Prisma.ActivityCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutOrganizationInput = {
@@ -927,6 +955,7 @@ export type LeadUncheckedCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutLeadInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutOrganizationInput = {
@@ -997,6 +1026,7 @@ export type LeadCreateWithoutProposalsInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
   user?: Prisma.UserCreateNestedOneWithoutLeadInput
   activities?: Prisma.ActivityCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutProposalsInput = {
@@ -1018,6 +1048,7 @@ export type LeadUncheckedCreateWithoutProposalsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutProposalsInput = {
@@ -1055,6 +1086,7 @@ export type LeadUpdateWithoutProposalsInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
   user?: Prisma.UserUpdateOneWithoutLeadNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutProposalsInput = {
@@ -1076,6 +1108,7 @@ export type LeadUncheckedUpdateWithoutProposalsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutActivitiesInput = {
@@ -1097,6 +1130,7 @@ export type LeadCreateWithoutActivitiesInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
   user?: Prisma.UserCreateNestedOneWithoutLeadInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutActivitiesInput = {
@@ -1118,6 +1152,7 @@ export type LeadUncheckedCreateWithoutActivitiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutLeadInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutActivitiesInput = {
@@ -1155,6 +1190,7 @@ export type LeadUpdateWithoutActivitiesInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
   user?: Prisma.UserUpdateOneWithoutLeadNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutActivitiesInput = {
@@ -1176,6 +1212,111 @@ export type LeadUncheckedUpdateWithoutActivitiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposals?: Prisma.ProposalUncheckedUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutCalendarEventsInput = {
+  id?: string
+  name: string
+  company: string
+  email: string
+  phone?: string | null
+  source?: string
+  stage?: string
+  value?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  probability?: number
+  score?: number
+  ownerName?: string | null
+  nextActivityAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
+  user?: Prisma.UserCreateNestedOneWithoutLeadInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutLeadInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutCalendarEventsInput = {
+  id?: string
+  organizationId: string
+  userId?: string | null
+  name: string
+  company: string
+  email: string
+  phone?: string | null
+  source?: string
+  stage?: string
+  value?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  probability?: number
+  score?: number
+  ownerName?: string | null
+  nextActivityAt?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutLeadInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutCalendarEventsInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutCalendarEventsInput, Prisma.LeadUncheckedCreateWithoutCalendarEventsInput>
+}
+
+export type LeadUpsertWithoutCalendarEventsInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutCalendarEventsInput, Prisma.LeadUncheckedUpdateWithoutCalendarEventsInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutCalendarEventsInput, Prisma.LeadUncheckedCreateWithoutCalendarEventsInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutCalendarEventsInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutCalendarEventsInput, Prisma.LeadUncheckedUpdateWithoutCalendarEventsInput>
+}
+
+export type LeadUpdateWithoutCalendarEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  stage?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  ownerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextActivityAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
+  user?: Prisma.UserUpdateOneWithoutLeadNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutLeadNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutCalendarEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  stage?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  ownerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextActivityAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutLeadNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyOrganizationInput = {
@@ -1216,6 +1357,7 @@ export type LeadUpdateWithoutOrganizationInput = {
   user?: Prisma.UserUpdateOneWithoutLeadNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutLeadNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutOrganizationInput = {
@@ -1237,6 +1379,7 @@ export type LeadUncheckedUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposals?: Prisma.ProposalUncheckedUpdateManyWithoutLeadNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutLeadNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutOrganizationInput = {
@@ -1266,11 +1409,13 @@ export type LeadUncheckedUpdateManyWithoutOrganizationInput = {
 export type LeadCountOutputType = {
   proposals: number
   activities: number
+  calendarEvents: number
 }
 
 export type LeadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   proposals?: boolean | LeadCountOutputTypeCountProposalsArgs
   activities?: boolean | LeadCountOutputTypeCountActivitiesArgs
+  calendarEvents?: boolean | LeadCountOutputTypeCountCalendarEventsArgs
 }
 
 /**
@@ -1297,6 +1442,13 @@ export type LeadCountOutputTypeCountActivitiesArgs<ExtArgs extends runtime.Types
   where?: Prisma.ActivityWhereInput
 }
 
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeCountCalendarEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarEventWhereInput
+}
+
 
 export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1320,6 +1472,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   user?: boolean | Prisma.Lead$userArgs<ExtArgs>
   proposals?: boolean | Prisma.Lead$proposalsArgs<ExtArgs>
   activities?: boolean | Prisma.Lead$activitiesArgs<ExtArgs>
+  calendarEvents?: boolean | Prisma.Lead$calendarEventsArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -1351,6 +1504,7 @@ export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   user?: boolean | Prisma.Lead$userArgs<ExtArgs>
   proposals?: boolean | Prisma.Lead$proposalsArgs<ExtArgs>
   activities?: boolean | Prisma.Lead$activitiesArgs<ExtArgs>
+  calendarEvents?: boolean | Prisma.Lead$calendarEventsArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1361,6 +1515,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     user: Prisma.$UserPayload<ExtArgs> | null
     proposals: Prisma.$ProposalPayload<ExtArgs>[]
     activities: Prisma.$ActivityPayload<ExtArgs>[]
+    calendarEvents: Prisma.$CalendarEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1724,6 +1879,7 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
   user<T extends Prisma.Lead$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   proposals<T extends Prisma.Lead$proposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$proposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activities<T extends Prisma.Lead$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  calendarEvents<T extends Prisma.Lead$calendarEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$calendarEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2182,6 +2338,30 @@ export type Lead$activitiesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ActivityScalarFieldEnum | Prisma.ActivityScalarFieldEnum[]
+}
+
+/**
+ * Lead.calendarEvents
+ */
+export type Lead$calendarEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarEvent
+   */
+  select?: Prisma.CalendarEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarEvent
+   */
+  omit?: Prisma.CalendarEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarEventInclude<ExtArgs> | null
+  where?: Prisma.CalendarEventWhereInput
+  orderBy?: Prisma.CalendarEventOrderByWithRelationInput | Prisma.CalendarEventOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarEventScalarFieldEnum | Prisma.CalendarEventScalarFieldEnum[]
 }
 
 /**

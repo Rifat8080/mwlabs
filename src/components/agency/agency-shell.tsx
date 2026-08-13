@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Bell,
+  BookOpenText,
   BrainCircuit,
   BriefcaseBusiness,
+  CalendarCheck2,
   CalendarDays,
   ChartNoAxesCombined,
   CheckSquare2,
@@ -17,11 +19,13 @@ import {
   FileCheck2,
   FileStack,
   Gauge,
+  GalleryVerticalEnd,
   Handshake,
   Inbox,
   Library,
   Menu,
   PanelLeftClose,
+  PanelsTopLeft,
   Search,
   Settings,
   Sparkles,
@@ -62,7 +66,16 @@ const navigation = [
       { label: "Projects", href: "/app/projects", icon: FileStack },
       { label: "Tasks", href: "/app/tasks", icon: CheckSquare2 },
       { label: "Calendar", href: "/app/calendar", icon: CalendarDays },
+      { label: "Scheduling", href: "/app/scheduling", icon: CalendarCheck2 },
       { label: "Time", href: "/app/time", icon: Clock3 },
+    ],
+  },
+  {
+    label: "Content",
+    items: [
+      { label: "Blog", href: "/app/blog", icon: BookOpenText },
+      { label: "Work & Proof", href: "/app/work", icon: GalleryVerticalEnd },
+      { label: "SEO Pages", href: "/app/seo-pages", icon: PanelsTopLeft },
     ],
   },
   {
@@ -179,7 +192,7 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
             <kbd className="absolute right-2.5 rounded border bg-white px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">⌘ K</kbd>
           </button>
           <div className="ml-auto flex items-center gap-1.5">
-            <Button render={<Link href="/app/ai" />} variant="ghost" className="hidden h-9 gap-2 rounded-full bg-brand-surface px-3 text-xs text-primary hover:bg-blue-100 sm:inline-flex">
+            <Button nativeButton={false} render={<Link href="/app/ai" />} variant="ghost" className="hidden h-9 gap-2 rounded-full bg-brand-surface px-3 text-xs text-primary hover:bg-blue-100 sm:inline-flex">
               <Sparkles className="size-3.5" /> Ask M&amp;W AI
             </Button>
             <Button variant="ghost" size="icon" className="relative rounded-full"><Bell className="size-4" /><span className="absolute right-2 top-2 size-1.5 rounded-full bg-orange-500" /></Button>

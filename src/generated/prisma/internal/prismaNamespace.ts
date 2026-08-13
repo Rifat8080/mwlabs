@@ -421,11 +421,17 @@ export const ModelName = {
   Retainer: 'Retainer',
   Document: 'Document',
   Activity: 'Activity',
+  CalendarEvent: 'CalendarEvent',
+  BookingType: 'BookingType',
+  AvailabilityRule: 'AvailabilityRule',
   Automation: 'Automation',
   AiThread: 'AiThread',
   AiMessage: 'AiMessage',
   KnowledgeItem: 'KnowledgeItem',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  BlogPost: 'BlogPost',
+  WorkPost: 'WorkPost',
+  SeoPage: 'SeoPage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -441,7 +447,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "team" | "teamMember" | "lead" | "client" | "proposal" | "contract" | "project" | "milestone" | "task" | "timeEntry" | "invoice" | "invoiceItem" | "payment" | "expense" | "retainer" | "document" | "activity" | "automation" | "aiThread" | "aiMessage" | "knowledgeItem" | "auditLog"
+    modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "team" | "teamMember" | "lead" | "client" | "proposal" | "contract" | "project" | "milestone" | "task" | "timeEntry" | "invoice" | "invoiceItem" | "payment" | "expense" | "retainer" | "document" | "activity" | "calendarEvent" | "bookingType" | "availabilityRule" | "automation" | "aiThread" | "aiMessage" | "knowledgeItem" | "auditLog" | "blogPost" | "workPost" | "seoPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2029,6 +2035,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CalendarEvent: {
+      payload: Prisma.$CalendarEventPayload<ExtArgs>
+      fields: Prisma.CalendarEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CalendarEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CalendarEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>
+        }
+        findFirst: {
+          args: Prisma.CalendarEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CalendarEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>
+        }
+        findMany: {
+          args: Prisma.CalendarEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>[]
+        }
+        create: {
+          args: Prisma.CalendarEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>
+        }
+        createMany: {
+          args: Prisma.CalendarEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CalendarEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>
+        }
+        update: {
+          args: Prisma.CalendarEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.CalendarEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CalendarEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CalendarEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarEventPayload>
+        }
+        aggregate: {
+          args: Prisma.CalendarEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCalendarEvent>
+        }
+        groupBy: {
+          args: Prisma.CalendarEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CalendarEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    BookingType: {
+      payload: Prisma.$BookingTypePayload<ExtArgs>
+      fields: Prisma.BookingTypeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BookingTypeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BookingTypeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>
+        }
+        findFirst: {
+          args: Prisma.BookingTypeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BookingTypeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>
+        }
+        findMany: {
+          args: Prisma.BookingTypeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>[]
+        }
+        create: {
+          args: Prisma.BookingTypeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>
+        }
+        createMany: {
+          args: Prisma.BookingTypeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BookingTypeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>
+        }
+        update: {
+          args: Prisma.BookingTypeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>
+        }
+        deleteMany: {
+          args: Prisma.BookingTypeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BookingTypeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BookingTypeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingTypePayload>
+        }
+        aggregate: {
+          args: Prisma.BookingTypeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBookingType>
+        }
+        groupBy: {
+          args: Prisma.BookingTypeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookingTypeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BookingTypeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookingTypeCountAggregateOutputType> | number
+        }
+      }
+    }
+    AvailabilityRule: {
+      payload: Prisma.$AvailabilityRulePayload<ExtArgs>
+      fields: Prisma.AvailabilityRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AvailabilityRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AvailabilityRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>
+        }
+        findFirst: {
+          args: Prisma.AvailabilityRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AvailabilityRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>
+        }
+        findMany: {
+          args: Prisma.AvailabilityRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>[]
+        }
+        create: {
+          args: Prisma.AvailabilityRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>
+        }
+        createMany: {
+          args: Prisma.AvailabilityRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AvailabilityRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>
+        }
+        update: {
+          args: Prisma.AvailabilityRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.AvailabilityRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AvailabilityRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AvailabilityRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailabilityRulePayload>
+        }
+        aggregate: {
+          args: Prisma.AvailabilityRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAvailabilityRule>
+        }
+        groupBy: {
+          args: Prisma.AvailabilityRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AvailabilityRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AvailabilityRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AvailabilityRuleCountAggregateOutputType> | number
+        }
+      }
+    }
     Automation: {
       payload: Prisma.$AutomationPayload<ExtArgs>
       fields: Prisma.AutomationFieldRefs
@@ -2356,6 +2560,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AuditLogCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    BlogPost: {
+      payload: Prisma.$BlogPostPayload<ExtArgs>
+      fields: Prisma.BlogPostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BlogPostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BlogPostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        findFirst: {
+          args: Prisma.BlogPostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BlogPostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        findMany: {
+          args: Prisma.BlogPostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        create: {
+          args: Prisma.BlogPostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        createMany: {
+          args: Prisma.BlogPostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BlogPostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        update: {
+          args: Prisma.BlogPostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        deleteMany: {
+          args: Prisma.BlogPostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BlogPostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BlogPostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        aggregate: {
+          args: Prisma.BlogPostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBlogPost>
+        }
+        groupBy: {
+          args: Prisma.BlogPostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogPostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BlogPostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogPostCountAggregateOutputType> | number
+        }
+      }
+    }
+    WorkPost: {
+      payload: Prisma.$WorkPostPayload<ExtArgs>
+      fields: Prisma.WorkPostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkPostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkPostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkPostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkPostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>
+        }
+        findMany: {
+          args: Prisma.WorkPostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>[]
+        }
+        create: {
+          args: Prisma.WorkPostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>
+        }
+        createMany: {
+          args: Prisma.WorkPostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WorkPostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>
+        }
+        update: {
+          args: Prisma.WorkPostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkPostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkPostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WorkPostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkPostPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkPostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkPost>
+        }
+        groupBy: {
+          args: Prisma.WorkPostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkPostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkPostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkPostCountAggregateOutputType> | number
+        }
+      }
+    }
+    SeoPage: {
+      payload: Prisma.$SeoPagePayload<ExtArgs>
+      fields: Prisma.SeoPageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SeoPageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SeoPageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>
+        }
+        findFirst: {
+          args: Prisma.SeoPageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SeoPageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>
+        }
+        findMany: {
+          args: Prisma.SeoPageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>[]
+        }
+        create: {
+          args: Prisma.SeoPageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>
+        }
+        createMany: {
+          args: Prisma.SeoPageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SeoPageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>
+        }
+        update: {
+          args: Prisma.SeoPageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>
+        }
+        deleteMany: {
+          args: Prisma.SeoPageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SeoPageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SeoPageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeoPagePayload>
+        }
+        aggregate: {
+          args: Prisma.SeoPageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSeoPage>
+        }
+        groupBy: {
+          args: Prisma.SeoPageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SeoPageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SeoPageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SeoPageCountAggregateOutputType> | number
         }
       }
     }
@@ -2768,6 +3170,71 @@ export const ActivityScalarFieldEnum = {
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
+export const CalendarEventScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  leadId: 'leadId',
+  bookingTypeId: 'bookingTypeId',
+  source: 'source',
+  bookingReference: 'bookingReference',
+  slotKey: 'slotKey',
+  title: 'title',
+  inviteeName: 'inviteeName',
+  inviteeEmail: 'inviteeEmail',
+  inviteePhone: 'inviteePhone',
+  inviteeCompany: 'inviteeCompany',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  timezone: 'timezone',
+  location: 'location',
+  status: 'status',
+  rescheduled: 'rescheduled',
+  cancellationReason: 'cancellationReason',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CalendarEventScalarFieldEnum = (typeof CalendarEventScalarFieldEnum)[keyof typeof CalendarEventScalarFieldEnum]
+
+
+export const BookingTypeScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  durationMinutes: 'durationMinutes',
+  slotIntervalMinutes: 'slotIntervalMinutes',
+  bufferBeforeMinutes: 'bufferBeforeMinutes',
+  bufferAfterMinutes: 'bufferAfterMinutes',
+  minimumNoticeHours: 'minimumNoticeHours',
+  maximumAdvanceDays: 'maximumAdvanceDays',
+  timezone: 'timezone',
+  location: 'location',
+  color: 'color',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BookingTypeScalarFieldEnum = (typeof BookingTypeScalarFieldEnum)[keyof typeof BookingTypeScalarFieldEnum]
+
+
+export const AvailabilityRuleScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  weekday: 'weekday',
+  startMinute: 'startMinute',
+  endMinute: 'endMinute',
+  enabled: 'enabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AvailabilityRuleScalarFieldEnum = (typeof AvailabilityRuleScalarFieldEnum)[keyof typeof AvailabilityRuleScalarFieldEnum]
+
+
 export const AutomationScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -2833,6 +3300,83 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  coverImage: 'coverImage',
+  category: 'category',
+  authorName: 'authorName',
+  status: 'status',
+  featured: 'featured',
+  publishedAt: 'publishedAt',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const WorkPostScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  clientName: 'clientName',
+  industry: 'industry',
+  services: 'services',
+  summary: 'summary',
+  challenge: 'challenge',
+  solution: 'solution',
+  results: 'results',
+  coverImage: 'coverImage',
+  projectUrl: 'projectUrl',
+  status: 'status',
+  featured: 'featured',
+  completedAt: 'completedAt',
+  publishedAt: 'publishedAt',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkPostScalarFieldEnum = (typeof WorkPostScalarFieldEnum)[keyof typeof WorkPostScalarFieldEnum]
+
+
+export const SeoPageScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  eyebrow: 'eyebrow',
+  summary: 'summary',
+  content: 'content',
+  heroImage: 'heroImage',
+  primaryKeyword: 'primaryKeyword',
+  status: 'status',
+  noIndex: 'noIndex',
+  publishedAt: 'publishedAt',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SeoPageScalarFieldEnum = (typeof SeoPageScalarFieldEnum)[keyof typeof SeoPageScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3138,6 +3682,51 @@ export const ActivityOrderByRelevanceFieldEnum = {
 export type ActivityOrderByRelevanceFieldEnum = (typeof ActivityOrderByRelevanceFieldEnum)[keyof typeof ActivityOrderByRelevanceFieldEnum]
 
 
+export const CalendarEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  leadId: 'leadId',
+  bookingTypeId: 'bookingTypeId',
+  source: 'source',
+  bookingReference: 'bookingReference',
+  slotKey: 'slotKey',
+  title: 'title',
+  inviteeName: 'inviteeName',
+  inviteeEmail: 'inviteeEmail',
+  inviteePhone: 'inviteePhone',
+  inviteeCompany: 'inviteeCompany',
+  timezone: 'timezone',
+  location: 'location',
+  status: 'status',
+  cancellationReason: 'cancellationReason',
+  notes: 'notes'
+} as const
+
+export type CalendarEventOrderByRelevanceFieldEnum = (typeof CalendarEventOrderByRelevanceFieldEnum)[keyof typeof CalendarEventOrderByRelevanceFieldEnum]
+
+
+export const BookingTypeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  timezone: 'timezone',
+  location: 'location',
+  color: 'color'
+} as const
+
+export type BookingTypeOrderByRelevanceFieldEnum = (typeof BookingTypeOrderByRelevanceFieldEnum)[keyof typeof BookingTypeOrderByRelevanceFieldEnum]
+
+
+export const AvailabilityRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId'
+} as const
+
+export type AvailabilityRuleOrderByRelevanceFieldEnum = (typeof AvailabilityRuleOrderByRelevanceFieldEnum)[keyof typeof AvailabilityRuleOrderByRelevanceFieldEnum]
+
+
 export const AutomationOrderByRelevanceFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -3194,6 +3783,70 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const BlogPostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  coverImage: 'coverImage',
+  category: 'category',
+  authorName: 'authorName',
+  status: 'status',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage'
+} as const
+
+export type BlogPostOrderByRelevanceFieldEnum = (typeof BlogPostOrderByRelevanceFieldEnum)[keyof typeof BlogPostOrderByRelevanceFieldEnum]
+
+
+export const WorkPostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  clientName: 'clientName',
+  industry: 'industry',
+  services: 'services',
+  summary: 'summary',
+  challenge: 'challenge',
+  solution: 'solution',
+  results: 'results',
+  coverImage: 'coverImage',
+  projectUrl: 'projectUrl',
+  status: 'status',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage'
+} as const
+
+export type WorkPostOrderByRelevanceFieldEnum = (typeof WorkPostOrderByRelevanceFieldEnum)[keyof typeof WorkPostOrderByRelevanceFieldEnum]
+
+
+export const SeoPageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  slug: 'slug',
+  eyebrow: 'eyebrow',
+  summary: 'summary',
+  content: 'content',
+  heroImage: 'heroImage',
+  primaryKeyword: 'primaryKeyword',
+  status: 'status',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage'
+} as const
+
+export type SeoPageOrderByRelevanceFieldEnum = (typeof SeoPageOrderByRelevanceFieldEnum)[keyof typeof SeoPageOrderByRelevanceFieldEnum]
 
 
 
@@ -3418,11 +4071,17 @@ export type GlobalOmitConfig = {
   retainer?: Prisma.RetainerOmit
   document?: Prisma.DocumentOmit
   activity?: Prisma.ActivityOmit
+  calendarEvent?: Prisma.CalendarEventOmit
+  bookingType?: Prisma.BookingTypeOmit
+  availabilityRule?: Prisma.AvailabilityRuleOmit
   automation?: Prisma.AutomationOmit
   aiThread?: Prisma.AiThreadOmit
   aiMessage?: Prisma.AiMessageOmit
   knowledgeItem?: Prisma.KnowledgeItemOmit
   auditLog?: Prisma.AuditLogOmit
+  blogPost?: Prisma.BlogPostOmit
+  workPost?: Prisma.WorkPostOmit
+  seoPage?: Prisma.SeoPageOmit
 }
 
 /* Types for Logging */

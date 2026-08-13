@@ -1,13 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Headphones, LoaderCircle, MessageCircle, Paperclip, Send, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarCheck2, CheckCircle2, Headphones, LoaderCircle, MessageCircle, Paperclip, Send, X } from "lucide-react";
 import { toast } from "sonner";
 
 const fieldClass = "block h-13 w-full rounded-2xl border border-blue-100 bg-blue-50/35 px-4 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-blue-200 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100/60";
 
 export function ProjectEnquiryForm() {
   const [pending, setPending] = useState(false);
+  const [submitted, setSubmitted] = useState<{ bookingPath: string | null } | null>(null);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,15 +22,37 @@ export function ProjectEnquiryForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const result = await response.json();
+      const result = await response.json() as { error?: string; bookingPath?: string | null };
       if (!response.ok) throw new Error(result.error ?? "Your enquiry could not be sent.");
       form.reset();
-      toast.success("Enquiry received", { description: "M&W Labs will review it and respond with a focused next step." });
+      setSubmitted({ bookingPath: result.bookingPath ?? null });
+      toast.success("Enquiry received", { description: result.bookingPath ? "Choose a discovery time now, or return to it later." : "M&W Labs will review it and respond with a focused next step." });
     } catch (error) {
       toast.error("Could not send the enquiry", { description: error instanceof Error ? error.message : "Please try again." });
     } finally {
       setPending(false);
     }
+  }
+
+  if (submitted) {
+    return (
+      <section className="grid min-h-[35rem] place-items-center rounded-[2.5rem] border border-emerald-100 bg-[radial-gradient(circle_at_top_right,#cffafe,transparent_22rem),#ffffff] p-7 text-center shadow-[0_35px_100px_rgba(37,99,235,0.13)] sm:p-10">
+        <div className="max-w-lg">
+          <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-100 text-emerald-700"><CheckCircle2 className="size-7" /></span>
+          <p className="mt-6 text-[0.65rem] font-black uppercase tracking-[0.2em] text-emerald-700">Brief received</p>
+          <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-slate-950 sm:text-4xl">Your opportunity is now in our workflow.</h2>
+          <p className="mt-4 text-sm font-semibold leading-7 text-slate-600">The next useful step is a focused discovery conversation. Your details will be prefilled when you choose a time.</p>
+          {submitted.bookingPath ? (
+            <Link href={submitted.bookingPath} className="group mt-7 inline-flex min-h-14 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-500 px-7 text-sm font-black text-white shadow-[0_18px_42px_rgba(37,99,235,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_52px_rgba(37,99,235,0.34)]">
+              <CalendarCheck2 className="mr-3 size-4" /> Book your discovery call <ArrowRight className="ml-3 size-4 transition group-hover:translate-x-1" />
+            </Link>
+          ) : (
+            <p className="mt-7 rounded-xl border border-blue-100 bg-blue-50 p-4 text-xs font-bold leading-5 text-blue-800">The team will contact you with a suitable discovery time.</p>
+          )}
+          <button type="button" onClick={() => setSubmitted(null)} className="mt-5 block w-full text-xs font-black text-slate-500 transition hover:text-blue-700">Send another enquiry</button>
+        </div>
+      </section>
+    );
   }
 
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
@@ -14,8 +15,10 @@ import {
 } from "lucide-react";
 
 import { LeadPortalActions } from "@/components/auth/lead-portal-actions";
+import { LocalMeetingTime } from "@/components/marketing/timezone-control";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { createBookingManagePath } from "@/lib/scheduling";
 
 export const metadata: Metadata = { title: "Your project status" };
 export const dynamic = "force-dynamic";
@@ -23,8 +26,9 @@ export const dynamic = "force-dynamic";
 const workflow = [
   { stage: "New", title: "Registered", copy: "Your project profile is securely in our CRM." },
   { stage: "Qualified", title: "Fit review", copy: "We review goals, scope, budget and timing." },
-  { stage: "Discovery", title: "Discovery", copy: "We align on the opportunity and success criteria." },
+  { stage: "Discovery", title: "Discovery booked", copy: "Your strategy conversation and calendar invitation are confirmed." },
   { stage: "Proposal", title: "Proposal", copy: "You receive the recommended approach and investment." },
+  { stage: "Negotiation", title: "Decision", copy: "We resolve scope and commercial questions together." },
   { stage: "Won", title: "Kickoff", copy: "The approved opportunity moves into client onboarding." },
 ];
 
@@ -48,6 +52,12 @@ export default async function LeadPortalPage() {
           take: 4,
           select: { id: true, title: true, body: true, occurredAt: true },
         },
+        calendarEvents: {
+          where: { status: "Scheduled", startAt: { gte: new Date() } },
+          orderBy: { startAt: "asc" },
+          take: 1,
+          select: { id: true, title: true, startAt: true, endAt: true, timezone: true, location: true, bookingReference: true },
+        },
       },
     }),
     db.user.findUnique({
@@ -63,6 +73,8 @@ export default async function LeadPortalPage() {
     ? 0
     : Math.max(0, workflow.findIndex((item) => item.stage === lead.stage));
   const nextStep = workflow[Math.min(stageIndex + 1, workflow.length - 1)];
+  const upcomingMeeting = lead.calendarEvents[0];
+  const manageMeetingPath = upcomingMeeting?.bookingReference ? createBookingManagePath(upcomingMeeting.id) : null;
   const firstName = session.user.name.split(" ")[0];
 
   return (
@@ -80,7 +92,7 @@ export default async function LeadPortalPage() {
               Welcome, {firstName}. <span className="text-gradient">We have your brief.</span>
             </h1>
             <p className="mt-4 max-w-2xl text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-              Follow your opportunity through the M&amp;W workflow. We will contact you when the next stage is ready.
+              Follow your opportunity through the M&amp;W workflow, book discovery, and manage confirmed meeting times from one secure place.
             </p>
           </div>
           <LeadPortalActions />
@@ -110,7 +122,7 @@ export default async function LeadPortalPage() {
               <p className="flex items-center gap-2 text-xs font-bold text-slate-500"><ShieldCheck className="size-4 text-blue-600" /> Visible only to you and M&amp;W Labs</p>
             </div>
 
-            <div className="mt-8 grid gap-3 lg:grid-cols-5">
+            <div className="mt-8 grid gap-3 lg:grid-cols-6">
               {workflow.map((item, index) => {
                 const completed = index < stageIndex || lead.stage === "Won";
                 const active = index === stageIndex && lead.stage !== "Lost";
@@ -145,14 +157,25 @@ export default async function LeadPortalPage() {
               <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[0.55rem] font-black uppercase tracking-[0.14em] text-cyan-200">Next milestone</span>
             </div>
             <p className="mt-7 text-[0.58rem] font-black uppercase tracking-[0.18em] text-cyan-300">Coming next</p>
-            <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">{nextStep.title}</h2>
-            <p className="mt-3 text-sm font-semibold leading-7 text-slate-300">{nextStep.copy}</p>
+            <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">{upcomingMeeting ? "Discovery booked" : nextStep.title}</h2>
+            <p className="mt-3 text-sm font-semibold leading-7 text-slate-300">
+              {upcomingMeeting
+                ? <>{upcomingMeeting.title} is confirmed for <LocalMeetingTime value={upcomingMeeting.startAt.toISOString()} fallbackTimezone={upcomingMeeting.timezone ?? "UTC"} />.</>
+                : nextStep.copy}
+            </p>
             <div className="mt-7 flex items-center gap-3 border-t border-white/10 pt-5 text-xs font-bold text-slate-400">
               <CalendarCheck2 className="size-4 text-cyan-300" />
-              {lead.nextActivityAt
+              {upcomingMeeting
+                ? "Calendar confirmed · shown in your current timezone"
+                : lead.nextActivityAt
                 ? `Follow-up planned for ${lead.nextActivityAt.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`
                 : "M&W Labs will confirm the next activity shortly."}
             </div>
+            {upcomingMeeting ? (
+              manageMeetingPath && <Link href={manageMeetingPath} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-cyan-400 px-4 text-xs font-black text-slate-950 transition hover:bg-cyan-300">Reschedule or cancel</Link>
+            ) : !["Proposal", "Negotiation", "Won", "Lost"].includes(lead.stage) ? (
+              <Link href="/book" className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-cyan-400 px-4 text-xs font-black text-slate-950 transition hover:bg-cyan-300"><CalendarCheck2 className="mr-2 size-4" /> Book discovery call</Link>
+            ) : null}
           </section>
 
           <section className="rounded-[1.75rem] border border-blue-100 bg-white/88 p-6 shadow-[0_22px_65px_rgba(37,99,235,0.08)] backdrop-blur-xl sm:p-7">

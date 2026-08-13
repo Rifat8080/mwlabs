@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { db } from "@/lib/db";
+import { createLeadBookingPath } from "@/lib/scheduling";
 
 const enquirySchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -95,5 +96,8 @@ export async function POST(request: Request) {
     }),
   ]);
 
-  return Response.json({ received: true }, { status: 201 });
+  return Response.json({
+    received: true,
+    bookingPath: createLeadBookingPath(lead.id),
+  }, { status: 201 });
 }
