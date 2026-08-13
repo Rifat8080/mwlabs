@@ -30,9 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# local and production environment files
 .env*
-!.env.example
 
 # secret-manager and credential exports
 *.secret

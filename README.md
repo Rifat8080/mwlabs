@@ -17,7 +17,7 @@ The private operating system for M&W Labs. M&W Command covers lead capture, qual
 Requirements: Node.js 20.19+ and Docker Desktop (or an existing MySQL 8 server).
 
 ```bash
-cp .env.example .env.local
+# Create a local .env file with the variables listed below.
 docker compose up -d mysql
 npm install
 npm run db:migrate
@@ -30,7 +30,7 @@ The included development database uses a non-root `mwlabs_app` user and a separa
 
 ### Secret handling
 
-- Keep local credentials in `.env.local`; all real `.env*` files are ignored except the placeholder-only `.env.example`.
+- Keep local credentials only in `.env`; every `.env*` file is ignored by Git.
 - Keep `GEMINI_API_KEY`, database passwords, auth secrets, and OAuth secrets server-only. Never use a `NEXT_PUBLIC_` prefix for them.
 - Configure production credentials through the deployment platform's encrypted secret manager, then redeploy after rotating a credential.
 - Run `npm run security:check` before pushing. GitHub Actions also rejects tracked key patterns and credential files.

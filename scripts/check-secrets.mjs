@@ -10,7 +10,7 @@ const candidateFiles = execFileSync(
   .filter(Boolean);
 
 const forbiddenFiles = candidateFiles.filter((file) => (
-  /(^|\/)\.env(?:\..+)?$/i.test(file) && file !== ".env.example"
+  /(^|\/)\.env(?:\..+)?$/i.test(file)
 ) || /(^|\/)(?:service-account|google-credentials).*\.json$/i.test(file));
 
 const patterns = [
