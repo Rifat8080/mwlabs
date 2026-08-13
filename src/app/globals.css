@@ -128,12 +128,23 @@
   }
   html {
     scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: clip;
   }
   body {
     @apply bg-background text-foreground font-sans;
+    position: relative;
+    max-width: 100%;
+    overflow-x: clip;
     text-rendering: optimizeLegibility;
     font-feature-settings: "ss01" 1, "cv02" 1, "cv03" 1;
     overflow-wrap: break-word;
+  }
+  img,
+  svg,
+  video,
+  canvas {
+    max-inline-size: 100%;
   }
   main,
   section,
@@ -453,6 +464,19 @@
     content: "";
     border-radius: inherit;
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), inset 0 -1px 0 rgb(2 209 250 / 5%);
+  }
+  .growth-showcase {
+    contain: inline-size;
+  }
+  .growth-visual {
+    isolation: isolate;
+  }
+  .growth-stage {
+    transform-origin: center;
+    will-change: transform;
+  }
+  .growth-dashboard {
+    max-width: 100%;
   }
   .hero-aurora {
     animation: hero-aurora-drift 13s ease-in-out infinite;

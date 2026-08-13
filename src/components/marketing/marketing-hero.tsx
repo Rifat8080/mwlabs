@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, ShieldCheck, Star } from "lucide-react";
 
 import { HeroArtwork } from "@/components/marketing/hero-artwork";
 import { Reveal } from "@/components/marketing/reveal";
@@ -10,6 +10,17 @@ const clientInitials = [
   { label: "TN", className: "bg-cyan-100 text-cyan-700" },
   { label: "MK", className: "bg-indigo-100 text-indigo-700" },
   { label: "JL", className: "bg-rose-100 text-rose-600" },
+];
+
+const trustedBrands = [
+  { name: "Wave", mark: "W", tone: "from-blue-600 to-cyan-400", wordmark: "text-slate-800" },
+  { name: "Slack", mark: "S", tone: "from-fuchsia-500 to-violet-600", wordmark: "text-slate-800" },
+  { name: "Notion", mark: "N", tone: "from-slate-950 to-slate-700", wordmark: "text-slate-950" },
+  { name: "Google", mark: "G", tone: "from-blue-500 via-red-500 to-amber-400", wordmark: "text-slate-700" },
+  { name: "monday", mark: "m", tone: "from-rose-500 via-amber-400 to-emerald-500", wordmark: "text-slate-950" },
+  { name: "HubSpot", mark: "H", tone: "from-orange-500 to-rose-500", wordmark: "text-slate-800" },
+  { name: "Shopify", mark: "S", tone: "from-lime-500 to-emerald-600", wordmark: "text-slate-800" },
+  { name: "Tech To The Rescue", mark: "+", tone: "from-red-500 to-rose-600", wordmark: "text-slate-800" },
 ];
 
 export function MarketingHero() {
@@ -89,11 +100,55 @@ export function MarketingHero() {
       </div>
 
       <div className="relative z-20 mx-auto max-w-[112rem] px-4 sm:px-7 lg:px-12 2xl:px-16">
-        <div className="rounded-t-[1.75rem] border border-b-0 border-blue-100/90 bg-white/76 px-6 py-6 text-center shadow-[0_-10px_50px_rgba(37,99,235,0.06)] backdrop-blur-xl sm:rounded-t-[2rem]">
-          <div className="mx-auto flex max-w-2xl items-center gap-4 sm:gap-7">
-            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-blue-200" />
-            <p className="shrink-0 text-[0.58rem] font-black uppercase tracking-[0.22em] text-slate-500 sm:text-xs sm:tracking-[0.28em]">Trusted by businesses of all sizes</p>
-            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-blue-200" />
+        <div className="relative overflow-hidden rounded-t-[2rem] border border-b-0 border-blue-100/90 bg-white/88 px-4 pb-7 pt-8 shadow-[0_-18px_65px_rgba(37,99,235,0.09)] backdrop-blur-2xl sm:rounded-t-[2.5rem] sm:px-7 sm:pb-9 sm:pt-9 lg:px-10">
+          <div className="pointer-events-none absolute -left-16 -top-20 size-56 rounded-full bg-blue-100/70 blur-3xl" />
+          <div className="pointer-events-none absolute -right-12 bottom-0 size-48 rounded-full bg-cyan-100/65 blur-3xl" />
+
+          <div className="relative flex flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
+            <div>
+              <div className="flex items-center justify-center gap-2 text-[0.62rem] font-black uppercase tracking-[0.2em] text-blue-600 md:justify-start">
+                <span className="grid size-7 place-items-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                  <ShieldCheck className="size-3.5" />
+                </span>
+                Proven partnerships
+              </div>
+              <h2 className="mt-3 text-2xl font-black tracking-[-0.035em] text-slate-950 sm:text-3xl">
+                Trusted by businesses <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">of all sizes.</span>
+              </h2>
+              <p className="mt-2 text-xs font-semibold leading-5 text-slate-500 sm:text-sm">
+                From ambitious startups to established teams building their next stage of growth.
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3 shadow-sm">
+              <div className="flex -space-x-2" aria-hidden="true">
+                {clientInitials.slice(0, 3).map((client) => (
+                  <span key={client.label} className={`grid size-8 place-items-center rounded-full border-2 border-white text-[0.48rem] font-black ${client.className}`}>
+                    {client.label}
+                  </span>
+                ))}
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-black text-slate-950">30+ partnerships</p>
+                <p className="text-[0.62rem] font-bold text-slate-500">Across 5+ countries</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8">
+            {trustedBrands.map((brand) => (
+              <div
+                key={brand.name}
+                className="group flex min-h-16 items-center justify-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/82 px-3 shadow-[0_8px_22px_rgba(15,23,42,0.04)] transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-white hover:shadow-[0_15px_32px_rgba(37,99,235,0.11)]"
+              >
+                <span className={`grid size-8 shrink-0 place-items-center rounded-xl bg-gradient-to-br ${brand.tone} text-xs font-black text-white shadow-sm transition duration-300 group-hover:scale-105`}>
+                  {brand.mark}
+                </span>
+                <span className={`min-w-0 text-[0.68rem] font-black leading-tight tracking-[-0.015em] sm:text-xs ${brand.wordmark}`}>
+                  {brand.name}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
