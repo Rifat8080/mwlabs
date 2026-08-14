@@ -1,10 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 
 import { db } from "@/lib/db";
 import { requireApiSession } from "@/lib/dal";
-import { detectImageExtension, uploadMimeTypes, uploadRoot } from "@/lib/upload-store";
+import { detectImageExtension, uploadMimeTypes } from "@/lib/upload-store";
 
 export const runtime = "nodejs";
 
@@ -28,22 +26,22 @@ export async function POST(request: Request) {
     }
 
     const filename = `${randomUUID()}.${extension}`;
-    await mkdir(uploadRoot, { recursive: true });
-    await writeFile(path.join(/* turbopackIgnore: true */ uploadRoot, filename), bytes, { flag: "wx" });
-
-    await db.auditLog.create({
-      data: {
-        organizationId: session.organizationId,
-        userId: session.userId,
-        action: "media.uploaded",
-        resource: "media",
-        resourceId: filename,
-        metadata: JSON.stringify({ originalName: file.name.slice(0, 240), bytes: file.size, type: uploadMimeTypes[extension] }),
-      },
-    });
+    await db.$transaction([
+      db.mediaAsset.create({ data: { organizationId: session.organizationId, filename, originalName: file.name.slice(0, 191), mimeType: uploadMimeTypes[extension], bytes: file.size, data: bytes } }),
+      db.auditLog.create({
+        data: {
+          organizationId: session.organizationId,
+          userId: session.userId,
+          action: "media.uploaded",
+          resource: "media",
+          resourceId: filename,
+          metadata: JSON.stringify({ originalName: file.name.slice(0, 240), bytes: file.size, type: uploadMimeTypes[extension], storage: "database" }),
+        },
+      }),
+    ]);
 
     return Response.json({ url: `/media/${filename}`, filename }, { status: 201 });
   } catch {
-    return Response.json({ error: "The image could not be stored. Check the upload directory and try again." }, { status: 500 });
+    return Response.json({ error: "The image could not be stored. Check the database connection and try again." }, { status: 500 });
   }
 }

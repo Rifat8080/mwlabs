@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { hasTrustedMutationOrigin } from "@/lib/dal";
 import { db } from "@/lib/db";
+import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import { availableDays, bookingSlotKey, hasCalendarConflict, isValidTimezone, readBookingManageToken } from "@/lib/scheduling";
 
 const changeSchema = z.discriminatedUnion("action", [
@@ -52,6 +53,28 @@ export async function PATCH(request: Request) {
           }),
         ]);
       });
+      await notifyOrganization({
+        organizationId: existing.organizationId,
+        category: "booking",
+        type: "booking.canceled",
+        title: "Meeting canceled",
+        message: `${existing.inviteeName || "An invitee"} canceled ${existing.title}.${reason ? ` Reason: ${reason}` : ""}`,
+        actionUrl: "/app/calendar",
+        resource: "calendar-events",
+        resourceId: existing.id,
+      });
+      if (existing.inviteeEmail) {
+        await queueWorkflowEmail({
+          organizationId: existing.organizationId,
+          to: existing.inviteeEmail,
+          recipientName: existing.inviteeName,
+          title: `Canceled: ${existing.title}`,
+          message: "Your meeting has been canceled and the time has been released. You can create a fresh booking whenever you are ready.",
+          actionLabel: "Book a new meeting",
+          actionUrl: "/book",
+          idempotencyKey: `booking-canceled-${existing.id}`,
+        });
+      }
       return Response.json({ changed: true, status: "Canceled" });
     }
 
@@ -116,6 +139,39 @@ export async function PATCH(request: Request) {
         }),
       ]);
     });
+
+    const meetingTime = new Intl.DateTimeFormat("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: reschedule.timezone,
+      timeZoneName: "short",
+    }).format(requestedStart);
+    await notifyOrganization({
+      organizationId: existing.organizationId,
+      category: "booking",
+      type: "booking.rescheduled",
+      title: "Meeting rescheduled",
+      message: `${existing.inviteeName || "An invitee"} moved ${existing.title} to ${meetingTime}.`,
+      actionUrl: "/app/calendar",
+      resource: "calendar-events",
+      resourceId: existing.id,
+    });
+    if (existing.inviteeEmail) {
+      await queueWorkflowEmail({
+        organizationId: existing.organizationId,
+        to: existing.inviteeEmail,
+        recipientName: existing.inviteeName,
+        title: `Rescheduled: ${existing.title}`,
+        message: `Your new meeting time is ${meetingTime}.${existing.location ? ` Location: ${existing.location}.` : ""}`,
+        actionLabel: "Manage your booking",
+        actionUrl: `/book/manage?booking=${encodeURIComponent(reschedule.booking)}`,
+        idempotencyKey: `booking-rescheduled-${existing.id}-${requestedStart.toISOString()}`,
+      });
+    }
 
     return Response.json({ changed: true, status: "Scheduled" });
   } catch (error) {

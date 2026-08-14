@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/MediaAsset'
 export type * from './models/Session'
 export type * from './models/Account'
 export type * from './models/Verification'
@@ -40,6 +41,9 @@ export type * from './models/AiThread'
 export type * from './models/AiMessage'
 export type * from './models/KnowledgeItem'
 export type * from './models/AuditLog'
+export type * from './models/BackgroundJob'
+export type * from './models/Notification'
+export type * from './models/NotificationPreference'
 export type * from './models/BlogPost'
 export type * from './models/WorkPost'
 export type * from './models/SeoPage'

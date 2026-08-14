@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  MediaAsset: 'MediaAsset',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
@@ -83,6 +84,9 @@ export const ModelName = {
   AiMessage: 'AiMessage',
   KnowledgeItem: 'KnowledgeItem',
   AuditLog: 'AuditLog',
+  BackgroundJob: 'BackgroundJob',
+  Notification: 'Notification',
+  NotificationPreference: 'NotificationPreference',
   BlogPost: 'BlogPost',
   WorkPost: 'WorkPost',
   SeoPage: 'SeoPage'
@@ -121,6 +125,20 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const MediaAssetScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  filename: 'filename',
+  originalName: 'originalName',
+  mimeType: 'mimeType',
+  bytes: 'bytes',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type MediaAssetScalarFieldEnum = (typeof MediaAssetScalarFieldEnum)[keyof typeof MediaAssetScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
@@ -606,6 +624,71 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const BackgroundJobScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  type: 'type',
+  payload: 'payload',
+  idempotencyKey: 'idempotencyKey',
+  status: 'status',
+  priority: 'priority',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  runAt: 'runAt',
+  lockedAt: 'lockedAt',
+  lockedBy: 'lockedBy',
+  lastError: 'lastError',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BackgroundJobScalarFieldEnum = (typeof BackgroundJobScalarFieldEnum)[keyof typeof BackgroundJobScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  actorId: 'actorId',
+  category: 'category',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  actionUrl: 'actionUrl',
+  resource: 'resource',
+  resourceId: 'resourceId',
+  inApp: 'inApp',
+  emailRequested: 'emailRequested',
+  emailStatus: 'emailStatus',
+  emailMessageId: 'emailMessageId',
+  emailError: 'emailError',
+  emailedAt: 'emailedAt',
+  readAt: 'readAt',
+  archivedAt: 'archivedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const NotificationPreferenceScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  inAppEnabled: 'inAppEnabled',
+  emailEnabled: 'emailEnabled',
+  emailCrud: 'emailCrud',
+  emailActivity: 'emailActivity',
+  emailBookings: 'emailBookings',
+  notifyOwnActions: 'notifyOwnActions',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationPreferenceScalarFieldEnum = (typeof NotificationPreferenceScalarFieldEnum)[keyof typeof NotificationPreferenceScalarFieldEnum]
+
+
 export const BlogPostScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -713,6 +796,17 @@ export const UserOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const MediaAssetOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  filename: 'filename',
+  originalName: 'originalName',
+  mimeType: 'mimeType'
+} as const
+
+export type MediaAssetOrderByRelevanceFieldEnum = (typeof MediaAssetOrderByRelevanceFieldEnum)[keyof typeof MediaAssetOrderByRelevanceFieldEnum]
 
 
 export const SessionOrderByRelevanceFieldEnum = {
@@ -1087,6 +1181,49 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const BackgroundJobOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  type: 'type',
+  payload: 'payload',
+  idempotencyKey: 'idempotencyKey',
+  status: 'status',
+  lockedBy: 'lockedBy',
+  lastError: 'lastError'
+} as const
+
+export type BackgroundJobOrderByRelevanceFieldEnum = (typeof BackgroundJobOrderByRelevanceFieldEnum)[keyof typeof BackgroundJobOrderByRelevanceFieldEnum]
+
+
+export const NotificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  actorId: 'actorId',
+  category: 'category',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  actionUrl: 'actionUrl',
+  resource: 'resource',
+  resourceId: 'resourceId',
+  emailStatus: 'emailStatus',
+  emailMessageId: 'emailMessageId',
+  emailError: 'emailError'
+} as const
+
+export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
+
+
+export const NotificationPreferenceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId'
+} as const
+
+export type NotificationPreferenceOrderByRelevanceFieldEnum = (typeof NotificationPreferenceOrderByRelevanceFieldEnum)[keyof typeof NotificationPreferenceOrderByRelevanceFieldEnum]
 
 
 export const BlogPostOrderByRelevanceFieldEnum = {

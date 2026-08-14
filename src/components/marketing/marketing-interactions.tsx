@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, CalendarCheck2, CheckCircle2, Headphones, LoaderCircle, MessageCircle, Paperclip, Send, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarCheck2, CheckCircle2, Headphones, LoaderCircle, MessageCircle, Send, X } from "lucide-react";
 import { toast } from "sonner";
 
 const fieldClass = "block h-13 w-full rounded-2xl border border-blue-100 bg-blue-50/35 px-4 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-blue-200 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100/60";
@@ -163,18 +163,18 @@ export function MarketingReception() {
       {open && (
         <section className="mb-3 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-blue-100 bg-slate-50 shadow-2xl shadow-slate-950/20">
           <header className="flex items-center justify-between border-b border-blue-100 bg-white px-4 py-3">
-            <div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-blue-600 text-white"><Headphones className="size-4" /></span><div><p className="text-sm font-black text-slate-950">M&amp;W Labs Reception</p><p className="flex items-center gap-1.5 text-xs font-bold text-emerald-600"><span className="size-1.5 rounded-full bg-emerald-500" />Local assistant ready</p></div></div>
+            <div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-blue-600 text-white"><Headphones className="size-4" /></span><div><p className="text-sm font-black text-slate-950">M&amp;W Labs Reception</p><p className="flex items-center gap-1.5 text-xs font-bold text-emerald-600"><span className="size-1.5 rounded-full bg-emerald-500" />Website guide ready</p></div></div>
             <button onClick={() => setOpen(false)} aria-label="Close reception chat" className="grid size-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"><X className="size-4" /></button>
           </header>
           <div className="h-72 space-y-3 overflow-y-auto p-4">
             {messages.map((message, index) => <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}><div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm font-semibold leading-6 ${message.role === "user" ? "bg-blue-600 text-white" : "border border-blue-100 bg-white text-slate-700"}`}>{message.text}</div></div>)}
           </div>
           <form onSubmit={submit} className="border-t border-blue-100 bg-white p-3">
-            <div className="flex items-end gap-2"><button type="button" className="grid size-10 place-items-center rounded-lg text-slate-400" aria-label="Attach context"><Paperclip className="size-4" /></button><textarea value={input} onChange={(event) => setInput(event.target.value)} rows={2} placeholder="Type your message…" className="min-h-12 flex-1 resize-none rounded-xl border border-blue-100 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-50" /><button type="submit" className="grid size-12 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700" aria-label="Send message"><Send className="size-4" /></button></div>
+            <div className="flex items-end gap-2"><textarea value={input} onChange={(event) => setInput(event.target.value)} rows={2} placeholder="Type your message…" className="min-h-12 flex-1 resize-none rounded-xl border border-blue-100 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-50" /><button type="submit" className="grid size-12 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700" aria-label="Send message"><Send className="size-4" /></button></div>
           </form>
         </section>
       )}
-      <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-brand-ink px-4 py-3 text-sm font-black text-white shadow-2xl shadow-slate-950/25 transition hover:-translate-y-1 hover:bg-blue-600"><span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400"><MessageCircle className="size-4" /></span>{open ? "Close Reception" : "AI Reception"}</button>
+      <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-brand-ink px-4 py-3 text-sm font-black text-white shadow-2xl shadow-slate-950/25 transition hover:-translate-y-1 hover:bg-blue-600"><span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400"><MessageCircle className="size-4" /></span>{open ? "Close Reception" : "Quick Help"}</button>
     </div>
   );
 }

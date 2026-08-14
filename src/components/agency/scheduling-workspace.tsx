@@ -131,6 +131,7 @@ export function SchedulingWorkspace() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Meeting type could not be saved.");
       toast.success(id ? "Meeting type updated" : "Meeting type created");
+      window.dispatchEvent(new Event("mwlabs:notifications-changed"));
       if (result.bookingType?.id) setSelectedId(result.bookingType.id);
       await load();
     } catch (error) {
@@ -147,6 +148,7 @@ export function SchedulingWorkspace() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Availability could not be saved.");
       toast.success("Weekly availability saved");
+      window.dispatchEvent(new Event("mwlabs:notifications-changed"));
     } catch (error) {
       toast.error("Could not save availability", { description: error instanceof Error ? error.message : "Try again." });
     } finally {
@@ -163,6 +165,7 @@ export function SchedulingWorkspace() {
       if (!response.ok) throw new Error(result.error ?? "Meeting type could not be deleted.");
       setSelectedId("");
       toast.success("Meeting type deleted");
+      window.dispatchEvent(new Event("mwlabs:notifications-changed"));
       await load();
     } catch (error) {
       toast.error("Could not delete meeting type", { description: error instanceof Error ? error.message : "Try again." });
@@ -174,23 +177,23 @@ export function SchedulingWorkspace() {
   if (loading) return <div className="grid min-h-[60svh] place-items-center"><div className="text-center"><LoaderCircle className="mx-auto size-6 animate-spin text-blue-600" /><p className="mt-3 text-xs font-semibold text-muted-foreground">Loading your scheduling system…</p></div></div>;
 
   return (
-    <div className="mx-auto max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-3xl"><div className="flex items-center gap-2"><p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-muted-foreground">Native scheduling</p><Badge variant="outline" className="rounded-full bg-emerald-50 text-[8px] font-semibold text-emerald-700">CRM owned</Badge></div><h1 className="mt-2 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">Scheduling &amp; availability</h1><p className="mt-2 text-sm leading-6 text-muted-foreground">Manage bookable meetings, working hours, buffers, notice periods, and public booking links without an external scheduling provider.</p></div>
-        <div className="flex gap-2"><Button variant="outline" onClick={() => { void navigator.clipboard.writeText(`${window.location.origin}/book`); toast.success("Booking link copied"); }}><Copy className="size-4" /> Copy booking link</Button><Button nativeButton={false} render={<Link href="/book" target="_blank" />}><ExternalLink className="size-4" /> Open booking page</Button></div>
+    <div className="admin-page">
+      <div className="admin-page-header">
+        <div className="max-w-3xl"><div className="flex flex-wrap items-center gap-2"><p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-muted-foreground">Native scheduling</p><Badge variant="outline" className="rounded-full bg-emerald-50 text-[8px] font-semibold text-emerald-700">CRM owned</Badge></div><h1 className="admin-page-title">Scheduling &amp; availability</h1><p className="admin-page-description">Manage bookable meetings, working hours, buffers, notice periods, and public booking links without an external scheduling provider.</p></div>
+        <div className="admin-actions"><Button variant="outline" onClick={() => { void navigator.clipboard.writeText(`${window.location.origin}/book`); toast.success("Booking link copied"); }}><Copy className="size-4" /> Copy booking link</Button><Button nativeButton={false} render={<Link href="/book" target="_blank" />}><ExternalLink className="size-4" /> Open booking page</Button></div>
       </div>
 
-      <div className="mt-7 grid gap-3 sm:grid-cols-3">
-        {[{ label: "Active meeting types", value: String(activeCount), detail: "Shown on the public scheduler" }, { label: "Booking horizon", value: `${Math.max(...(settings?.bookingTypes.map((item) => item.maximumAdvanceDays) ?? [60]))} days`, detail: "Furthest available date" }, { label: "System", value: "First-party", detail: "CRM, calendar, leads and portal connected" }].map((metric) => <div key={metric.label} className="rounded-2xl border bg-white p-5 shadow-sm"><p className="text-xs font-medium text-muted-foreground">{metric.label}</p><p className="mt-3 text-2xl font-semibold tracking-[-0.04em]">{metric.value}</p><p className="mt-2 text-[11px] text-muted-foreground">{metric.detail}</p></div>)}
+      <div className="admin-metrics admin-metrics-three mt-7">
+        {[{ label: "Active meeting types", value: String(activeCount), detail: "Shown on the public scheduler" }, { label: "Booking horizon", value: `${Math.max(...(settings?.bookingTypes.map((item) => item.maximumAdvanceDays) ?? [60]))} days`, detail: "Furthest available date" }, { label: "System", value: "First-party", detail: "CRM, calendar, leads and portal connected" }].map((metric) => <div key={metric.label} className="admin-metric-card"><p className="text-xs font-medium text-muted-foreground">{metric.label}</p><p className="mt-3 text-2xl font-semibold tracking-[-0.04em]">{metric.value}</p><p className="mt-2 text-[11px] text-muted-foreground">{metric.detail}</p></div>)}
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[0.72fr_1.28fr]">
-        <section className="rounded-2xl border bg-white p-5 shadow-sm">
+        <section className="admin-card rounded-2xl p-4 sm:p-5">
           <div className="flex items-center justify-between"><div><h2 className="text-sm font-semibold">Meeting types</h2><p className="mt-1 text-[11px] text-muted-foreground">What visitors can book.</p></div><Button size="sm" onClick={() => { setSelectedId(""); setForm(blankType); }}><Plus className="size-3.5" /> New</Button></div>
           <div className="mt-4 space-y-2">{settings?.bookingTypes.map((type) => <button key={type.id} onClick={() => selectType(type)} className={cn("w-full rounded-xl border p-4 text-left transition", form.id === type.id ? "border-blue-300 bg-blue-50 shadow-sm" : "hover:bg-muted/40")}><div className="flex items-start justify-between gap-3"><span className="flex items-center gap-3"><span className="size-3 rounded-full" style={{ backgroundColor: type.color }} /><span><span className="block text-sm font-semibold">{type.title}</span><span className="mt-1 block text-[10px] text-muted-foreground">/book?type={type.slug}</span></span></span><Badge variant="outline" className={cn("text-[8px]", type.active ? "text-emerald-700" : "text-muted-foreground")}>{type.active ? "Active" : "Hidden"}</Badge></div><div className="mt-3 flex gap-4 text-[10px] text-muted-foreground"><span className="flex items-center gap-1"><Clock3 className="size-3" /> {type.durationMinutes} min</span><span>{type.minimumNoticeHours}h notice</span><span>{type.maximumAdvanceDays}d horizon</span></div></button>)}</div>
         </section>
 
-        <form onSubmit={saveType} className="rounded-2xl border bg-white p-5 shadow-sm sm:p-6">
+        <form onSubmit={saveType} className="admin-card rounded-2xl p-4 sm:p-6">
           <div className="flex items-center justify-between"><div><h2 className="text-sm font-semibold">{creating ? "Create meeting type" : "Meeting type settings"}</h2><p className="mt-1 text-[11px] text-muted-foreground">Control duration, booking rules and public presentation.</p></div><Settings2 className="size-4 text-muted-foreground" /></div>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="space-y-2"><Label>Title</Label><Input value={form.title} onChange={(event) => update("title", event.target.value)} required /></div>
@@ -202,13 +205,13 @@ export function SchedulingWorkspace() {
             <div className="space-y-2 sm:col-span-2"><Label>Location or meeting instructions</Label><Input value={form.location ?? ""} onChange={(event) => update("location", event.target.value)} /></div>
             <label className="flex items-center justify-between rounded-xl border p-3 sm:col-span-2"><span><span className="block text-sm font-semibold">Accept public bookings</span><span className="block text-[10px] text-muted-foreground">Hidden types remain attached to historical meetings.</span></span><Switch checked={form.active} onCheckedChange={(checked) => update("active", checked)} /></label>
           </div>
-          <div className="mt-5 flex justify-between gap-2">{form.id ? <Button type="button" variant="ghost" onClick={() => void deleteType()} disabled={saving} className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"><Trash2 className="size-4" /> Delete</Button> : <span />}<Button type="submit" disabled={saving}>{saving ? <LoaderCircle className="size-4 animate-spin" /> : <Check className="size-4" />} {creating ? "Create meeting type" : "Save meeting type"}</Button></div>
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:justify-between">{form.id ? <Button type="button" variant="ghost" onClick={() => void deleteType()} disabled={saving} className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"><Trash2 className="size-4" /> Delete</Button> : <span />}<Button type="submit" disabled={saving}>{saving ? <LoaderCircle className="size-4 animate-spin" /> : <Check className="size-4" />} {creating ? "Create meeting type" : "Save meeting type"}</Button></div>
         </form>
       </div>
 
-      <section className="mt-5 rounded-2xl border bg-white p-5 shadow-sm sm:p-6">
+      <section className="admin-card mt-5 rounded-2xl p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 className="text-sm font-semibold">Weekly availability</h2><p className="mt-1 text-[11px] text-muted-foreground">Recurring hours used by every active meeting type. Times follow each type’s host timezone.</p></div><Button onClick={() => void saveAvailability()} disabled={saving}><CalendarCheck2 className="size-4" /> Save availability</Button></div>
-        <div className="mt-5 divide-y rounded-xl border">{rules.map((rule, index) => <div key={rule.weekday} className="grid items-center gap-3 p-3 sm:grid-cols-[1fr_1fr_1fr_auto]"><label className="flex items-center gap-3 text-sm font-semibold"><Switch checked={rule.enabled} onCheckedChange={(checked) => setRules((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, enabled: checked } : item))} /> {weekdays[rule.weekday]}</label><Input type="time" value={minuteToTime(rule.startMinute)} disabled={!rule.enabled} onChange={(event) => setRules((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, startMinute: timeToMinute(event.target.value) } : item))} /><Input type="time" value={minuteToTime(rule.endMinute)} disabled={!rule.enabled} onChange={(event) => setRules((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, endMinute: timeToMinute(event.target.value) } : item))} /><span className="text-[10px] font-medium text-muted-foreground">{rule.enabled ? `${(rule.endMinute - rule.startMinute) / 60}h` : "Unavailable"}</span></div>)}</div>
+        <div className="mt-5 divide-y rounded-xl border">{rules.map((rule, index) => <div key={rule.weekday} className="grid grid-cols-2 items-center gap-3 p-3 sm:grid-cols-[1fr_1fr_1fr_auto]"><label className="col-span-2 flex items-center gap-3 text-sm font-semibold sm:col-span-1"><Switch checked={rule.enabled} onCheckedChange={(checked) => setRules((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, enabled: checked } : item))} /> {weekdays[rule.weekday]}</label><Input type="time" value={minuteToTime(rule.startMinute)} disabled={!rule.enabled} aria-label={`${weekdays[rule.weekday]} start time`} onChange={(event) => setRules((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, startMinute: timeToMinute(event.target.value) } : item))} /><Input type="time" value={minuteToTime(rule.endMinute)} disabled={!rule.enabled} aria-label={`${weekdays[rule.weekday]} end time`} onChange={(event) => setRules((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, endMinute: timeToMinute(event.target.value) } : item))} /><span className="col-span-2 text-[10px] font-medium text-muted-foreground sm:col-span-1">{rule.enabled ? `${(rule.endMinute - rule.startMinute) / 60}h` : "Unavailable"}</span></div>)}</div>
       </section>
     </div>
   );

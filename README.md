@@ -48,9 +48,15 @@ The included development database uses a non-root `mwlabs_app` user and a separa
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Optional Google OAuth |
 | `GEMINI_API_KEY` | Server-only Gemini credential |
 | `GEMINI_MODEL` | Gemini model, default `gemini-3.5-flash` |
+| `RESEND_API_KEY` | Server-only Resend API key used for transactional notification emails |
+| `NOTIFICATION_EMAIL_FROM` | Verified sender, for example `M&W Command <notifications@mwlabs.digital>` |
+| `NOTIFICATION_EMAIL_REPLY_TO` | Optional reply-to address for operational emails |
+| `BACKGROUND_JOB_SECRET` | High-entropy bearer secret protecting the scheduled worker endpoint (`openssl rand -hex 32`) |
+| `CRON_SECRET` | Optional deployment-platform alternative to `BACKGROUND_JOB_SECRET` |
+| `BACKGROUND_JOB_RETENTION_DAYS` | Optional successful-job retention period, default `30` days (bounded to `1`–`365`) |
 | `ALLOW_INITIAL_SIGNUP` | Temporary owner bootstrap gate; keep `false` after setup |
 | `SEED_DEMO_DATA` | Adds sample records to a new development workspace when `true` |
-| `MWLABS_UPLOAD_DIR` | Optional persistent directory for CMS image uploads (defaults to `.data/uploads`) |
+| `MWLABS_UPLOAD_DIR` | Optional legacy filesystem fallback for images uploaded before database media storage |
 
 Production should use TLS for MySQL, an application-specific database user, managed secret storage, and a transaction email provider before requiring email verification.
 
@@ -67,12 +73,43 @@ The workflow is:
 5. Meeting times are stored as UTC instants and automatically displayed in each visitor's browser-detected IANA timezone, including daylight-saving changes. Visitors can override the detected timezone before booking or rescheduling.
 6. Portal users can book and manage meetings without re-entering their profile, while owners manage every appointment in the agency calendar.
 
+## Notifications and email
+
+The notification inbox at `/app/inbox` receives CRUD, activity, enquiry, registration, and scheduling events. The header bell polls for unread notifications, and each user can control in-app delivery, CRUD email, activity email, booking email, and notifications for their own actions.
+
+Email delivery uses a durable MySQL-backed background queue. Jobs are saved before the originating response completes, then processed immediately through Next.js `after()` for low latency. Atomic claims prevent duplicate workers, provider idempotency keys prevent duplicate sends, stopped workers are recovered after five minutes, and transient failures use capped exponential backoff. Successful job history is retained for 30 days by default and pruned automatically. Without `RESEND_API_KEY` and `NOTIFICATION_EMAIL_FROM`, in-app notifications remain active and email jobs are deferred without exhausting their retry allowance.
+
+For restart recovery, call the protected worker endpoint every one to five minutes from the deployment scheduler:
+
+```bash
+curl --fail --silent --show-error \
+  --header "Authorization: Bearer $BACKGROUND_JOB_SECRET" \
+  "https://your-command-domain.example/api/jobs/run?limit=25"
+```
+
+Owners and administrators can inspect queue health, run due work, and retry dead jobs from `/app/settings`. In production, configure either `BACKGROUND_JOB_SECRET` or `CRON_SECRET`; the worker endpoint refuses unauthenticated production requests.
+
+## Agency operating workflow
+
+- Leads move through a validated pipeline. Marking a lead won creates or reuses one onboarding client, and accepting a lead-linked proposal performs the same handoff without creating duplicates.
+- Projects include milestone management. Milestone progress recalculates project progress, task assignees come from the real member directory, and time entries recalculate task tracked time.
+- Finance includes invoices, line items, payments, expenses, and retainers. Line-item totals are calculated server-side, invoice totals include tax, and a fully reconciled payment marks its invoice paid.
+- Blog posts, case studies, and SEO pages support database-backed image uploads (durable across server restarts), draft/publish states, generated slugs, metadata, and public rendering.
+- Supported automations use structured triggers and actions. Runs update counters, create audit events, and either notify owners/admins or create a follow-up activity.
+- Owners and admins can invite members, copy invitation links when email is unavailable, change roles, and manage delivery teams. Invitees can create a member account from the invitation without reopening public owner signup.
+- CSV/XLSX import and CSV export are available on live record workspaces. Imports validate headers and each row, with a 500-row batch limit.
+- Reports and dashboard indicators are calculated from live records. Settings shows provider/security readiness without exposing credentials.
+- Connected clients, projects, and invoices are protected from destructive cascading deletion; archive or void them to preserve operating history.
+
 ## Quality checks
 
 ```bash
 npm run typecheck
 npm run lint
 npm run security:check
+npm run jobs:smoke
+npm run notifications:smoke
+npm run workflow:smoke
 npm run build
 ```
 

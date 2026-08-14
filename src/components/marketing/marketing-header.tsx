@@ -184,6 +184,7 @@ export function MarketingHeader() {
             fill
             sizes="172px"
             priority
+            loading="eager"
             className="object-contain object-left transition duration-300 group-hover:opacity-80"
           />
         </Link>

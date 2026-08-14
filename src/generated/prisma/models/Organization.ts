@@ -222,6 +222,10 @@ export type OrganizationWhereInput = {
   blogPosts?: Prisma.BlogPostListRelationFilter
   workPosts?: Prisma.WorkPostListRelationFilter
   seoPages?: Prisma.SeoPageListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
+  mediaAssets?: Prisma.MediaAssetListRelationFilter
+  backgroundJobs?: Prisma.BackgroundJobListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -256,6 +260,10 @@ export type OrganizationOrderByWithRelationInput = {
   blogPosts?: Prisma.BlogPostOrderByRelationAggregateInput
   workPosts?: Prisma.WorkPostOrderByRelationAggregateInput
   seoPages?: Prisma.SeoPageOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  notificationPreferences?: Prisma.NotificationPreferenceOrderByRelationAggregateInput
+  mediaAssets?: Prisma.MediaAssetOrderByRelationAggregateInput
+  backgroundJobs?: Prisma.BackgroundJobOrderByRelationAggregateInput
   _relevance?: Prisma.OrganizationOrderByRelevanceInput
 }
 
@@ -294,6 +302,10 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   blogPosts?: Prisma.BlogPostListRelationFilter
   workPosts?: Prisma.WorkPostListRelationFilter
   seoPages?: Prisma.SeoPageListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
+  mediaAssets?: Prisma.MediaAssetListRelationFilter
+  backgroundJobs?: Prisma.BackgroundJobListRelationFilter
 }, "id" | "slug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -354,6 +366,10 @@ export type OrganizationCreateInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -388,6 +404,10 @@ export type OrganizationUncheckedCreateInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -422,6 +442,10 @@ export type OrganizationUpdateInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -456,6 +480,10 @@ export type OrganizationUncheckedUpdateInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -486,6 +514,11 @@ export type OrganizationUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type OrganizationScalarRelationFilter = {
+  is?: Prisma.OrganizationWhereInput
+  isNot?: Prisma.OrganizationWhereInput
 }
 
 export type OrganizationOrderByRelevanceInput = {
@@ -524,9 +557,23 @@ export type OrganizationMinOrderByAggregateInput = {
   metadata?: Prisma.SortOrder
 }
 
-export type OrganizationScalarRelationFilter = {
-  is?: Prisma.OrganizationWhereInput
-  isNot?: Prisma.OrganizationWhereInput
+export type OrganizationNullableScalarRelationFilter = {
+  is?: Prisma.OrganizationWhereInput | null
+  isNot?: Prisma.OrganizationWhereInput | null
+}
+
+export type OrganizationCreateNestedOneWithoutMediaAssetsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutMediaAssetsInput, Prisma.OrganizationUncheckedCreateWithoutMediaAssetsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutMediaAssetsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutMediaAssetsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutMediaAssetsInput, Prisma.OrganizationUncheckedCreateWithoutMediaAssetsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutMediaAssetsInput
+  upsert?: Prisma.OrganizationUpsertWithoutMediaAssetsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutMediaAssetsInput, Prisma.OrganizationUpdateWithoutMediaAssetsInput>, Prisma.OrganizationUncheckedUpdateWithoutMediaAssetsInput>
 }
 
 export type OrganizationCreateNestedOneWithoutMembersInput = {
@@ -823,6 +870,50 @@ export type OrganizationUpdateOneRequiredWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.OrganizationUpdateWithoutAuditLogsInput>, Prisma.OrganizationUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type OrganizationCreateNestedOneWithoutBackgroundJobsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBackgroundJobsInput, Prisma.OrganizationUncheckedCreateWithoutBackgroundJobsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBackgroundJobsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneWithoutBackgroundJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBackgroundJobsInput, Prisma.OrganizationUncheckedCreateWithoutBackgroundJobsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBackgroundJobsInput
+  upsert?: Prisma.OrganizationUpsertWithoutBackgroundJobsInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutBackgroundJobsInput, Prisma.OrganizationUpdateWithoutBackgroundJobsInput>, Prisma.OrganizationUncheckedUpdateWithoutBackgroundJobsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationsInput, Prisma.OrganizationUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationsInput, Prisma.OrganizationUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.OrganizationUpsertWithoutNotificationsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutNotificationsInput, Prisma.OrganizationUpdateWithoutNotificationsInput>, Prisma.OrganizationUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutNotificationPreferencesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationPreferencesInput, Prisma.OrganizationUncheckedCreateWithoutNotificationPreferencesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutNotificationPreferencesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutNotificationPreferencesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationPreferencesInput, Prisma.OrganizationUncheckedCreateWithoutNotificationPreferencesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutNotificationPreferencesInput
+  upsert?: Prisma.OrganizationUpsertWithoutNotificationPreferencesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutNotificationPreferencesInput, Prisma.OrganizationUpdateWithoutNotificationPreferencesInput>, Prisma.OrganizationUncheckedUpdateWithoutNotificationPreferencesInput>
+}
+
 export type OrganizationCreateNestedOneWithoutBlogPostsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBlogPostsInput, Prisma.OrganizationUncheckedCreateWithoutBlogPostsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBlogPostsInput
@@ -865,6 +956,170 @@ export type OrganizationUpdateOneRequiredWithoutSeoPagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutSeoPagesInput, Prisma.OrganizationUpdateWithoutSeoPagesInput>, Prisma.OrganizationUncheckedUpdateWithoutSeoPagesInput>
 }
 
+export type OrganizationCreateWithoutMediaAssetsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutMediaAssetsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutMediaAssetsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutMediaAssetsInput, Prisma.OrganizationUncheckedCreateWithoutMediaAssetsInput>
+}
+
+export type OrganizationUpsertWithoutMediaAssetsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutMediaAssetsInput, Prisma.OrganizationUncheckedUpdateWithoutMediaAssetsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutMediaAssetsInput, Prisma.OrganizationUncheckedCreateWithoutMediaAssetsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutMediaAssetsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutMediaAssetsInput, Prisma.OrganizationUncheckedUpdateWithoutMediaAssetsInput>
+}
+
+export type OrganizationUpdateWithoutMediaAssetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutMediaAssetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
 export type OrganizationCreateWithoutMembersInput = {
   id: string
   name: string
@@ -896,6 +1151,10 @@ export type OrganizationCreateWithoutMembersInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -929,6 +1188,10 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -978,6 +1241,10 @@ export type OrganizationUpdateWithoutMembersInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -1011,6 +1278,10 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvitationsInput = {
@@ -1044,6 +1315,10 @@ export type OrganizationCreateWithoutInvitationsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -1077,6 +1352,10 @@ export type OrganizationUncheckedCreateWithoutInvitationsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -1126,6 +1405,10 @@ export type OrganizationUpdateWithoutInvitationsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -1159,6 +1442,10 @@ export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTeamsInput = {
@@ -1192,6 +1479,10 @@ export type OrganizationCreateWithoutTeamsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTeamsInput = {
@@ -1225,6 +1516,10 @@ export type OrganizationUncheckedCreateWithoutTeamsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTeamsInput = {
@@ -1274,6 +1569,10 @@ export type OrganizationUpdateWithoutTeamsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTeamsInput = {
@@ -1307,6 +1606,10 @@ export type OrganizationUncheckedUpdateWithoutTeamsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLeadsInput = {
@@ -1340,6 +1643,10 @@ export type OrganizationCreateWithoutLeadsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLeadsInput = {
@@ -1373,6 +1680,10 @@ export type OrganizationUncheckedCreateWithoutLeadsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLeadsInput = {
@@ -1422,6 +1733,10 @@ export type OrganizationUpdateWithoutLeadsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLeadsInput = {
@@ -1455,6 +1770,10 @@ export type OrganizationUncheckedUpdateWithoutLeadsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientsInput = {
@@ -1488,6 +1807,10 @@ export type OrganizationCreateWithoutClientsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientsInput = {
@@ -1521,6 +1844,10 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientsInput = {
@@ -1570,6 +1897,10 @@ export type OrganizationUpdateWithoutClientsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientsInput = {
@@ -1603,6 +1934,10 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProposalsInput = {
@@ -1636,6 +1971,10 @@ export type OrganizationCreateWithoutProposalsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProposalsInput = {
@@ -1669,6 +2008,10 @@ export type OrganizationUncheckedCreateWithoutProposalsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProposalsInput = {
@@ -1718,6 +2061,10 @@ export type OrganizationUpdateWithoutProposalsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProposalsInput = {
@@ -1751,6 +2098,10 @@ export type OrganizationUncheckedUpdateWithoutProposalsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutContractsInput = {
@@ -1784,6 +2135,10 @@ export type OrganizationCreateWithoutContractsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutContractsInput = {
@@ -1817,6 +2172,10 @@ export type OrganizationUncheckedCreateWithoutContractsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutContractsInput = {
@@ -1866,6 +2225,10 @@ export type OrganizationUpdateWithoutContractsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutContractsInput = {
@@ -1899,6 +2262,10 @@ export type OrganizationUncheckedUpdateWithoutContractsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectsInput = {
@@ -1932,6 +2299,10 @@ export type OrganizationCreateWithoutProjectsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectsInput = {
@@ -1965,6 +2336,10 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectsInput = {
@@ -2014,6 +2389,10 @@ export type OrganizationUpdateWithoutProjectsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectsInput = {
@@ -2047,6 +2426,10 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTasksInput = {
@@ -2080,6 +2463,10 @@ export type OrganizationCreateWithoutTasksInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTasksInput = {
@@ -2113,6 +2500,10 @@ export type OrganizationUncheckedCreateWithoutTasksInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTasksInput = {
@@ -2162,6 +2553,10 @@ export type OrganizationUpdateWithoutTasksInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTasksInput = {
@@ -2195,6 +2590,10 @@ export type OrganizationUncheckedUpdateWithoutTasksInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvoicesInput = {
@@ -2228,6 +2627,10 @@ export type OrganizationCreateWithoutInvoicesInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvoicesInput = {
@@ -2261,6 +2664,10 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvoicesInput = {
@@ -2310,6 +2717,10 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
@@ -2343,6 +2754,10 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExpensesInput = {
@@ -2376,6 +2791,10 @@ export type OrganizationCreateWithoutExpensesInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExpensesInput = {
@@ -2409,6 +2828,10 @@ export type OrganizationUncheckedCreateWithoutExpensesInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExpensesInput = {
@@ -2458,6 +2881,10 @@ export type OrganizationUpdateWithoutExpensesInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExpensesInput = {
@@ -2491,6 +2918,10 @@ export type OrganizationUncheckedUpdateWithoutExpensesInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutRetainersInput = {
@@ -2524,6 +2955,10 @@ export type OrganizationCreateWithoutRetainersInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutRetainersInput = {
@@ -2557,6 +2992,10 @@ export type OrganizationUncheckedCreateWithoutRetainersInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutRetainersInput = {
@@ -2606,6 +3045,10 @@ export type OrganizationUpdateWithoutRetainersInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutRetainersInput = {
@@ -2639,6 +3082,10 @@ export type OrganizationUncheckedUpdateWithoutRetainersInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDocumentsInput = {
@@ -2672,6 +3119,10 @@ export type OrganizationCreateWithoutDocumentsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDocumentsInput = {
@@ -2705,6 +3156,10 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDocumentsInput = {
@@ -2754,6 +3209,10 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
@@ -2787,6 +3246,10 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutActivitiesInput = {
@@ -2820,6 +3283,10 @@ export type OrganizationCreateWithoutActivitiesInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutActivitiesInput = {
@@ -2853,6 +3320,10 @@ export type OrganizationUncheckedCreateWithoutActivitiesInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutActivitiesInput = {
@@ -2902,6 +3373,10 @@ export type OrganizationUpdateWithoutActivitiesInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutActivitiesInput = {
@@ -2935,6 +3410,10 @@ export type OrganizationUncheckedUpdateWithoutActivitiesInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCalendarEventsInput = {
@@ -2968,6 +3447,10 @@ export type OrganizationCreateWithoutCalendarEventsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCalendarEventsInput = {
@@ -3001,6 +3484,10 @@ export type OrganizationUncheckedCreateWithoutCalendarEventsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCalendarEventsInput = {
@@ -3050,6 +3537,10 @@ export type OrganizationUpdateWithoutCalendarEventsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCalendarEventsInput = {
@@ -3083,6 +3574,10 @@ export type OrganizationUncheckedUpdateWithoutCalendarEventsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutBookingTypesInput = {
@@ -3116,6 +3611,10 @@ export type OrganizationCreateWithoutBookingTypesInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutBookingTypesInput = {
@@ -3149,6 +3648,10 @@ export type OrganizationUncheckedCreateWithoutBookingTypesInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutBookingTypesInput = {
@@ -3198,6 +3701,10 @@ export type OrganizationUpdateWithoutBookingTypesInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutBookingTypesInput = {
@@ -3231,6 +3738,10 @@ export type OrganizationUncheckedUpdateWithoutBookingTypesInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAvailabilityInput = {
@@ -3264,6 +3775,10 @@ export type OrganizationCreateWithoutAvailabilityInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAvailabilityInput = {
@@ -3297,6 +3812,10 @@ export type OrganizationUncheckedCreateWithoutAvailabilityInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAvailabilityInput = {
@@ -3346,6 +3865,10 @@ export type OrganizationUpdateWithoutAvailabilityInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAvailabilityInput = {
@@ -3379,6 +3902,10 @@ export type OrganizationUncheckedUpdateWithoutAvailabilityInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAutomationsInput = {
@@ -3412,6 +3939,10 @@ export type OrganizationCreateWithoutAutomationsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAutomationsInput = {
@@ -3445,6 +3976,10 @@ export type OrganizationUncheckedCreateWithoutAutomationsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAutomationsInput = {
@@ -3494,6 +4029,10 @@ export type OrganizationUpdateWithoutAutomationsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAutomationsInput = {
@@ -3527,6 +4066,10 @@ export type OrganizationUncheckedUpdateWithoutAutomationsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAiThreadsInput = {
@@ -3560,6 +4103,10 @@ export type OrganizationCreateWithoutAiThreadsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAiThreadsInput = {
@@ -3593,6 +4140,10 @@ export type OrganizationUncheckedCreateWithoutAiThreadsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAiThreadsInput = {
@@ -3642,6 +4193,10 @@ export type OrganizationUpdateWithoutAiThreadsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAiThreadsInput = {
@@ -3675,6 +4230,10 @@ export type OrganizationUncheckedUpdateWithoutAiThreadsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutKnowledgeItemsInput = {
@@ -3708,6 +4267,10 @@ export type OrganizationCreateWithoutKnowledgeItemsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutKnowledgeItemsInput = {
@@ -3741,6 +4304,10 @@ export type OrganizationUncheckedCreateWithoutKnowledgeItemsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutKnowledgeItemsInput = {
@@ -3790,6 +4357,10 @@ export type OrganizationUpdateWithoutKnowledgeItemsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutKnowledgeItemsInput = {
@@ -3823,6 +4394,10 @@ export type OrganizationUncheckedUpdateWithoutKnowledgeItemsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAuditLogsInput = {
@@ -3856,6 +4431,10 @@ export type OrganizationCreateWithoutAuditLogsInput = {
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
@@ -3889,6 +4468,10 @@ export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAuditLogsInput = {
@@ -3938,6 +4521,10 @@ export type OrganizationUpdateWithoutAuditLogsInput = {
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
@@ -3971,6 +4558,502 @@ export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutBackgroundJobsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutBackgroundJobsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutBackgroundJobsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBackgroundJobsInput, Prisma.OrganizationUncheckedCreateWithoutBackgroundJobsInput>
+}
+
+export type OrganizationUpsertWithoutBackgroundJobsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutBackgroundJobsInput, Prisma.OrganizationUncheckedUpdateWithoutBackgroundJobsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBackgroundJobsInput, Prisma.OrganizationUncheckedCreateWithoutBackgroundJobsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutBackgroundJobsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutBackgroundJobsInput, Prisma.OrganizationUncheckedUpdateWithoutBackgroundJobsInput>
+}
+
+export type OrganizationUpdateWithoutBackgroundJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutBackgroundJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutNotificationsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutNotificationsInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationsInput, Prisma.OrganizationUncheckedCreateWithoutNotificationsInput>
+}
+
+export type OrganizationUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutNotificationsInput, Prisma.OrganizationUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationsInput, Prisma.OrganizationUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutNotificationsInput, Prisma.OrganizationUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type OrganizationUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutNotificationPreferencesInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutNotificationPreferencesInput = {
+  id: string
+  name: string
+  slug: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  metadata?: string | null
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutOrganizationInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutOrganizationInput
+  automations?: Prisma.AutomationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiThreads?: Prisma.AiThreadUncheckedCreateNestedManyWithoutOrganizationInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  calendarEvents?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+  bookingTypes?: Prisma.BookingTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
+  workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutNotificationPreferencesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationPreferencesInput, Prisma.OrganizationUncheckedCreateWithoutNotificationPreferencesInput>
+}
+
+export type OrganizationUpsertWithoutNotificationPreferencesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutNotificationPreferencesInput, Prisma.OrganizationUncheckedUpdateWithoutNotificationPreferencesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutNotificationPreferencesInput, Prisma.OrganizationUncheckedCreateWithoutNotificationPreferencesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutNotificationPreferencesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutNotificationPreferencesInput, Prisma.OrganizationUncheckedUpdateWithoutNotificationPreferencesInput>
+}
+
+export type OrganizationUpdateWithoutNotificationPreferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutNotificationPreferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutOrganizationNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutOrganizationNestedInput
+  automations?: Prisma.AutomationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiThreads?: Prisma.AiThreadUncheckedUpdateManyWithoutOrganizationNestedInput
+  knowledgeItems?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  calendarEvents?: Prisma.CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  bookingTypes?: Prisma.BookingTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutBlogPostsInput = {
@@ -4004,6 +5087,10 @@ export type OrganizationCreateWithoutBlogPostsInput = {
   availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutBlogPostsInput = {
@@ -4037,6 +5124,10 @@ export type OrganizationUncheckedCreateWithoutBlogPostsInput = {
   availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutBlogPostsInput = {
@@ -4086,6 +5177,10 @@ export type OrganizationUpdateWithoutBlogPostsInput = {
   availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutBlogPostsInput = {
@@ -4119,6 +5214,10 @@ export type OrganizationUncheckedUpdateWithoutBlogPostsInput = {
   availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutWorkPostsInput = {
@@ -4152,6 +5251,10 @@ export type OrganizationCreateWithoutWorkPostsInput = {
   availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutWorkPostsInput = {
@@ -4185,6 +5288,10 @@ export type OrganizationUncheckedCreateWithoutWorkPostsInput = {
   availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   seoPages?: Prisma.SeoPageUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutWorkPostsInput = {
@@ -4234,6 +5341,10 @@ export type OrganizationUpdateWithoutWorkPostsInput = {
   availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutWorkPostsInput = {
@@ -4267,6 +5378,10 @@ export type OrganizationUncheckedUpdateWithoutWorkPostsInput = {
   availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   seoPages?: Prisma.SeoPageUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSeoPagesInput = {
@@ -4300,6 +5415,10 @@ export type OrganizationCreateWithoutSeoPagesInput = {
   availability?: Prisma.AvailabilityRuleCreateNestedManyWithoutOrganizationInput
   blogPosts?: Prisma.BlogPostCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSeoPagesInput = {
@@ -4333,6 +5452,10 @@ export type OrganizationUncheckedCreateWithoutSeoPagesInput = {
   availability?: Prisma.AvailabilityRuleUncheckedCreateNestedManyWithoutOrganizationInput
   blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutOrganizationInput
   workPosts?: Prisma.WorkPostUncheckedCreateNestedManyWithoutOrganizationInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+  mediaAssets?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOrganizationInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSeoPagesInput = {
@@ -4382,6 +5505,10 @@ export type OrganizationUpdateWithoutSeoPagesInput = {
   availability?: Prisma.AvailabilityRuleUpdateManyWithoutOrganizationNestedInput
   blogPosts?: Prisma.BlogPostUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSeoPagesInput = {
@@ -4415,6 +5542,10 @@ export type OrganizationUncheckedUpdateWithoutSeoPagesInput = {
   availability?: Prisma.AvailabilityRuleUncheckedUpdateManyWithoutOrganizationNestedInput
   blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutOrganizationNestedInput
   workPosts?: Prisma.WorkPostUncheckedUpdateManyWithoutOrganizationNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  mediaAssets?: Prisma.MediaAssetUncheckedUpdateManyWithoutOrganizationNestedInput
+  backgroundJobs?: Prisma.BackgroundJobUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -4447,6 +5578,10 @@ export type OrganizationCountOutputType = {
   blogPosts: number
   workPosts: number
   seoPages: number
+  notifications: number
+  notificationPreferences: number
+  mediaAssets: number
+  backgroundJobs: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4474,6 +5609,10 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   blogPosts?: boolean | OrganizationCountOutputTypeCountBlogPostsArgs
   workPosts?: boolean | OrganizationCountOutputTypeCountWorkPostsArgs
   seoPages?: boolean | OrganizationCountOutputTypeCountSeoPagesArgs
+  notifications?: boolean | OrganizationCountOutputTypeCountNotificationsArgs
+  notificationPreferences?: boolean | OrganizationCountOutputTypeCountNotificationPreferencesArgs
+  mediaAssets?: boolean | OrganizationCountOutputTypeCountMediaAssetsArgs
+  backgroundJobs?: boolean | OrganizationCountOutputTypeCountBackgroundJobsArgs
 }
 
 /**
@@ -4654,6 +5793,34 @@ export type OrganizationCountOutputTypeCountSeoPagesArgs<ExtArgs extends runtime
   where?: Prisma.SeoPageWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountNotificationPreferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationPreferenceWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountMediaAssetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MediaAssetWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountBackgroundJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BackgroundJobWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4687,6 +5854,10 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   blogPosts?: boolean | Prisma.Organization$blogPostsArgs<ExtArgs>
   workPosts?: boolean | Prisma.Organization$workPostsArgs<ExtArgs>
   seoPages?: boolean | Prisma.Organization$seoPagesArgs<ExtArgs>
+  notifications?: boolean | Prisma.Organization$notificationsArgs<ExtArgs>
+  notificationPreferences?: boolean | Prisma.Organization$notificationPreferencesArgs<ExtArgs>
+  mediaAssets?: boolean | Prisma.Organization$mediaAssetsArgs<ExtArgs>
+  backgroundJobs?: boolean | Prisma.Organization$backgroundJobsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -4728,6 +5899,10 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   blogPosts?: boolean | Prisma.Organization$blogPostsArgs<ExtArgs>
   workPosts?: boolean | Prisma.Organization$workPostsArgs<ExtArgs>
   seoPages?: boolean | Prisma.Organization$seoPagesArgs<ExtArgs>
+  notifications?: boolean | Prisma.Organization$notificationsArgs<ExtArgs>
+  notificationPreferences?: boolean | Prisma.Organization$notificationPreferencesArgs<ExtArgs>
+  mediaAssets?: boolean | Prisma.Organization$mediaAssetsArgs<ExtArgs>
+  backgroundJobs?: boolean | Prisma.Organization$backgroundJobsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -4758,6 +5933,10 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
     workPosts: Prisma.$WorkPostPayload<ExtArgs>[]
     seoPages: Prisma.$SeoPagePayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    notificationPreferences: Prisma.$NotificationPreferencePayload<ExtArgs>[]
+    mediaAssets: Prisma.$MediaAssetPayload<ExtArgs>[]
+    backgroundJobs: Prisma.$BackgroundJobPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5131,6 +6310,10 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   blogPosts<T extends Prisma.Organization$blogPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   workPosts<T extends Prisma.Organization$workPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$workPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   seoPages<T extends Prisma.Organization$seoPagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$seoPagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SeoPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.Organization$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notificationPreferences<T extends Prisma.Organization$notificationPreferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$notificationPreferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mediaAssets<T extends Prisma.Organization$mediaAssetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$mediaAssetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  backgroundJobs<T extends Prisma.Organization$backgroundJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$backgroundJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BackgroundJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6088,6 +7271,102 @@ export type Organization$seoPagesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.SeoPageScalarFieldEnum | Prisma.SeoPageScalarFieldEnum[]
+}
+
+/**
+ * Organization.notifications
+ */
+export type Organization$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * Organization.notificationPreferences
+ */
+export type Organization$notificationPreferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NotificationPreference
+   */
+  select?: Prisma.NotificationPreferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NotificationPreference
+   */
+  omit?: Prisma.NotificationPreferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationPreferenceInclude<ExtArgs> | null
+  where?: Prisma.NotificationPreferenceWhereInput
+  orderBy?: Prisma.NotificationPreferenceOrderByWithRelationInput | Prisma.NotificationPreferenceOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationPreferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationPreferenceScalarFieldEnum | Prisma.NotificationPreferenceScalarFieldEnum[]
+}
+
+/**
+ * Organization.mediaAssets
+ */
+export type Organization$mediaAssetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MediaAsset
+   */
+  select?: Prisma.MediaAssetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MediaAsset
+   */
+  omit?: Prisma.MediaAssetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MediaAssetInclude<ExtArgs> | null
+  where?: Prisma.MediaAssetWhereInput
+  orderBy?: Prisma.MediaAssetOrderByWithRelationInput | Prisma.MediaAssetOrderByWithRelationInput[]
+  cursor?: Prisma.MediaAssetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MediaAssetScalarFieldEnum | Prisma.MediaAssetScalarFieldEnum[]
+}
+
+/**
+ * Organization.backgroundJobs
+ */
+export type Organization$backgroundJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BackgroundJob
+   */
+  select?: Prisma.BackgroundJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BackgroundJob
+   */
+  omit?: Prisma.BackgroundJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BackgroundJobInclude<ExtArgs> | null
+  where?: Prisma.BackgroundJobWhereInput
+  orderBy?: Prisma.BackgroundJobOrderByWithRelationInput | Prisma.BackgroundJobOrderByWithRelationInput[]
+  cursor?: Prisma.BackgroundJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BackgroundJobScalarFieldEnum | Prisma.BackgroundJobScalarFieldEnum[]
 }
 
 /**

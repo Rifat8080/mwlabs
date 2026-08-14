@@ -1,6 +1,7 @@
 import "server-only";
 
 import { db } from "@/lib/db";
+import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 
 export type LeadRegistrationProfile = {
   userId: string;
@@ -134,6 +135,27 @@ export async function registerLeadProfile(profile: LeadRegistrationProfile) {
         },
       }),
     ]);
+    await notifyOrganization({
+      organizationId: organization.id,
+      actorId: profile.userId,
+      category: "activity",
+      type: "lead.registered",
+      title: existingByEmail ? "Enquiry converted to registration" : "New prospect registered",
+      message: `${profile.name.trim()} created a secure project profile for ${company}.`,
+      actionUrl: "/app/leads",
+      resource: "leads",
+      resourceId: lead.id,
+    });
+    await queueWorkflowEmail({
+      organizationId: organization.id,
+      to: email,
+      recipientName: profile.name,
+      title: "Your M&W Labs project profile is ready",
+      message: "Your project details are securely connected to our CRM. You can follow progress and book or manage discovery meetings from your client portal.",
+      actionLabel: "Open your secure portal",
+      actionUrl: "/portal",
+      idempotencyKey: `lead-registration-${lead.id}`,
+    });
   }
 
   return lead;

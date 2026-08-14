@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { requireApiSession } from "@/lib/dal";
+import { notifyCrudMutation } from "@/lib/notifications";
 
 const createLeadSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -47,6 +48,13 @@ export async function POST(request: Request) {
       resource: "lead",
       resourceId: lead.id,
     },
+  });
+  await notifyCrudMutation({
+    organizationId: session.organizationId,
+    actorId: session.userId,
+    resource: "leads",
+    action: "created",
+    record: lead,
   });
 
   return Response.json({ lead: { ...lead, value: Number(lead.value) } }, { status: 201 });

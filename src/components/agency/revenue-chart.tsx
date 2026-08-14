@@ -10,16 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-const data = [
-  { month: "Mar", revenue: 38, target: 42 },
-  { month: "Apr", revenue: 46, target: 44 },
-  { month: "May", revenue: 43, target: 47 },
-  { month: "Jun", revenue: 58, target: 50 },
-  { month: "Jul", revenue: 63, target: 54 },
-  { month: "Aug", revenue: 71, target: 58 },
-];
-
-export function RevenueChart() {
+export function RevenueChart({ data }: { data: Array<{ month: string; revenue: number; target: number }> }) {
   return (
     <div className="h-[220px] w-full">
       <ResponsiveContainer width="100%" height="100%">

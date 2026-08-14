@@ -3,6 +3,7 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { hasTrustedMutationOrigin } from "@/lib/dal";
 import { db } from "@/lib/db";
+import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import {
   availableDays,
   bookingSlotKey,
@@ -218,6 +219,36 @@ export async function POST(request: Request) {
 
     const managePath = createBookingManagePath(event.id);
     const bookingToken = new URL(managePath, "https://mwlabs.digital").searchParams.get("booking");
+    const meetingTime = new Intl.DateTimeFormat("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: parsed.data.timezone,
+      timeZoneName: "short",
+    }).format(event.startAt);
+    await notifyOrganization({
+      organizationId: organization.id,
+      category: "booking",
+      type: "booking.created",
+      title: "New meeting booked",
+      message: `${parsed.data.name} booked ${event.title} for ${meetingTime}.`,
+      actionUrl: "/app/calendar",
+      resource: "calendar-events",
+      resourceId: event.id,
+    });
+    await queueWorkflowEmail({
+      organizationId: bookingType.organizationId,
+      to: normalizedEmail,
+      recipientName: parsed.data.name,
+      title: `Confirmed: ${event.title}`,
+      message: `Your meeting is confirmed for ${meetingTime}. Reference: ${event.bookingReference}.${event.location ? ` Location: ${event.location}.` : ""}`,
+      actionLabel: "Manage your booking",
+      actionUrl: managePath,
+      idempotencyKey: `booking-confirmed-${event.id}`,
+    });
     return Response.json({
       booking: { ...event, startAt: event.startAt.toISOString(), endAt: event.endAt?.toISOString() ?? null },
       managePath,

@@ -7,12 +7,22 @@ import { organization } from "better-auth/plugins";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
+import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import { ensureSchedulingDefaults } from "@/lib/scheduling";
 import { seedWorkspace } from "@/lib/seed-workspace";
 
 const googleEnabled = Boolean(
   process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
 );
+
+async function recordOrganizationActivity({ organizationId, actorId, action, resource, resourceId, title, message }: { organizationId: string; actorId?: string | null; action: string; resource: string; resourceId?: string | null; title: string; message: string }) {
+  try {
+    await db.auditLog.create({ data: { organizationId, userId: actorId || null, action, resource, resourceId: resourceId || null } });
+    await notifyOrganization({ organizationId, actorId, category: "system", type: action, title, message, actionUrl: "/app/team", resource, resourceId });
+  } catch (error) {
+    console.error(`Could not record ${action}`, error);
+  }
+}
 
 export const auth = betterAuth({
   appName: "M&W Command",
@@ -105,13 +115,45 @@ export const auth = betterAuth({
         maximumTeams: 20,
       },
       invitationExpiresIn: 60 * 60 * 48,
-      requireEmailVerificationOnInvitation: true,
+      requireEmailVerificationOnInvitation: false,
+      sendInvitationEmail: async ({ id, email, organization: invitedOrganization, inviter }) => {
+        const title = `Join ${invitedOrganization.name} in M&W Command`;
+        const message = `${inviter.user.name} invited you to collaborate in the ${invitedOrganization.name} agency workspace. This invitation expires in 48 hours.`;
+        await queueWorkflowEmail({
+          organizationId: invitedOrganization.id,
+          to: email,
+          recipientName: null,
+          title,
+          message,
+          actionLabel: "Accept invitation",
+          actionUrl: `/invite/${encodeURIComponent(id)}`,
+          idempotencyKey: `organization-invitation-${id}`,
+        });
+      },
       organizationHooks: {
         afterCreateOrganization: async ({ organization: created }) => {
           await ensureSchedulingDefaults(created.id);
           if (process.env.SEED_DEMO_DATA === "true") {
             await seedWorkspace(created.id);
           }
+        },
+        afterCreateInvitation: async ({ invitation, inviter, organization: invitationOrganization }) => {
+          await recordOrganizationActivity({ organizationId: invitationOrganization.id, actorId: inviter.id, action: "team.invitation.created", resource: "invitation", resourceId: invitation.id, title: "Team invitation created", message: `${inviter.name} invited ${invitation.email} as ${invitation.role}.` });
+        },
+        afterAcceptInvitation: async ({ invitation, user, organization: invitationOrganization }) => {
+          await recordOrganizationActivity({ organizationId: invitationOrganization.id, actorId: user.id, action: "team.invitation.accepted", resource: "member", resourceId: user.id, title: "New workspace member", message: `${user.name} accepted the invitation and joined as ${invitation.role}.` });
+        },
+        afterUpdateMemberRole: async ({ member, previousRole, user, organization: memberOrganization }) => {
+          await recordOrganizationActivity({ organizationId: memberOrganization.id, actorId: user.id, action: "team.member.role_updated", resource: "member", resourceId: member.id, title: "Member role updated", message: `${user.name} changed a member role from ${previousRole} to ${member.role}.` });
+        },
+        afterRemoveMember: async ({ member, user, organization: memberOrganization }) => {
+          await recordOrganizationActivity({ organizationId: memberOrganization.id, actorId: user.id, action: "team.member.removed", resource: "member", resourceId: member.id, title: "Workspace member removed", message: `${user.name} removed a member from the workspace.` });
+        },
+        afterCreateTeam: async ({ team, user, organization: teamOrganization }) => {
+          await recordOrganizationActivity({ organizationId: teamOrganization.id, actorId: user?.id, action: "team.created", resource: "team", resourceId: team.id, title: "Delivery team created", message: `${user?.name || "A workspace owner"} created ${team.name}.` });
+        },
+        afterDeleteTeam: async ({ team, user, organization: teamOrganization }) => {
+          await recordOrganizationActivity({ organizationId: teamOrganization.id, actorId: user?.id, action: "team.deleted", resource: "team", resourceId: team.id, title: "Delivery team removed", message: `${user?.name || "A workspace owner"} removed ${team.name}.` });
         },
       },
     }),

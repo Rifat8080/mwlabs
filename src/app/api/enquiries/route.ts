@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { db } from "@/lib/db";
+import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import { createLeadBookingPath } from "@/lib/scheduling";
 
 const enquirySchema = z.object({
@@ -96,8 +97,30 @@ export async function POST(request: Request) {
     }),
   ]);
 
+  const bookingPath = createLeadBookingPath(lead.id);
+  await notifyOrganization({
+    organizationId: organization.id,
+    category: "activity",
+    type: "enquiry.received",
+    title: "New website enquiry",
+    message: `${parsed.data.name} from ${parsed.data.company || "an individual enquiry"} asked about ${parsed.data.service}.`,
+    actionUrl: "/app/leads",
+    resource: "leads",
+    resourceId: lead.id,
+  });
+  await queueWorkflowEmail({
+    organizationId: organization.id,
+    to: parsed.data.email.toLowerCase(),
+    recipientName: parsed.data.name,
+    title: "We received your M&W Labs enquiry",
+    message: `Thanks for telling us about your ${parsed.data.service} project. Your brief is securely in our workflow, and you can choose a discovery time now if you are ready.`,
+    actionLabel: "Choose a discovery time",
+    actionUrl: bookingPath,
+    idempotencyKey: `enquiry-received-${lead.id}`,
+  });
+
   return Response.json({
     received: true,
-    bookingPath: createLeadBookingPath(lead.id),
+    bookingPath,
   }, { status: 201 });
 }

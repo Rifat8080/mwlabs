@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { requireApiSession } from "@/lib/dal";
 import { db } from "@/lib/db";
+import { notifyOrganization } from "@/lib/notifications";
 import { isValidTimezone } from "@/lib/scheduling";
 
 const optionalText = (max: number) => z.preprocess((value) => value === "" ? null : value, z.string().trim().max(max).nullable().optional());
@@ -68,6 +69,7 @@ export async function POST(request: Request) {
   try {
     const bookingType = await db.bookingType.create({ data: { organizationId: session.organizationId, ...parsed.data.data } });
     await db.auditLog.create({ data: { organizationId: session.organizationId, userId: session.userId, action: "scheduler.type.created", resource: "booking_type", resourceId: bookingType.id } });
+    await notifyOrganization({ organizationId: session.organizationId, actorId: session.userId, category: "crud", type: "scheduler.type.created", title: "Meeting type created", message: `${bookingType.title} is now available in scheduling settings.`, actionUrl: "/app/scheduling", resource: "booking_type", resourceId: bookingType.id });
     return Response.json({ bookingType }, { status: 201 });
   } catch (error) {
     return errorResponse(error);
@@ -102,6 +104,17 @@ export async function PATCH(request: Request) {
       });
       return bookingType;
     });
+    await notifyOrganization({
+      organizationId: session.organizationId,
+      actorId: session.userId,
+      category: "crud",
+      type: parsed.data.availability && !parsed.data.data ? "scheduler.availability.updated" : "scheduler.type.updated",
+      title: parsed.data.availability && !parsed.data.data ? "Availability updated" : "Meeting type updated",
+      message: parsed.data.availability && !parsed.data.data ? "The weekly booking schedule was updated." : `${result?.title || "A meeting type"} was updated.`,
+      actionUrl: "/app/scheduling",
+      resource: result ? "booking_type" : "availability",
+      resourceId: result?.id ?? session.organizationId,
+    });
     return Response.json({ bookingType: result, saved: true });
   } catch (error) {
     return errorResponse(error);
@@ -114,7 +127,7 @@ export async function DELETE(request: Request) {
   if (!canManage(session.role)) return Response.json({ error: "Only owners and administrators can change scheduling settings." }, { status: 403 });
   const parsed = deleteSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Invalid meeting type." }, { status: 400 });
-  const existing = await db.bookingType.findFirst({ where: { id: parsed.data.id, organizationId: session.organizationId }, select: { id: true } });
+  const existing = await db.bookingType.findFirst({ where: { id: parsed.data.id, organizationId: session.organizationId }, select: { id: true, title: true } });
   if (!existing) return Response.json({ error: "Meeting type not found." }, { status: 404 });
   const count = await db.bookingType.count({ where: { organizationId: session.organizationId } });
   if (count <= 1) return Response.json({ error: "Keep at least one meeting type. You can deactivate it instead." }, { status: 409 });
@@ -122,5 +135,6 @@ export async function DELETE(request: Request) {
     db.bookingType.delete({ where: { id: existing.id } }),
     db.auditLog.create({ data: { organizationId: session.organizationId, userId: session.userId, action: "scheduler.type.deleted", resource: "booking_type", resourceId: existing.id } }),
   ]);
+  await notifyOrganization({ organizationId: session.organizationId, actorId: session.userId, category: "crud", type: "scheduler.type.deleted", title: "Meeting type deleted", message: `${existing.title} was removed from scheduling.`, actionUrl: "/app/scheduling", resource: "booking_type", resourceId: existing.id });
   return Response.json({ deleted: true });
 }

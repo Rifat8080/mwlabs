@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Bell,
   BookOpenText,
   BrainCircuit,
   BriefcaseBusiness,
+  Building2,
   CalendarCheck2,
   CalendarDays,
   ChartNoAxesCombined,
@@ -23,20 +23,30 @@ import {
   Handshake,
   Inbox,
   Library,
+  LogOut,
   Menu,
-  PanelLeftClose,
   PanelsTopLeft,
   Search,
   Settings,
   Sparkles,
+  UserRound,
   UsersRound,
   X,
   Zap,
 } from "lucide-react";
 
 import { Logo } from "@/components/logo";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { NotificationsBell } from "@/components/agency/notifications";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -47,7 +57,7 @@ const navigation = [
     items: [
       { label: "Overview", href: "/app", icon: Gauge },
       { label: "M&W AI", href: "/app/ai", icon: BrainCircuit, badge: "⌘ J" },
-      { label: "Inbox", href: "/app/inbox", icon: Inbox, badge: "8" },
+      { label: "Inbox", href: "/app/inbox", icon: Inbox },
     ],
   },
   {
@@ -107,11 +117,80 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+type AccountMenuProps = {
+  user: AgencyShellProps["user"];
+  organization: AgencyShellProps["organization"];
+  role: string;
+  placement: "header" | "sidebar";
+  onNavigate: (href: string) => void;
+  onLogout: () => Promise<void>;
+};
+
+function AccountMenu({ user, organization, role, placement, onNavigate, onLogout }: AccountMenuProps) {
+  const header = placement === "header";
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={header ? (
+          <button type="button" className="group flex h-10 items-center gap-1 rounded-full pl-0.5 pr-1 outline-none transition hover:bg-blue-50 focus-visible:ring-3 focus-visible:ring-blue-200" aria-label="Open profile menu">
+            <Avatar className="size-9 ring-2 ring-blue-100 transition group-hover:ring-blue-200">
+              {user.image && <AvatarImage src={user.image} alt="" />}
+              <AvatarFallback className="bg-brand-navy text-[10px] text-white">{initials(user.name)}</AvatarFallback>
+            </Avatar>
+            <ChevronDown className="hidden size-3.5 text-slate-400 transition group-data-popup-open:rotate-180 sm:block" />
+          </button>
+        ) : (
+          <button type="button" className="group flex w-full items-center gap-3 rounded-xl p-2 text-left outline-none transition hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-sidebar-ring">
+            <Avatar className="size-8">
+              {user.image && <AvatarImage src={user.image} alt="" />}
+              <AvatarFallback className="bg-white/10 text-[11px] text-white">{initials(user.name)}</AvatarFallback>
+            </Avatar>
+            <span className="min-w-0 flex-1"><span className="block truncate text-xs font-semibold text-white">{user.name}</span><span className="block text-[10px] capitalize text-white/35">{role} account</span></span>
+            <ChevronDown className="size-3.5 text-white/35 transition group-data-popup-open:rotate-180" />
+          </button>
+        )}
+      />
+      <DropdownMenuContent align={header ? "end" : "start"} side={header ? "bottom" : "top"} sideOffset={header ? 8 : 10} className="w-[min(19rem,calc(100vw-1rem))] rounded-2xl border-blue-100 p-2 shadow-[0_18px_55px_rgba(1,22,69,0.18)]">
+        <DropdownMenuLabel className="p-2.5 font-normal">
+          <div className="flex items-center gap-3">
+            <Avatar className="size-10 ring-2 ring-blue-100">
+              {user.image && <AvatarImage src={user.image} alt="" />}
+              <AvatarFallback className="bg-brand-navy text-xs font-semibold text-white">{initials(user.name)}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-foreground">{user.name}</p><p className="truncate text-[11px] text-muted-foreground">{user.email}</p></div>
+            <span className="rounded-full bg-blue-50 px-2 py-1 text-[9px] font-semibold capitalize text-blue-700">{role}</span>
+          </div>
+          <div className="mt-3 flex items-center gap-2 rounded-xl bg-muted/40 px-3 py-2"><span className="grid size-7 place-items-center rounded-lg bg-white font-semibold text-blue-700 shadow-sm">{organization.name[0]?.toUpperCase()}</span><span className="min-w-0"><span className="block truncate text-[11px] font-semibold text-foreground">{organization.name}</span><span className="block truncate text-[9px] text-muted-foreground">{organization.slug}</span></span></div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => onNavigate("/app/settings")}><UserRound className="size-4 text-blue-600" />Account &amp; workspace</DropdownMenuItem>
+        <DropdownMenuItem className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => onNavigate("/app/team")}><UsersRound className="size-4 text-violet-600" />Team &amp; permissions</DropdownMenuItem>
+        <DropdownMenuItem className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => onNavigate("/app/inbox")}><Inbox className="size-4 text-orange-600" />Notification preferences</DropdownMenuItem>
+        <DropdownMenuItem className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => onNavigate("/")}><Building2 className="size-4 text-cyan-700" />View agency website</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive" className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => void onLogout()}><LogOut className="size-4" />Sign out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function AgencyShell({ children, user, organization, role }: AgencyShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [commandQuery, setCommandQuery] = useState("");
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const allNavigation = navigation.flatMap((group) => group.items);
+  const currentPage = [...allNavigation]
+    .sort((a, b) => b.href.length - a.href.length)
+    .find((item) => item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href));
+  const mobileNavigation = [
+    allNavigation.find((item) => item.href === "/app"),
+    allNavigation.find((item) => item.href === "/app/leads"),
+    allNavigation.find((item) => item.href === "/app/tasks"),
+    allNavigation.find((item) => item.href === "/app/scheduling"),
+  ].filter((item): item is (typeof allNavigation)[number] => Boolean(item));
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -129,27 +208,38 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [router]);
 
+  useEffect(() => {
+    if (!mobileOpen && !commandOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [commandOpen, mobileOpen]);
+
   async function logout() {
     await authClient.signOut();
     router.push("/sign-in");
     router.refresh();
   }
 
+  function navigateAccount(href: string) {
+    setMobileOpen(false);
+    router.push(href);
+  }
+
   const sidebar = (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
-      <div className="flex h-17 items-center justify-between border-b border-sidebar-border px-5">
+      <div className="flex h-[4.5rem] items-center justify-between border-b border-sidebar-border px-5">
         <Logo href="/app" className="text-white" />
-        <PanelLeftClose className="hidden size-4 text-white/30 lg:block" />
-        <button className="lg:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X className="size-5" /></button>
+        <button className="grid size-9 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white xl:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X className="size-5" /></button>
       </div>
       <div className="border-b border-sidebar-border p-3">
-        <button className="flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-sidebar-accent">
+        <Link href="/app/settings" onClick={() => setMobileOpen(false)} className="flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-sidebar-accent">
           <span className="grid size-8 place-items-center rounded-lg bg-accent font-semibold text-accent-foreground">{organization.name[0]?.toUpperCase()}</span>
           <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-white">{organization.name}</span><span className="block truncate text-[11px] text-white/38">Agency workspace</span></span>
           <ChevronDown className="size-3.5 text-white/35" />
-        </button>
+        </Link>
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Agency workspace">
+      <nav className="admin-scrollbar flex-1 overflow-y-auto px-3 py-4" aria-label="Agency workspace">
         {navigation.map((group) => (
           <div key={group.label} className="mb-5">
             <p className="mb-1.5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/28">{group.label}</p>
@@ -157,11 +247,14 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
               {group.items.map((item) => {
                 const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);
                 const Icon = item.icon;
+                const badge = item.href === "/app/inbox"
+                  ? unreadNotifications > 0 ? unreadNotifications > 99 ? "99+" : String(unreadNotifications) : null
+                  : "badge" in item ? item.badge : null;
                 return (
-                  <Link onClick={() => setMobileOpen(false)} key={item.href} href={item.href} className={cn("group flex h-8.5 items-center gap-2.5 rounded-lg px-2.5 text-[13px] text-white/57 transition hover:bg-sidebar-accent hover:text-white", active && "bg-sidebar-accent text-white shadow-sm")}>
+                  <Link onClick={() => setMobileOpen(false)} key={item.href} href={item.href} className={cn("group flex min-h-10 items-center gap-2.5 rounded-xl px-2.5 text-[13px] text-white/60 transition hover:bg-sidebar-accent hover:text-white", active && "bg-sidebar-accent text-white shadow-[inset_3px_0_0_#02d1fa,0_8px_20px_rgba(0,0,0,0.12)]")}>
                     <Icon className={cn("size-4 text-white/38 group-hover:text-white/75", active && "text-accent")} />
                     <span className="flex-1">{item.label}</span>
-                    {item.badge && <span className={cn("text-[9px] text-white/28", item.label === "Inbox" && "grid min-w-5 place-items-center rounded-full bg-white/8 px-1 py-0.5 text-white/55")}>{item.badge}</span>}
+                    {badge && <span className={cn("text-[9px] text-white/28", item.label === "Inbox" && "grid min-w-5 place-items-center rounded-full bg-white/8 px-1 py-0.5 text-white/55")}>{badge}</span>}
                   </Link>
                 );
               })}
@@ -170,45 +263,53 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
         ))}
       </nav>
       <div className="border-t border-sidebar-border p-3">
-        <button onClick={logout} className="flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-sidebar-accent">
-          <Avatar className="size-8"><AvatarFallback className="bg-white/10 text-[11px] text-white">{initials(user.name)}</AvatarFallback></Avatar>
-          <span className="min-w-0 flex-1"><span className="block truncate text-xs font-semibold text-white">{user.name}</span><span className="block text-[10px] capitalize text-white/35">{role} · Sign out</span></span>
-        </button>
+        <AccountMenu user={user} organization={organization} role={role} placement="sidebar" onNavigate={navigateAccount} onLogout={logout} />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-svh bg-background">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[244px] lg:block">{sidebar}</aside>
-      {mobileOpen && <div className="fixed inset-0 z-50 lg:hidden"><button className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" /><aside className="relative h-full w-[284px] shadow-2xl">{sidebar}</aside></div>}
+    <div data-agency-shell className="min-h-svh bg-background">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[264px] xl:block">{sidebar}</aside>
+      {mobileOpen && <div className="fixed inset-0 z-50 xl:hidden"><button className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" /><aside className="relative h-full w-[min(88vw,320px)] shadow-2xl">{sidebar}</aside></div>}
 
-      <div className="lg:pl-[244px]">
-        <header className="sticky top-0 z-30 flex h-17 items-center gap-3 border-b bg-white/88 px-4 backdrop-blur-xl sm:px-6">
-          <button onClick={() => setMobileOpen(true)} className="grid size-9 place-items-center rounded-lg hover:bg-muted lg:hidden" aria-label="Open navigation"><Menu className="size-5" /></button>
-          <button onClick={() => setCommandOpen(true)} className="relative hidden w-full max-w-md items-center md:flex">
+      <div className="xl:pl-[264px]">
+        <header className="sticky top-0 z-30 flex h-[4.5rem] items-center gap-3 border-b border-blue-100/80 bg-white/90 px-3 shadow-[0_8px_30px_rgba(15,23,42,0.025)] backdrop-blur-xl sm:px-6">
+          <button onClick={() => setMobileOpen(true)} className="grid size-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 xl:hidden" aria-label="Open navigation"><Menu className="size-5" /></button>
+          <div className="min-w-0 md:hidden"><p className="truncate text-sm font-semibold tracking-[-0.02em]">{currentPage?.label ?? "Workspace"}</p><p className="truncate text-[9px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">{organization.name}</p></div>
+          <button onClick={() => { setCommandQuery(""); setCommandOpen(true); }} className="relative hidden w-full max-w-md items-center md:flex">
             <Search className="absolute left-3 size-4 text-muted-foreground" />
-            <Input readOnly placeholder="Search clients, projects, anything…" className="h-9 cursor-pointer bg-muted/65 pl-9 pr-14 text-xs" />
+            <Input readOnly placeholder="Jump to a workspace…" className="h-10 cursor-pointer border-blue-100 bg-blue-50/55 pl-9 pr-14 text-xs shadow-none" />
             <kbd className="absolute right-2.5 rounded border bg-white px-1.5 py-0.5 font-mono text-[9px] text-muted-foreground">⌘ K</kbd>
           </button>
           <div className="ml-auto flex items-center gap-1.5">
-            <Button nativeButton={false} render={<Link href="/app/ai" />} variant="ghost" className="hidden h-9 gap-2 rounded-full bg-brand-surface px-3 text-xs text-primary hover:bg-blue-100 sm:inline-flex">
+            <button onClick={() => { setCommandQuery(""); setCommandOpen(true); }} className="grid size-10 place-items-center rounded-full text-muted-foreground transition hover:bg-blue-50 hover:text-blue-700 md:hidden" aria-label="Search workspaces"><Search className="size-4" /></button>
+            <Button nativeButton={false} render={<Link href="/app/ai" />} className="hidden h-10 gap-2 rounded-full border-0 bg-[linear-gradient(110deg,#155dfc,#0188ec_58%,#02b9e8)] px-4 text-xs text-white shadow-[0_10px_24px_rgba(21,93,252,0.22)] hover:-translate-y-0.5 hover:brightness-105 sm:inline-flex">
               <Sparkles className="size-3.5" /> Ask M&amp;W AI
             </Button>
-            <Button variant="ghost" size="icon" className="relative rounded-full"><Bell className="size-4" /><span className="absolute right-2 top-2 size-1.5 rounded-full bg-orange-500" /></Button>
-            <Avatar className="ml-1 size-8"><AvatarFallback className="bg-foreground text-[10px] text-background">{initials(user.name)}</AvatarFallback></Avatar>
+            <NotificationsBell onCountChange={setUnreadNotifications} />
+            <AccountMenu user={user} organization={organization} role={role} placement="header" onNavigate={navigateAccount} onLogout={logout} />
           </div>
         </header>
-        <main className="min-h-[calc(100svh-4.25rem)]">{children}</main>
+        <main className="min-h-[calc(100svh-4.5rem)] pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
       </div>
 
+      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 rounded-2xl border border-blue-100 bg-white/95 p-1.5 shadow-[0_18px_50px_rgba(1,22,69,0.18)] backdrop-blur-xl md:hidden" style={{ paddingBottom: "max(0.375rem, env(safe-area-inset-bottom))" }} aria-label="Mobile quick navigation">
+        {mobileNavigation.map((item) => {
+          const active = item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href);
+          return <Link key={item.href} href={item.href} className={cn("flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl text-[9px] font-semibold text-slate-500 transition", active && "bg-blue-50 text-blue-700")}><item.icon className={cn("size-4", active && "text-blue-600")} /><span>{item.label === "Scheduling" ? "Schedule" : item.label}</span></Link>;
+        })}
+        <button onClick={() => setMobileOpen(true)} className={cn("flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl text-[9px] font-semibold text-slate-500 transition", mobileOpen && "bg-blue-50 text-blue-700")}><Menu className="size-4" /><span>More</span></button>
+      </nav>
+
       {commandOpen && (
-        <div className="fixed inset-0 z-[70] grid place-items-start bg-black/20 px-4 pt-[12vh] backdrop-blur-sm" onMouseDown={() => setCommandOpen(false)}>
-          <div className="w-full max-w-xl overflow-hidden rounded-2xl border bg-white shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
-            <div className="flex items-center gap-3 border-b px-4"><Search className="size-4 text-muted-foreground" /><input autoFocus className="h-14 flex-1 bg-transparent text-sm outline-none" placeholder="Jump to a workspace…" /></div>
-            <div className="p-2">
-              <p className="px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">Quick access</p>
-              {navigation.flatMap((group) => group.items).slice(0, 8).map((item) => <Link onClick={() => setCommandOpen(false)} key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-muted"><item.icon className="size-4 text-muted-foreground" />{item.label}</Link>)}
+        <div className="fixed inset-0 z-[70] flex items-end bg-slate-950/35 p-2 backdrop-blur-sm sm:grid sm:place-items-start sm:px-4 sm:pt-[12vh]" onMouseDown={() => setCommandOpen(false)}>
+          <div className="max-h-[78svh] w-full overflow-hidden rounded-2xl border bg-white shadow-2xl sm:max-w-xl" onMouseDown={(event) => event.stopPropagation()}>
+            <div className="flex items-center gap-3 border-b px-4"><Search className="size-4 text-muted-foreground" /><input autoFocus value={commandQuery} onChange={(event) => setCommandQuery(event.target.value)} className="h-14 flex-1 bg-transparent text-sm outline-none" placeholder="Jump to a workspace…" /></div>
+            <div className="admin-scrollbar max-h-[calc(78svh-3.5rem)] overflow-y-auto p-2">
+              <p className="px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">{commandQuery ? "Matching workspaces" : "Quick access"}</p>
+              {allNavigation.filter((item) => item.label.toLowerCase().includes(commandQuery.trim().toLowerCase())).slice(0, commandQuery ? 20 : 8).map((item) => <Link onClick={() => setCommandOpen(false)} key={item.href} href={item.href} className="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition hover:bg-blue-50 hover:text-blue-700"><span className="grid size-8 place-items-center rounded-lg bg-muted"><item.icon className="size-4 text-muted-foreground" /></span>{item.label}</Link>)}
+              {navigation.flatMap((group) => group.items).filter((item) => item.label.toLowerCase().includes(commandQuery.trim().toLowerCase())).length === 0 && <p className="px-3 py-8 text-center text-xs text-muted-foreground">No workspace matches “{commandQuery}”.</p>}
             </div>
           </div>
         </div>

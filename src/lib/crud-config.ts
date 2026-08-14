@@ -105,7 +105,7 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "sentAt", label: "Sent at", type: "date" },
       { key: "acceptedAt", label: "Accepted at", type: "date" },
     ],
-    columns: [{ key: "title", label: "Proposal" }, { key: "status", label: "Status" }, { key: "amount", label: "Value", format: "currency" }, { key: "validUntil", label: "Valid until", format: "date" }, { key: "sentAt", label: "Sent", format: "date" }],
+    columns: [{ key: "title", label: "Proposal" }, { key: "leadId", label: "Lead" }, { key: "clientId", label: "Client" }, { key: "status", label: "Status" }, { key: "amount", label: "Value", format: "currency" }, { key: "validUntil", label: "Valid until", format: "date" }, { key: "sentAt", label: "Sent", format: "date" }],
   },
   contracts: {
     resource: "contracts",
@@ -120,7 +120,7 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "endDate", label: "End date", type: "date" },
       { key: "signedAt", label: "Signed at", type: "date" },
     ],
-    columns: [{ key: "title", label: "Agreement" }, { key: "status", label: "Status" }, { key: "value", label: "Value", format: "currency" }, { key: "startDate", label: "Starts", format: "date" }, { key: "endDate", label: "Ends", format: "date" }],
+    columns: [{ key: "title", label: "Agreement" }, { key: "clientId", label: "Client" }, { key: "status", label: "Status" }, { key: "value", label: "Value", format: "currency" }, { key: "startDate", label: "Starts", format: "date" }, { key: "endDate", label: "Ends", format: "date" }],
   },
   projects: {
     resource: "projects",
@@ -137,7 +137,7 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "startDate", label: "Start date", type: "date" },
       { key: "dueDate", label: "Due date", type: "date" },
     ],
-    columns: [{ key: "name", label: "Project" }, { key: "code", label: "Code" }, { key: "status", label: "Status" }, { key: "progress", label: "Progress", format: "percent" }, { key: "budget", label: "Budget", format: "currency" }, { key: "managerName", label: "Manager" }, { key: "dueDate", label: "Due", format: "date" }],
+    columns: [{ key: "name", label: "Project" }, { key: "clientId", label: "Client" }, { key: "code", label: "Code" }, { key: "status", label: "Status" }, { key: "progress", label: "Progress", format: "percent" }, { key: "budget", label: "Budget", format: "currency" }, { key: "managerName", label: "Manager" }, { key: "dueDate", label: "Due", format: "date" }],
   },
   tasks: {
     resource: "tasks",
@@ -146,13 +146,13 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "title", label: "Task title", type: "text", required: true },
       { key: "description", label: "Description", type: "textarea" },
       { key: "projectId", label: "Project", type: "relation", relationResource: "projects" },
+      { key: "assigneeId", label: "Assignee", type: "relation", relationResource: "members" },
       { key: "status", label: "Status", type: "select", options: ["Backlog", "Today", "In progress", "Review", "Done"], required: true },
       { key: "priority", label: "Priority", type: "select", options: ["Low", "Medium", "High", "Urgent"], required: true },
       { key: "dueDate", label: "Due date", type: "date" },
       { key: "estimatedMinutes", label: "Estimated minutes", type: "number", min: 0 },
-      { key: "trackedMinutes", label: "Tracked minutes", type: "number", min: 0 },
     ],
-    columns: [{ key: "title", label: "Task" }, { key: "status", label: "Status" }, { key: "priority", label: "Priority" }, { key: "dueDate", label: "Due", format: "date" }, { key: "estimatedMinutes", label: "Estimate" }, { key: "trackedMinutes", label: "Tracked" }],
+    columns: [{ key: "title", label: "Task" }, { key: "projectId", label: "Project" }, { key: "assigneeId", label: "Assignee" }, { key: "status", label: "Status" }, { key: "priority", label: "Priority" }, { key: "dueDate", label: "Due", format: "date" }, { key: "estimatedMinutes", label: "Estimate" }, { key: "trackedMinutes", label: "Tracked" }],
   },
   calendar: {
     resource: "calendar-events",
@@ -186,7 +186,7 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "hourlyRate", label: "Hourly rate", type: "number", min: 0, step: 1 },
       { key: "date", label: "Date", type: "date", required: true },
     ],
-    columns: [{ key: "description", label: "Entry" }, { key: "date", label: "Date", format: "date" }, { key: "minutes", label: "Minutes" }, { key: "billable", label: "Billable", format: "boolean" }, { key: "hourlyRate", label: "Rate", format: "currency" }],
+    columns: [{ key: "description", label: "Entry" }, { key: "projectId", label: "Project" }, { key: "taskId", label: "Task" }, { key: "date", label: "Date", format: "date" }, { key: "minutes", label: "Minutes" }, { key: "billable", label: "Billable", format: "boolean" }, { key: "hourlyRate", label: "Rate", format: "currency" }],
   },
   finance: {
     resource: "invoices",
@@ -196,15 +196,14 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "clientId", label: "Client", type: "relation", relationResource: "clients", required: true },
       { key: "projectId", label: "Project", type: "relation", relationResource: "projects" },
       { key: "status", label: "Status", type: "select", options: ["Draft", "Sent", "Paid", "Overdue", "Void"], required: true },
-      { key: "currency", label: "Currency", type: "select", options: ["GBP", "USD", "EUR", "BDT"], required: true },
+      { key: "currency", label: "Currency", type: "select", options: ["USD", "GBP", "EUR", "BDT"], required: true },
       { key: "subtotal", label: "Subtotal", type: "number", min: 0, step: 1, required: true },
       { key: "tax", label: "Tax", type: "number", min: 0, step: 1 },
-      { key: "total", label: "Total", type: "number", min: 0, step: 1, required: true },
       { key: "issuedAt", label: "Issued", type: "date" },
       { key: "dueDate", label: "Due", type: "date" },
       { key: "paidAt", label: "Paid", type: "date" },
     ],
-    columns: [{ key: "number", label: "Invoice" }, { key: "status", label: "Status" }, { key: "currency", label: "Currency" }, { key: "total", label: "Total", format: "currency" }, { key: "issuedAt", label: "Issued", format: "date" }, { key: "dueDate", label: "Due", format: "date" }],
+    columns: [{ key: "number", label: "Invoice" }, { key: "clientId", label: "Client" }, { key: "projectId", label: "Project" }, { key: "status", label: "Status" }, { key: "currency", label: "Currency" }, { key: "total", label: "Total", format: "currency" }, { key: "issuedAt", label: "Issued", format: "date" }, { key: "dueDate", label: "Due", format: "date" }],
   },
   team: {
     resource: "teams",
@@ -223,18 +222,16 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
       { key: "clientId", label: "Client", type: "relation", relationResource: "clients" },
       { key: "projectId", label: "Project", type: "relation", relationResource: "projects" },
     ],
-    columns: [{ key: "name", label: "Document" }, { key: "type", label: "Type" }, { key: "version", label: "Version" }, { key: "url", label: "Location" }, { key: "createdAt", label: "Created", format: "date" }],
+    columns: [{ key: "name", label: "Document" }, { key: "type", label: "Type" }, { key: "clientId", label: "Client" }, { key: "projectId", label: "Project" }, { key: "version", label: "Version" }, { key: "url", label: "Location" }, { key: "createdAt", label: "Created", format: "date" }],
   },
   automations: {
     resource: "automations",
     singular: "automation",
     fields: [
       { key: "name", label: "Automation name", type: "text", required: true },
-      { key: "trigger", label: "Trigger", type: "text", required: true },
-      { key: "action", label: "Action", type: "textarea", required: true },
+      { key: "trigger", label: "Trigger", type: "select", options: ["lead.created", "lead.won", "proposal.accepted", "contract.signed", "task.completed", "invoice.overdue", "invoice.paid", "record.created"], required: true },
+      { key: "action", label: "Action", type: "select", options: ["notify.owners", "create.follow_up_activity"], required: true },
       { key: "enabled", label: "Enabled", type: "checkbox", checkboxLabel: "Run this automation", defaultChecked: true },
-      { key: "runCount", label: "Run count", type: "number", min: 0 },
-      { key: "lastRunAt", label: "Last run", type: "date" },
     ],
     columns: [{ key: "name", label: "Automation" }, { key: "trigger", label: "Trigger" }, { key: "action", label: "Action" }, { key: "enabled", label: "Enabled", format: "boolean" }, { key: "runCount", label: "Runs" }, { key: "lastRunAt", label: "Last run", format: "date" }],
   },
@@ -309,6 +306,90 @@ export const crudModuleConfigs: Partial<Record<string, CrudUiConfig>> = {
     ],
     columns: [{ key: "title", label: "Page" }, { key: "status", label: "Status" }, { key: "slug", label: "URL" }, { key: "primaryKeyword", label: "Primary keyword" }, { key: "noIndex", label: "No index", format: "boolean" }, { key: "updatedAt", label: "Updated", format: "date" }],
   },
+};
+
+const expenseConfig: CrudUiConfig = {
+  resource: "expenses",
+  singular: "expense",
+  fields: [
+    { key: "category", label: "Category", type: "text", required: true },
+    { key: "vendor", label: "Vendor", type: "text", required: true },
+    { key: "description", label: "Description", type: "textarea" },
+    { key: "amount", label: "Amount", type: "number", min: 0, step: 0.01, required: true },
+    { key: "status", label: "Status", type: "select", options: ["Pending", "Approved", "Paid", "Rejected"], required: true },
+    { key: "incurredAt", label: "Incurred", type: "date", required: true },
+  ],
+  columns: [{ key: "vendor", label: "Vendor" }, { key: "category", label: "Category" }, { key: "status", label: "Status" }, { key: "amount", label: "Amount", format: "currency" }, { key: "incurredAt", label: "Incurred", format: "date" }],
+};
+
+const retainerConfig: CrudUiConfig = {
+  resource: "retainers",
+  singular: "retainer",
+  fields: [
+    { key: "clientId", label: "Client", type: "relation", relationResource: "clients", required: true },
+    { key: "name", label: "Retainer name", type: "text", required: true },
+    { key: "status", label: "Status", type: "select", options: ["Active", "Paused", "Ending", "Ended"], required: true },
+    { key: "monthlyValue", label: "Monthly value", type: "number", min: 0, step: 0.01, required: true },
+    { key: "includedHours", label: "Included hours", type: "number", min: 0 },
+    { key: "renewalDate", label: "Renewal date", type: "date" },
+  ],
+  columns: [{ key: "name", label: "Retainer" }, { key: "clientId", label: "Client" }, { key: "status", label: "Status" }, { key: "monthlyValue", label: "Monthly value", format: "currency" }, { key: "includedHours", label: "Included hours" }, { key: "renewalDate", label: "Renewal", format: "date" }],
+};
+
+const invoiceItemConfig: CrudUiConfig = {
+  resource: "invoice-items",
+  singular: "invoice line item",
+  fields: [
+    { key: "invoiceId", label: "Invoice", type: "relation", relationResource: "invoices", required: true },
+    { key: "description", label: "Description", type: "text", required: true },
+    { key: "quantity", label: "Quantity", type: "number", min: 0.01, step: 0.01, required: true },
+    { key: "unitPrice", label: "Unit price", type: "number", min: 0, step: 0.01, required: true },
+  ],
+  columns: [{ key: "description", label: "Line item" }, { key: "invoiceId", label: "Invoice" }, { key: "quantity", label: "Quantity" }, { key: "unitPrice", label: "Unit price", format: "currency" }, { key: "total", label: "Total", format: "currency" }],
+};
+
+const paymentConfig: CrudUiConfig = {
+  resource: "payments",
+  singular: "payment",
+  fields: [
+    { key: "invoiceId", label: "Invoice", type: "relation", relationResource: "invoices", required: true },
+    { key: "amount", label: "Amount", type: "number", min: 0.01, step: 0.01, required: true },
+    { key: "method", label: "Payment method", type: "text", placeholder: "Bank transfer" },
+    { key: "reference", label: "Reference", type: "text" },
+    { key: "processedAt", label: "Processed", type: "date" },
+  ],
+  columns: [{ key: "reference", label: "Reference" }, { key: "invoiceId", label: "Invoice" }, { key: "method", label: "Method" }, { key: "amount", label: "Amount", format: "currency" }, { key: "processedAt", label: "Processed", format: "date" }],
+};
+
+const milestoneConfig: CrudUiConfig = {
+  resource: "milestones",
+  singular: "milestone",
+  fields: [
+    { key: "projectId", label: "Project", type: "relation", relationResource: "projects", required: true },
+    { key: "name", label: "Milestone", type: "text", required: true },
+    { key: "status", label: "Status", type: "select", options: ["Upcoming", "In progress", "Review", "Complete", "Blocked"], required: true },
+    { key: "progress", label: "Progress", type: "number", min: 0, max: 100 },
+    { key: "dueDate", label: "Due date", type: "date" },
+  ],
+  columns: [{ key: "name", label: "Milestone" }, { key: "projectId", label: "Project" }, { key: "status", label: "Status" }, { key: "progress", label: "Progress", format: "percent" }, { key: "dueDate", label: "Due", format: "date" }],
+};
+
+const knowledgeConfig: CrudUiConfig = {
+  resource: "knowledge",
+  singular: "knowledge item",
+  fields: [
+    { key: "title", label: "Title", type: "text", required: true },
+    { key: "content", label: "Approved knowledge", type: "textarea", rows: 12, required: true },
+    { key: "source", label: "Source", type: "text" },
+    { key: "tags", label: "Tags", type: "text", placeholder: "pricing, delivery, policy" },
+  ],
+  columns: [{ key: "title", label: "Knowledge" }, { key: "source", label: "Source" }, { key: "tags", label: "Tags" }, { key: "updatedAt", label: "Updated", format: "date" }],
+};
+
+export const crudWorkspaceViews: Partial<Record<string, CrudUiConfig[]>> = {
+  projects: [crudModuleConfigs.projects!, milestoneConfig],
+  finance: [crudModuleConfigs.finance!, invoiceItemConfig, paymentConfig, expenseConfig, retainerConfig],
+  documents: [crudModuleConfigs.documents!, knowledgeConfig],
 };
 
 export const genericStatusOptions = statusOptions;
