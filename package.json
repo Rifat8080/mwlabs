@@ -12,6 +12,7 @@
     "security:secrets": "node scripts/check-secrets.mjs",
     "security:check": "npm run security:secrets && npm audit --audit-level=high",
     "jobs:smoke": "node --env-file=.env scripts/test-background-jobs.mjs",
+    "scale:smoke": "node --env-file=.env scripts/test-scale.mjs",
     "notifications:smoke": "node --env-file=.env scripts/test-notifications.mjs",
     "workflow:smoke": "node --env-file=.env scripts/test-agency-workflow.mjs",
     "db:generate": "prisma generate",

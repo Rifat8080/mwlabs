@@ -34,21 +34,24 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
-import { Logo } from "@/components/logo";
+// logo replaced with Image component for admin sidebar
 import { NotificationsBell } from "@/components/agency/notifications";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { useSession, signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -151,17 +154,19 @@ function AccountMenu({ user, organization, role, placement, onNavigate, onLogout
         )}
       />
       <DropdownMenuContent align={header ? "end" : "start"} side={header ? "bottom" : "top"} sideOffset={header ? 8 : 10} className="w-[min(19rem,calc(100vw-1rem))] rounded-2xl border-blue-100 p-2 shadow-[0_18px_55px_rgba(1,22,69,0.18)]">
-        <DropdownMenuLabel className="p-2.5 font-normal">
-          <div className="flex items-center gap-3">
-            <Avatar className="size-10 ring-2 ring-blue-100">
-              {user.image && <AvatarImage src={user.image} alt="" />}
-              <AvatarFallback className="bg-brand-navy text-xs font-semibold text-white">{initials(user.name)}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-foreground">{user.name}</p><p className="truncate text-[11px] text-muted-foreground">{user.email}</p></div>
-            <span className="rounded-full bg-blue-50 px-2 py-1 text-[9px] font-semibold capitalize text-blue-700">{role}</span>
-          </div>
-          <div className="mt-3 flex items-center gap-2 rounded-xl bg-muted/40 px-3 py-2"><span className="grid size-7 place-items-center rounded-lg bg-white font-semibold text-blue-700 shadow-sm">{organization.name[0]?.toUpperCase()}</span><span className="min-w-0"><span className="block truncate text-[11px] font-semibold text-foreground">{organization.name}</span><span className="block truncate text-[9px] text-muted-foreground">{organization.slug}</span></span></div>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="p-2.5 font-normal">
+            <div className="flex items-center gap-3">
+              <Avatar className="size-10 ring-2 ring-blue-100">
+                {user.image && <AvatarImage src={user.image} alt="" />}
+                <AvatarFallback className="bg-brand-navy text-xs font-semibold text-white">{initials(user.name)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-foreground">{user.name}</p><p className="truncate text-[11px] text-muted-foreground">{user.email}</p></div>
+              <span className="rounded-full bg-blue-50 px-2 py-1 text-[9px] font-semibold capitalize text-blue-700">{role}</span>
+            </div>
+            <div className="mt-3 flex items-center gap-2 rounded-xl bg-muted/40 px-3 py-2"><span className="grid size-7 place-items-center rounded-lg bg-white font-semibold text-blue-700 shadow-sm">{organization.name[0]?.toUpperCase()}</span><span className="min-w-0"><span className="block truncate text-[11px] font-semibold text-foreground">{organization.name}</span><span className="block truncate text-[9px] text-muted-foreground">{organization.slug}</span></span></div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => onNavigate("/app/settings")}><UserRound className="size-4 text-blue-600" />Account &amp; workspace</DropdownMenuItem>
         <DropdownMenuItem className="min-h-10 cursor-pointer rounded-xl px-3" onClick={() => onNavigate("/app/team")}><UsersRound className="size-4 text-violet-600" />Team &amp; permissions</DropdownMenuItem>
@@ -178,6 +183,9 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [savedPref, setSavedPref] = useState(false);
+  const session = useSession();
   const [commandOpen, setCommandOpen] = useState(false);
   const [commandQuery, setCommandQuery] = useState("");
   const [unreadNotifications, setUnreadNotifications] = useState(0);
@@ -215,10 +223,45 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
     return () => { document.body.style.overflow = previousOverflow; };
   }, [commandOpen, mobileOpen]);
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("mwlabs:sidebarCollapsed");
+      if (saved !== null) { setCollapsed(JSON.parse(saved)); setSavedPref(true); }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    function onResize() {
+      if (typeof window === "undefined") return;
+      const width = window.innerWidth;
+      // if user hasn't set a preference, auto-collapse on narrower large screens
+      if (!savedPref) setCollapsed(width < 1400);
+    }
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [savedPref]);
+
+  useEffect(() => {
+    if (session.isPending) return;
+    if (!session.data?.user) {
+      // avoid redirecting from public auth routes
+      if (!pathname.startsWith("/sign-in") && !pathname.startsWith("/register") && !pathname.startsWith("/invite") && !pathname.startsWith("/auth")) {
+        router.push("/sign-in");
+      }
+    }
+  }, [session, pathname, router]);
+
   async function logout() {
-    await authClient.signOut();
-    router.push("/sign-in");
-    router.refresh();
+    try {
+      await signOut();
+    } finally {
+      try { localStorage.removeItem("mwlabs:sidebarCollapsed"); } catch {}
+      router.push("/sign-in");
+      router.refresh();
+    }
   }
 
   function navigateAccount(href: string) {
@@ -228,21 +271,38 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
 
   const sidebar = (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
-      <div className="flex h-[4.5rem] items-center justify-between border-b border-sidebar-border px-5">
-        <Logo href="/app" className="text-white" />
-        <button className="grid size-9 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white xl:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X className="size-5" /></button>
+      <div className="flex h-[4.5rem] items-center justify-between border-b border-sidebar-border px-3">
+        <div className="flex items-center gap-3">
+          {collapsed ? (
+            <span className="rounded-md bg-white p-1">
+              <Image src="/mw-logo.png" alt="M&W Labs" width={28} height={28} />
+            </span>
+          ) : (
+            <Link href="/app" aria-label="M&W Labs home" className="inline-flex items-center gap-2.5 font-semibold text-white">
+              <span className="rounded-md bg-white p-1">
+                <Image src="/mw-logo.png" alt="M&W Labs" width={120} height={36} />
+              </span>
+            </Link>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => { const next = !collapsed; setCollapsed(next); setSavedPref(true); try { localStorage.setItem("mwlabs:sidebarCollapsed", JSON.stringify(next)); } catch {} }} className="hidden xl:inline-grid grid size-9 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white" aria-label="Toggle sidebar">
+            {collapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
+          </button>
+          <button className="grid size-9 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white xl:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X className="size-5" /></button>
+        </div>
       </div>
       <div className="border-b border-sidebar-border p-3">
-        <Link href="/app/settings" onClick={() => setMobileOpen(false)} className="flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-sidebar-accent">
+        <Link href="/app/settings" onClick={() => setMobileOpen(false)} className={cn("flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-sidebar-accent", collapsed && "justify-center") }>
           <span className="grid size-8 place-items-center rounded-lg bg-accent font-semibold text-accent-foreground">{organization.name[0]?.toUpperCase()}</span>
-          <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-white">{organization.name}</span><span className="block truncate text-[11px] text-white/38">Agency workspace</span></span>
+          {!collapsed && <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-white">{organization.name}</span><span className="block truncate text-[11px] text-white/38">Agency workspace</span></span>}
           <ChevronDown className="size-3.5 text-white/35" />
         </Link>
       </div>
       <nav className="admin-scrollbar flex-1 overflow-y-auto px-3 py-4" aria-label="Agency workspace">
         {navigation.map((group) => (
           <div key={group.label} className="mb-5">
-            <p className="mb-1.5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/28">{group.label}</p>
+            {!collapsed && <p className="mb-1.5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/28">{group.label}</p>}
             <div className="space-y-0.5">
               {group.items.map((item) => {
                 const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);
@@ -251,10 +311,10 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
                   ? unreadNotifications > 0 ? unreadNotifications > 99 ? "99+" : String(unreadNotifications) : null
                   : "badge" in item ? item.badge : null;
                 return (
-                  <Link onClick={() => setMobileOpen(false)} key={item.href} href={item.href} className={cn("group flex min-h-10 items-center gap-2.5 rounded-xl px-2.5 text-[13px] text-white/60 transition hover:bg-sidebar-accent hover:text-white", active && "bg-sidebar-accent text-white shadow-[inset_3px_0_0_#02d1fa,0_8px_20px_rgba(0,0,0,0.12)]")}>
+                  <Link onClick={() => setMobileOpen(false)} key={item.href} href={item.href} className={cn("group flex min-h-10 items-center gap-2.5 rounded-xl px-2.5 text-[13px] text-white/60 transition hover:bg-sidebar-accent hover:text-white", active && "bg-sidebar-accent text-white shadow-[inset_3px_0_0_#02d1fa,0_8px_20px_rgba(0,0,0,0.12)]", collapsed && "justify-center px-1.5")}> 
                     <Icon className={cn("size-4 text-white/38 group-hover:text-white/75", active && "text-accent")} />
-                    <span className="flex-1">{item.label}</span>
-                    {badge && <span className={cn("text-[9px] text-white/28", item.label === "Inbox" && "grid min-w-5 place-items-center rounded-full bg-white/8 px-1 py-0.5 text-white/55")}>{badge}</span>}
+                    {!collapsed && <span className="flex-1">{item.label}</span>}
+                    {badge && !collapsed && <span className={cn("text-[9px] text-white/28", item.label === "Inbox" && "grid min-w-5 place-items-center rounded-full bg-white/8 px-1 py-0.5 text-white/55")}>{badge}</span>}
                   </Link>
                 );
               })}
@@ -270,10 +330,16 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
 
   return (
     <div data-agency-shell className="min-h-svh bg-background">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[264px] xl:block">{sidebar}</aside>
+      {/* session handling: redirect to sign-in if not authenticated */}
+      {session.isPending ? (
+        <div className="fixed inset-0 z-60 grid place-items-center bg-white/90"><div className="animate-pulse text-slate-700">Loading session…</div></div>
+      ) : !session.data?.user ? (
+        <></>
+      ) : null}
+      <aside className={cn("fixed inset-y-0 left-0 z-40 hidden xl:block", collapsed ? "w-20" : "w-[264px]")}>{sidebar}</aside>
       {mobileOpen && <div className="fixed inset-0 z-50 xl:hidden"><button className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" /><aside className="relative h-full w-[min(88vw,320px)] shadow-2xl">{sidebar}</aside></div>}
 
-      <div className="xl:pl-[264px]">
+      <div className={cn(collapsed ? "xl:pl-[80px]" : "xl:pl-[264px]")}> 
         <header className="sticky top-0 z-30 flex h-[4.5rem] items-center gap-3 border-b border-blue-100/80 bg-white/90 px-3 shadow-[0_8px_30px_rgba(15,23,42,0.025)] backdrop-blur-xl sm:px-6">
           <button onClick={() => setMobileOpen(true)} className="grid size-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 xl:hidden" aria-label="Open navigation"><Menu className="size-5" /></button>
           <div className="min-w-0 md:hidden"><p className="truncate text-sm font-semibold tracking-[-0.02em]">{currentPage?.label ?? "Workspace"}</p><p className="truncate text-[9px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">{organization.name}</p></div>

@@ -223,6 +223,7 @@ model Lead {
   calendarEvents CalendarEvent[]
 
   @@index([organizationId, stage])
+  @@index([organizationId, id])
 }
 
 model Client {
@@ -247,6 +248,7 @@ model Client {
   documents          Document[]
 
   @@index([organizationId, status])
+  @@index([organizationId, id])
 }
 
 model Proposal {
@@ -268,6 +270,7 @@ model Proposal {
   contracts      Contract[]
 
   @@index([organizationId, status])
+  @@index([organizationId, id])
 }
 
 model Contract {
@@ -288,6 +291,7 @@ model Contract {
   proposal       Proposal?    @relation(fields: [proposalId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, status])
+  @@index([organizationId, id])
 }
 
 model Project {
@@ -315,6 +319,7 @@ model Project {
 
   @@unique([organizationId, code])
   @@index([organizationId, status])
+  @@index([organizationId, id])
 }
 
 model Milestone {
@@ -349,6 +354,7 @@ model Task {
   timeEntries      TimeEntry[]
 
   @@index([organizationId, status])
+  @@index([organizationId, id])
   @@index([assigneeId])
 }
 
@@ -393,6 +399,7 @@ model Invoice {
 
   @@unique([organizationId, number])
   @@index([organizationId, status])
+  @@index([organizationId, id])
 }
 
 model InvoiceItem {
@@ -403,6 +410,8 @@ model InvoiceItem {
   unitPrice   Decimal @db.Decimal(14, 2)
   total       Decimal @db.Decimal(14, 2)
   invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
 }
 
 model Payment {
@@ -429,6 +438,7 @@ model Expense {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, incurredAt])
+  @@index([organizationId, id])
 }
 
 model Retainer {
@@ -444,6 +454,7 @@ model Retainer {
   client         Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, status])
+  @@index([organizationId, id])
 }
 
 model Document {
@@ -461,6 +472,7 @@ model Document {
   project        Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, type])
+  @@index([organizationId, id])
 }
 
 model Activity {
@@ -475,6 +487,7 @@ model Activity {
   lead           Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, occurredAt])
+  @@index([organizationId, id])
 }
 
 model CalendarEvent {
@@ -506,6 +519,7 @@ model CalendarEvent {
 
   @@index([organizationId, startAt])
   @@index([organizationId, status, startAt])
+  @@index([organizationId, id])
   @@index([leadId, startAt])
   @@index([bookingTypeId, startAt])
 }
@@ -562,6 +576,7 @@ model Automation {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, enabled])
+  @@index([organizationId, id])
 }
 
 model AiThread {
@@ -602,6 +617,7 @@ model KnowledgeItem {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, updatedAt])
+  @@index([organizationId, id])
 }
 
 model AuditLog {
@@ -640,6 +656,8 @@ model BackgroundJob {
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([status, runAt, priority])
+  @@index([status, priority, runAt, createdAt])
+  @@index([status, completedAt])
   @@index([organizationId, createdAt])
   @@index([lockedAt])
 }
@@ -716,6 +734,8 @@ model BlogPost {
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, status, publishedAt])
+  @@index([organizationId, updatedAt, id])
+  @@index([status, featured, publishedAt, id])
 }
 
 model WorkPost {
@@ -745,6 +765,8 @@ model WorkPost {
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, status, publishedAt])
+  @@index([organizationId, updatedAt, id])
+  @@index([status, featured, publishedAt, id])
 }
 
 model SeoPage {
@@ -769,4 +791,6 @@ model SeoPage {
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, status, publishedAt])
+  @@index([organizationId, updatedAt, id])
+  @@index([status, noIndex, publishedAt, id])
 }

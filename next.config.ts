@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  distDir: process.env.MWLABS_VERIFY_DIST_DIR ?? ".next",
   poweredByHeader: false,
   outputFileTracingRoot: process.cwd(),
   turbopack: {

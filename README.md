@@ -41,6 +41,7 @@ The included development database uses a non-root `mwlabs_app` user and a separa
 | Variable | Purpose |
 | --- | --- |
 | `DATABASE_URL` | MySQL application connection string |
+| `DATABASE_POOL_SIZE` | Optional per-instance connection-pool limit, default `10` (bounded to `2`–`50`) |
 | `SHADOW_DATABASE_URL` | MySQL shadow database used by development migrations |
 | `BETTER_AUTH_URL` | Canonical application URL |
 | `NEXT_PUBLIC_SITE_URL` | Optional public canonical URL for metadata, sitemap, and robots (defaults to `BETTER_AUTH_URL`) |
@@ -97,8 +98,10 @@ Owners and administrators can inspect queue health, run due work, and retry dead
 - Blog posts, case studies, and SEO pages support database-backed image uploads (durable across server restarts), draft/publish states, generated slugs, metadata, and public rendering.
 - Supported automations use structured triggers and actions. Runs update counters, create audit events, and either notify owners/admins or create a follow-up activity.
 - Owners and admins can invite members, copy invitation links when email is unavailable, change roles, and manage delivery teams. Invitees can create a member account from the invitation without reopening public owner signup.
-- CSV/XLSX import and CSV export are available on live record workspaces. Imports validate headers and each row, with a 500-row batch limit.
-- Reports and dashboard indicators are calculated from live records. Settings shows provider/security readiness without exposing credentials.
+- CSV/XLSX import and CSV export are available on live record workspaces. Imports validate headers and each row, accept up to 500 rows per file, and send 25-row batches with bounded database concurrency.
+- Record workspaces use indexed cursor pagination, server-side search, and 50-row views, so the browser never has to render the full dataset. Blog and work archives are paginated, and large sitemaps are automatically split into 45,000-URL segments.
+- Reports and dashboard indicators use database aggregates and bounded result sets instead of loading full tables into application memory. Settings shows provider/security readiness without exposing credentials.
+- Email notification fan-out is inserted into the durable queue in 500-job chunks; workers claim bounded batches and safely recover interrupted work.
 - Connected clients, projects, and invoices are protected from destructive cascading deletion; archive or void them to preserve operating history.
 
 ## Quality checks
@@ -110,6 +113,7 @@ npm run security:check
 npm run jobs:smoke
 npm run notifications:smoke
 npm run workflow:smoke
+npm run scale:smoke
 npm run build
 ```
 

@@ -62,28 +62,29 @@ function scheduleRun(jobIds: string[]) {
 
 export async function queueNotificationEmailJobs(organizationId: string, notificationIds: string[], reset = false) {
   const uniqueIds = Array.from(new Set(notificationIds));
-  const jobs = await Promise.all(uniqueIds.map((notificationId) => db.backgroundJob.upsert({
-    where: { idempotencyKey: durableKey("notification-email", notificationId) },
-    create: {
+  if (!uniqueIds.length) return [];
+  const rows = uniqueIds.map((notificationId) => ({
       organizationId,
       type: "notification-email",
       payload: JSON.stringify({ notificationId }),
       idempotencyKey: durableKey("notification-email", notificationId),
       priority: 10,
-    },
-    update: reset ? {
-      status: "Pending",
-      attempts: 0,
-      runAt: new Date(),
-      lockedAt: null,
-      lockedBy: null,
-      lastError: null,
-      completedAt: null,
-    } : {},
-    select: { id: true },
-  })));
-  const jobIds = jobs.map((job) => job.id);
-  scheduleRun(jobIds);
+  }));
+  const jobIds: string[] = [];
+  for (let offset = 0; offset < rows.length; offset += 500) {
+    const batch = rows.slice(offset, offset + 500);
+    const keys = batch.map((row) => row.idempotencyKey);
+    await db.backgroundJob.createMany({ data: batch, skipDuplicates: true });
+    if (reset) {
+      await db.backgroundJob.updateMany({
+        where: { idempotencyKey: { in: keys } },
+        data: { status: "Pending", attempts: 0, runAt: new Date(), lockedAt: null, lockedBy: null, lastError: null, completedAt: null },
+      });
+    }
+    const jobs = await db.backgroundJob.findMany({ where: { idempotencyKey: { in: keys } }, select: { id: true } });
+    jobIds.push(...jobs.map((job) => job.id));
+  }
+  scheduleRun(jobIds.slice(0, 50));
   return jobIds;
 }
 

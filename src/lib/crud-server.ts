@@ -16,6 +16,7 @@ type CrudSpec = {
 type CrudDelegate = {
   findMany: (args: Record<string, unknown>) => Promise<Record<string, unknown>[]>;
   findFirst: (args: Record<string, unknown>) => Promise<Record<string, unknown> | null>;
+  count: (args: Record<string, unknown>) => Promise<number>;
   create: (args: Record<string, unknown>) => Promise<Record<string, unknown>>;
   update: (args: Record<string, unknown>) => Promise<Record<string, unknown>>;
   delete: (args: Record<string, unknown>) => Promise<Record<string, unknown>>;
@@ -55,6 +56,29 @@ const taskPriority = z.enum(["Low", "Medium", "High", "Urgent"]);
 const invoiceStatus = z.enum(["Draft", "Sent", "Paid", "Overdue", "Void"]);
 const contentResources = new Set(["blog-posts", "work-posts", "seo-pages"]);
 const reservedPageSlugs = new Set(["app", "api", "auth", "blog", "portal", "register", "robots.txt", "sign-in", "sign-up", "sitemap.xml", "work", "_next"]);
+const searchFields: Record<string, string[]> = {
+  leads: ["name", "company", "email", "phone", "source", "stage", "ownerName"],
+  clients: ["name", "company", "email", "phone", "status"],
+  proposals: ["title", "status"],
+  contracts: ["title", "status"],
+  projects: ["name", "code", "status", "managerName"],
+  tasks: ["title", "status", "priority"],
+  "calendar-events": ["title", "inviteeName", "inviteeEmail", "inviteeCompany", "status", "source"],
+  "time-entries": ["description"],
+  invoices: ["number", "status", "currency"],
+  expenses: ["category", "vendor", "status"],
+  retainers: ["name", "status"],
+  documents: ["name", "type"],
+  activities: ["type", "title"],
+  automations: ["name", "trigger", "action"],
+  knowledge: ["title", "tags"],
+  "blog-posts": ["title", "slug", "category", "authorName", "status", "metaTitle"],
+  "work-posts": ["title", "slug", "clientName", "industry", "status", "metaTitle"],
+  "seo-pages": ["title", "slug", "eyebrow", "primaryKeyword", "status", "metaTitle"],
+  milestones: ["name", "status"],
+  "invoice-items": ["description"],
+  payments: ["method", "reference"],
+};
 
 function validationMessage(error: z.ZodError) {
   const issue = error.issues[0];
@@ -339,27 +363,51 @@ export function supportsCrudResource(resource: string) {
   return Boolean(getSpec(resource));
 }
 
-export async function listCrudRecords(resource: string, organizationId: string) {
+export async function listCrudRecords(
+  resource: string,
+  organizationId: string,
+  options: { limit?: number; cursor?: string | null; query?: string | null } = {},
+) {
   const spec = getSpec(resource);
   if (!spec) throw new Error("Unsupported resource");
-  const records = await getDelegate(spec).findMany({
-    where: ownershipWhere(spec, organizationId),
+  const limit = Math.min(100, Math.max(10, options.limit ?? 50));
+  const query = options.query?.trim().slice(0, 120) || "";
+  const fields = searchFields[resource] ?? [];
+  const owned = ownershipWhere(spec, organizationId);
+  const where = query && fields.length
+    ? { AND: [owned, { OR: fields.map((field) => ({ [field]: { contains: query } })) }] }
+    : owned;
+  const orderBy = contentResources.has(resource)
+    ? [{ updatedAt: "desc" }, { id: "desc" }]
+    : resource === "calendar-events"
+      ? [{ startAt: "asc" }, { id: "asc" }]
+      : [{ id: "desc" }];
+  const delegate = getDelegate(spec);
+  const [records, total] = await Promise.all([delegate.findMany({
+    where,
     select: selectFields(spec),
-    ...(contentResources.has(resource)
-      ? { orderBy: { updatedAt: "desc" } }
-      : resource === "calendar-events"
-        ? { orderBy: { startAt: "asc" } }
-        : {}),
-    take: 250,
-  });
-  const normalized = records.map(normalizeRecord);
+    orderBy,
+    take: limit + 1,
+    ...(options.cursor ? { cursor: { id: options.cursor }, skip: 1 } : {}),
+  }), delegate.count({ where })]);
+  const hasMore = records.length > limit;
+  const pageRecords = hasMore ? records.slice(0, limit) : records;
+  let normalized = pageRecords.map(normalizeRecord);
   if (["invoice-items", "payments"].includes(resource)) {
     const invoiceIds = normalized.map((record) => String(record.invoiceId)).filter(Boolean);
     const invoices = await db.invoice.findMany({ where: { id: { in: invoiceIds }, organizationId }, select: { id: true, currency: true } });
     const currencies = new Map(invoices.map((invoice) => [invoice.id, invoice.currency]));
-    return normalized.map((record) => ({ ...record, currency: currencies.get(String(record.invoiceId)) ?? "USD" }));
+    normalized = normalized.map((record) => ({ ...record, currency: currencies.get(String(record.invoiceId)) ?? "USD" }));
   }
-  return normalized;
+  return {
+    records: normalized,
+    page: {
+      limit,
+      total,
+      hasMore,
+      nextCursor: hasMore ? String(pageRecords.at(-1)?.id ?? "") || null : null,
+    },
+  };
 }
 
 export async function createCrudRecord(resource: string, organizationId: string, userId: string, input: unknown) {

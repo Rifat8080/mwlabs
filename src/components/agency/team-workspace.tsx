@@ -17,6 +17,7 @@ type TeamData = {
   currentRole: string;
   organizationId: string;
   emailProviderConfigured: boolean;
+  totals: { members: number; invitations: number; teams: number };
   members: Array<{ id: string; userId: string; role: string; createdAt: string; name: string; email: string }>;
   invitations: Array<{ id: string; email: string; role: string; expiresAt: string }>;
   teams: Array<{ id: string; name: string; memberCount: number; createdAt: string }>;
@@ -188,12 +189,12 @@ export function TeamWorkspace() {
       </div>
 
       <div className="admin-metrics mt-7">
-        {[{ label: "Workspace members", value: data?.members.length ?? 0, detail: `${ownerCount} owner${ownerCount === 1 ? "" : "s"}` }, { label: "Pending invitations", value: data?.invitations.length ?? 0, detail: "Expire after 48 hours" }, { label: "Delivery teams", value: data?.teams.length ?? 0, detail: "Role-scoped groups" }, { label: "Invitation email", value: data?.emailProviderConfigured ? "Ready" : "Setup needed", detail: data?.emailProviderConfigured ? "Transactional provider connected" : "Links can still be copied" }].map((metric) => <div key={metric.label} className="admin-metric-card"><p className="text-xs text-muted-foreground">{metric.label}</p><p className="mt-3 text-2xl font-semibold tracking-[-0.04em]">{metric.value}</p><p className="mt-3 text-[11px] text-muted-foreground">{metric.detail}</p></div>)}
+        {[{ label: "Workspace members", value: data?.totals.members ?? 0, detail: `${ownerCount} owner${ownerCount === 1 ? "" : "s"} shown` }, { label: "Pending invitations", value: data?.totals.invitations ?? 0, detail: "Expire after 48 hours" }, { label: "Delivery teams", value: data?.totals.teams ?? 0, detail: "Role-scoped groups" }, { label: "Invitation email", value: data?.emailProviderConfigured ? "Ready" : "Setup needed", detail: data?.emailProviderConfigured ? "Transactional provider connected" : "Links can still be copied" }].map((metric) => <div key={metric.label} className="admin-metric-card"><p className="text-xs text-muted-foreground">{metric.label}</p><p className="mt-3 text-2xl font-semibold tracking-[-0.04em]">{metric.value}</p><p className="mt-3 text-[11px] text-muted-foreground">{metric.detail}</p></div>)}
       </div>
 
       {loading ? <div className="mt-6 grid h-48 place-items-center rounded-2xl border bg-white"><LoaderCircle className="size-6 animate-spin text-blue-600" /></div> : <div className="mt-6 grid gap-5 xl:grid-cols-[1.35fr_0.65fr]">
         <section className="admin-card overflow-hidden rounded-2xl">
-          <div className="flex items-center justify-between border-b px-5 py-4"><div><h2 className="text-sm font-semibold">Member directory</h2><p className="mt-1 text-[11px] text-muted-foreground">Tasks can be assigned to any person listed here.</p></div><ShieldCheck className="size-4 text-emerald-600" /></div>
+          <div className="flex items-center justify-between border-b px-5 py-4"><div><h2 className="text-sm font-semibold">Member directory</h2><p className="mt-1 text-[11px] text-muted-foreground">Tasks can be assigned to any person listed here. Up to 250 members are shown at once.</p></div><ShieldCheck className="size-4 text-emerald-600" /></div>
           <div className="divide-y">{data?.members.map((member) => {
             const isCurrent = member.userId === data.currentUserId;
             const isLastOwner = member.role.includes("owner") && ownerCount <= 1;

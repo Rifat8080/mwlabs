@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -23,9 +24,9 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Studio", href: "/#about", section: "about" },
-  { label: "Work", href: "/#work", section: "work" },
+  { label: "Work", href: "/work", section: "work" },
   { label: "Process", href: "/#process", section: "process" },
-  { label: "Insights", href: "/#insights", section: "insights" },
+  { label: "Insights", href: "/blog", section: "insights" },
   { label: "Contact", href: "/#enquiry", section: "enquiry" },
 ];
 
@@ -76,6 +77,7 @@ const services: Array<{
 const observedSections = ["about", "services", "work", "process", "insights", "enquiry"];
 
 export function MarketingHeader() {
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -258,14 +260,15 @@ export function MarketingHeader() {
           </div>
 
           {navItems.map((item) => {
-            const active = activeSection === item.section;
+            const routeActive = !item.href.startsWith("/#") && pathname.startsWith(item.href);
+            const active = routeActive || (pathname === "/" && activeSection === item.section);
 
             return (
               <Link
                 key={item.label}
                 href={item.href}
-                onClick={() => closeNavigation(item.section)}
-                aria-current={active ? "location" : undefined}
+                onClick={() => closeNavigation(item.href.startsWith("/#") ? item.section : undefined)}
+                aria-current={active ? routeActive ? "page" : "location" : undefined}
                 className={cn(
                   "relative flex h-10 items-center rounded-xl px-3.5 text-[0.8rem] font-bold text-slate-600 transition hover:bg-white hover:text-slate-950 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-blue-600",
                   active && "bg-white text-blue-700 shadow-sm",
@@ -372,14 +375,15 @@ export function MarketingHeader() {
 
               <div className="grid gap-1 sm:grid-cols-2">
                 {navItems.map((item) => {
-                  const active = activeSection === item.section;
+                  const routeActive = !item.href.startsWith("/#") && pathname.startsWith(item.href);
+                  const active = routeActive || (pathname === "/" && activeSection === item.section);
 
                   return (
                     <Link
                       key={item.label}
                       href={item.href}
-                      onClick={() => closeNavigation(item.section)}
-                      aria-current={active ? "location" : undefined}
+                      onClick={() => closeNavigation(item.href.startsWith("/#") ? item.section : undefined)}
+                      aria-current={active ? routeActive ? "page" : "location" : undefined}
                       className={cn(
                         "flex items-center justify-between rounded-xl px-3 py-3 text-sm font-extrabold text-slate-700 transition hover:bg-white",
                         active && "bg-white text-blue-700 shadow-sm",

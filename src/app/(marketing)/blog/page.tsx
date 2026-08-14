@@ -13,8 +13,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-export default async function BlogPage() {
-  const posts = await getPublishedBlogPosts();
+export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
+  const params = await searchParams;
+  const value = Array.isArray(params.page) ? params.page[0] : params.page;
+  const requestedPage = Number(value || 1);
+  const { posts, page, pages } = await getPublishedBlogPosts(Number.isFinite(requestedPage) ? requestedPage : 1);
 
   return (
     <div className="bg-white">
@@ -56,6 +59,7 @@ export default async function BlogPage() {
             <p className="mt-3 text-sm font-semibold leading-7 text-slate-600">Published articles will appear here automatically.</p>
           </div>
         )}
+        {pages > 1 && <nav aria-label="Blog pagination" className="mt-12 flex items-center justify-center gap-3"><Link aria-disabled={page <= 1} tabIndex={page <= 1 ? -1 : undefined} href={page <= 2 ? "/blog" : `/blog?page=${page - 1}`} className={`rounded-full border px-5 py-2.5 text-sm font-extrabold transition ${page <= 1 ? "pointer-events-none opacity-40" : "hover:border-blue-300 hover:text-blue-700"}`}>Previous</Link><span className="text-xs font-bold text-slate-500">Page {page} of {pages}</span><Link aria-disabled={page >= pages} tabIndex={page >= pages ? -1 : undefined} href={`/blog?page=${page + 1}`} className={`rounded-full border px-5 py-2.5 text-sm font-extrabold transition ${page >= pages ? "pointer-events-none opacity-40" : "hover:border-blue-300 hover:text-blue-700"}`}>Next</Link></nav>}
       </section>
     </div>
   );

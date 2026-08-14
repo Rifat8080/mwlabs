@@ -9,15 +9,22 @@ import { runCrudWorkflows } from "@/lib/workflow-engine";
 const mutationSchema = z.object({
   id: z.string().min(1).max(191).optional(),
   data: z.record(z.string(), z.unknown()).optional(),
+  records: z.array(z.record(z.string(), z.unknown())).min(1).max(50).optional(),
 });
 const memberWritableResources = new Set(["tasks", "calendar-events", "time-entries", "documents", "activities", "knowledge"]);
+const maximumRequestBytes = 8 * 1024 * 1024;
+
+class RequestBodyTooLargeError extends Error {}
+
+export const maxDuration = 60;
 
 function canWriteResource(role: string, resource: string) {
   return role === "owner" || role === "admin" || memberWritableResources.has(resource);
 }
 
-function errorResponse(error: unknown) {
+function safeErrorMessage(error: unknown) {
   const message = error instanceof Error ? error.message : "The record could not be saved.";
+  if (error instanceof RequestBodyTooLargeError) return { message, status: 413 };
   const conflict = /unique|duplicate/i.test(message);
   const related = /foreign key|constraint/i.test(message);
   const safeMessage = conflict
@@ -27,7 +34,45 @@ function errorResponse(error: unknown) {
       : /prisma|database|query/i.test(message)
         ? "The database could not complete this operation."
         : message;
-  return Response.json({ error: safeMessage }, { status: conflict ? 409 : 400 });
+  return { message: safeMessage, status: conflict ? 409 : 400 };
+}
+
+function errorResponse(error: unknown) {
+  const safe = safeErrorMessage(error);
+  return Response.json({ error: safe.message }, { status: safe.status });
+}
+
+async function requestBody(request: Request) {
+  const declared = Number(request.headers.get("content-length") || 0);
+  if (declared > maximumRequestBytes) throw new RequestBodyTooLargeError("Request body exceeds the 8 MB limit.");
+  if (!request.body) return null;
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let received = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    received += value.byteLength;
+    if (received > maximumRequestBytes) {
+      await reader.cancel();
+      throw new RequestBodyTooLargeError("Request body exceeds the 8 MB limit.");
+    }
+    chunks.push(value);
+  }
+
+  const bytes = new Uint8Array(received);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  const source = new TextDecoder().decode(bytes);
+  try {
+    return JSON.parse(source) as unknown;
+  } catch {
+    return null;
+  }
 }
 
 async function contextFor(request: Request, context: RouteContext<"/api/crud/[resource]">) {
@@ -42,26 +87,64 @@ export async function GET(request: Request, context: RouteContext<"/api/crud/[re
   const resolved = await contextFor(request, context);
   if ("response" in resolved) return resolved.response;
   try {
-    const records = await listCrudRecords(resolved.resource, resolved.session.organizationId);
-    return Response.json({ records });
+    const url = new URL(request.url);
+    const requestedLimit = Number(url.searchParams.get("limit") || 50);
+    const limit = Number.isFinite(requestedLimit) ? Math.min(100, Math.max(10, requestedLimit)) : 50;
+    const result = await listCrudRecords(resolved.resource, resolved.session.organizationId, {
+      limit,
+      cursor: url.searchParams.get("cursor"),
+      query: url.searchParams.get("q"),
+    });
+    return Response.json(result, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return errorResponse(error);
   }
+}
+
+async function createWithEffects(
+  resource: string,
+  session: { organizationId: string; userId: string },
+  data: Record<string, unknown>,
+) {
+  const record = await createCrudRecord(resource, session.organizationId, session.userId, data);
+  const reconciliation = await reconcileCrudRelations(resource, record, session.organizationId);
+  await db.auditLog.create({ data: { organizationId: session.organizationId, userId: session.userId, action: `${resource}.created`, resource, resourceId: String(record.id) } });
+  await notifyCrudMutation({ organizationId: session.organizationId, actorId: session.userId, resource, action: "created", record });
+  const workflow = await runCrudWorkflows({ organizationId: session.organizationId, actorId: session.userId, resource, action: "created", record, changedFields: Object.keys(data) });
+  return { record, workflow: [reconciliation, workflow].filter(Boolean).join(" ") || null };
 }
 
 export async function POST(request: Request, context: RouteContext<"/api/crud/[resource]">) {
   const resolved = await contextFor(request, context);
   if ("response" in resolved) return resolved.response;
   if (!canWriteResource(resolved.session.role, resolved.resource)) return Response.json({ error: "Your workspace role cannot change this business area." }, { status: 403 });
-  const parsed = mutationSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success || !parsed.data.data) return Response.json({ error: "Invalid request body" }, { status: 400 });
+  const resource = resolved.resource;
+  const session = resolved.session;
   try {
-    const record = await createCrudRecord(resolved.resource, resolved.session.organizationId, resolved.session.userId, parsed.data.data);
-    const reconciliation = await reconcileCrudRelations(resolved.resource, record, resolved.session.organizationId);
-    await db.auditLog.create({ data: { organizationId: resolved.session.organizationId, userId: resolved.session.userId, action: `${resolved.resource}.created`, resource: resolved.resource, resourceId: String(record.id) } });
-    await notifyCrudMutation({ organizationId: resolved.session.organizationId, actorId: resolved.session.userId, resource: resolved.resource, action: "created", record });
-    const workflow = await runCrudWorkflows({ organizationId: resolved.session.organizationId, actorId: resolved.session.userId, resource: resolved.resource, action: "created", record, changedFields: Object.keys(parsed.data.data) });
-    return Response.json({ record, workflow: [reconciliation, workflow].filter(Boolean).join(" ") || null }, { status: 201 });
+    const parsed = mutationSchema.safeParse(await requestBody(request));
+    if (!parsed.success || (!parsed.data.data && !parsed.data.records)) return Response.json({ error: "Invalid request body" }, { status: 400 });
+    if (parsed.data.records) {
+      const records = parsed.data.records;
+      const results: Array<{ index: number; record?: Record<string, unknown>; error?: string }> = new Array(records.length);
+      let cursor = 0;
+      async function work() {
+        while (cursor < records.length) {
+          const index = cursor++;
+          try {
+            const created = await createWithEffects(resource, session, records[index]!);
+            results[index] = { index, record: created.record };
+          } catch (error) {
+            results[index] = { index, error: safeErrorMessage(error).message };
+          }
+        }
+      }
+      await Promise.all(Array.from({ length: Math.min(4, records.length) }, () => work()));
+      const created = results.filter((result) => result.record).map((result) => result.record!);
+      const failures = results.filter((result) => result.error).map(({ index, error }) => ({ index, error }));
+      return Response.json({ records: created, failures }, { status: failures.length ? 207 : 201 });
+    }
+    const created = await createWithEffects(resource, session, parsed.data.data!);
+    return Response.json(created, { status: 201 });
   } catch (error) {
     return errorResponse(error);
   }
@@ -71,9 +154,9 @@ export async function PATCH(request: Request, context: RouteContext<"/api/crud/[
   const resolved = await contextFor(request, context);
   if ("response" in resolved) return resolved.response;
   if (!canWriteResource(resolved.session.role, resolved.resource)) return Response.json({ error: "Your workspace role cannot change this business area." }, { status: 403 });
-  const parsed = mutationSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success || !parsed.data.id || !parsed.data.data) return Response.json({ error: "Invalid request body" }, { status: 400 });
   try {
+    const parsed = mutationSchema.safeParse(await requestBody(request));
+    if (!parsed.success || !parsed.data.id || !parsed.data.data) return Response.json({ error: "Invalid request body" }, { status: 400 });
     const record = await updateCrudRecord(resolved.resource, parsed.data.id, resolved.session.organizationId, parsed.data.data);
     if (!record) return Response.json({ error: "Record not found" }, { status: 404 });
     const reconciliation = await reconcileCrudRelations(resolved.resource, record, resolved.session.organizationId);
@@ -90,9 +173,9 @@ export async function DELETE(request: Request, context: RouteContext<"/api/crud/
   const resolved = await contextFor(request, context);
   if ("response" in resolved) return resolved.response;
   if (!["owner", "admin"].includes(resolved.session.role)) return Response.json({ error: "Only owners and administrators can delete records." }, { status: 403 });
-  const parsed = mutationSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success || !parsed.data.id) return Response.json({ error: "Invalid request body" }, { status: 400 });
   try {
+    const parsed = mutationSchema.safeParse(await requestBody(request));
+    if (!parsed.success || !parsed.data.id) return Response.json({ error: "Invalid request body" }, { status: 400 });
     const deleted = await deleteCrudRecord(resolved.resource, parsed.data.id, resolved.session.organizationId);
     if (!deleted) return Response.json({ error: "Record not found" }, { status: 404 });
     await reconcileCrudRelations(resolved.resource, deleted, resolved.session.organizationId);

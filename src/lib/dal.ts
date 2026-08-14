@@ -4,8 +4,18 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+
+function dbNumber(value: unknown) {
+  if (value && typeof value === "object" && "toNumber" in value && typeof value.toNumber === "function") return value.toNumber();
+  const number = Number(value ?? 0);
+  return Number.isFinite(number) ? number : 0;
+}
+
+type PipelineRow = { stage: string; count: bigint | number; value: unknown; weighted: unknown; probabilitySum: unknown };
+type MonthRow = { monthKey: string; total: unknown };
 
 export function hasTrustedMutationOrigin(request: Request) {
   if (["GET", "HEAD", "OPTIONS"].includes(request.method)) return true;
@@ -96,12 +106,16 @@ export async function requireApiSession(request: Request) {
 export const getDashboardData = cache(async () => {
   const { organization } = await getWorkspaceContext();
   const organizationId = organization.id;
+  const now = new Date();
+  const sixMonthsAgo = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
 
-  const [leads, clients, activeProjects, projects, tasks, invoices, expenses] = await Promise.all([
-    db.lead.findMany({
-      where: { organizationId },
-      select: { id: true, company: true, stage: true, value: true, probability: true, nextActivityAt: true },
-    }),
+  const [pipelineRows, clients, activeProjects, projects, tasks, invoiceRows, expenseTotals, revenueRows, topLeadRows] = await Promise.all([
+    db.$queryRaw<PipelineRow[]>(Prisma.sql`
+      SELECT stage, COUNT(*) AS count, COALESCE(SUM(value), 0) AS value,
+        COALESCE(SUM(value * probability / 100), 0) AS weighted,
+        COALESCE(SUM(probability), 0) AS probabilitySum
+      FROM \`Lead\` WHERE organizationId = ${organizationId} GROUP BY stage
+    `),
     db.client.count({ where: { organizationId, status: "Active" } }),
     db.project.count({ where: { organizationId, status: { notIn: ["Complete", "Archived"] } } }),
     db.project.findMany({
@@ -133,55 +147,52 @@ export const getDashboardData = cache(async () => {
         project: { select: { code: true } },
       },
     }),
-    db.invoice.findMany({
-      where: { organizationId },
-      select: { status: true, total: true, paidAt: true },
-    }),
-    db.expense.findMany({
-      where: { organizationId },
-      select: { amount: true },
-    }),
+    db.$queryRaw<Array<{ paidRevenue: unknown; receivables: unknown }>>(Prisma.sql`
+      SELECT
+        COALESCE(SUM(CASE WHEN status = 'Paid' THEN total ELSE 0 END), 0) AS paidRevenue,
+        COALESCE(SUM(CASE WHEN status IN ('Sent', 'Overdue') THEN total ELSE 0 END), 0) AS receivables
+      FROM Invoice WHERE organizationId = ${organizationId}
+    `),
+    db.expense.aggregate({ where: { organizationId }, _sum: { amount: true } }),
+    db.$queryRaw<MonthRow[]>(Prisma.sql`
+      SELECT DATE_FORMAT(paidAt, '%Y-%m') AS monthKey, COALESCE(SUM(total), 0) AS total
+      FROM Invoice
+      WHERE organizationId = ${organizationId} AND status = 'Paid' AND paidAt >= ${sixMonthsAgo}
+      GROUP BY DATE_FORMAT(paidAt, '%Y-%m')
+    `),
+    db.$queryRaw<Array<{ company: string; value: unknown; probability: number }>>(Prisma.sql`
+      SELECT company, value, probability FROM \`Lead\`
+      WHERE organizationId = ${organizationId} AND stage NOT IN ('Won', 'Lost')
+      ORDER BY (value * probability) DESC LIMIT 1
+    `),
   ]);
 
-  const weightedPipeline = leads.reduce(
-    (total, lead) => total + Number(lead.value) * (lead.probability / 100),
-    0,
-  );
-  const paidRevenue = invoices
-    .filter((invoice) => invoice.status === "Paid")
-    .reduce((total, invoice) => total + Number(invoice.total), 0);
-  const receivables = invoices
-    .filter((invoice) => ["Sent", "Overdue"].includes(invoice.status))
-    .reduce((total, invoice) => total + Number(invoice.total), 0);
-  const operatingCosts = expenses.reduce(
-    (total, expense) => total + Number(expense.amount),
-    0,
-  );
+  const weightedPipeline = pipelineRows.reduce((total, row) => total + dbNumber(row.weighted), 0);
+  const paidRevenue = dbNumber(invoiceRows[0]?.paidRevenue);
+  const receivables = dbNumber(invoiceRows[0]?.receivables);
+  const operatingCosts = dbNumber(expenseTotals._sum.amount);
   const grossMargin = paidRevenue
     ? Math.max(0, ((paidRevenue - operatingCosts) / paidRevenue) * 100)
     : 0;
 
+  const pipelineMap = new Map(pipelineRows.map((row) => [row.stage, row]));
   const pipelineByStage = ["New", "Qualified", "Discovery", "Proposal", "Negotiation"].map((stage) => ({
     stage,
-    count: leads.filter((lead) => lead.stage === stage).length,
-    value: leads
-      .filter((lead) => lead.stage === stage)
-      .reduce((total, lead) => total + Number(lead.value), 0),
+    count: Number(pipelineMap.get(stage)?.count ?? 0),
+    value: dbNumber(pipelineMap.get(stage)?.value),
   }));
 
-  const now = new Date();
   const months = Array.from({ length: 6 }, (_, index) => {
     const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5 + index, 1));
-    return { key: `${date.getUTCFullYear()}-${date.getUTCMonth()}`, month: new Intl.DateTimeFormat("en", { month: "short" }).format(date), revenue: 0 };
+    return { key: date.toISOString().slice(0, 7), month: new Intl.DateTimeFormat("en", { month: "short" }).format(date), revenue: 0 };
   });
   const monthMap = new Map(months.map((month) => [month.key, month]));
-  invoices.filter((invoice) => invoice.status === "Paid" && invoice.paidAt).forEach((invoice) => {
-    const paidAt = invoice.paidAt!;
-    const month = monthMap.get(`${paidAt.getUTCFullYear()}-${paidAt.getUTCMonth()}`);
-    if (month) month.revenue += Number(invoice.total);
+  revenueRows.forEach((row) => {
+    const month = monthMap.get(row.monthKey);
+    if (month) month.revenue = dbNumber(row.total);
   });
   const maxRevenue = Math.max(1, ...months.map((month) => month.revenue));
-  const topLead = leads.filter((lead) => !["Won", "Lost"].includes(lead.stage)).sort((a, b) => Number(b.value) * b.probability - Number(a.value) * a.probability)[0] ?? null;
+  const topLead = topLeadRows[0] ?? null;
   const riskyProject = [...projects].sort((a, b) => {
     const aVariance = (Number(a.budget) ? Number(a.spent) / Number(a.budget) * 100 : 0) - a.progress;
     const bVariance = (Number(b.budget) ? Number(b.spent) / Number(b.budget) * 100 : 0) - b.progress;
@@ -224,62 +235,96 @@ export const getReportsData = cache(async () => {
   const now = new Date();
   const sixMonthsAgo = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
 
-  const [leads, projects, invoices, expenses, retainers, timeEntries, clients] = await Promise.all([
-    db.lead.findMany({ where: { organizationId }, select: { stage: true, value: true, probability: true } }),
-    db.project.findMany({ where: { organizationId, status: { notIn: ["Complete", "Archived"] } }, select: { id: true, name: true, progress: true, budget: true, spent: true, dueDate: true, client: { select: { company: true } } } }),
-    db.invoice.findMany({ where: { organizationId }, select: { status: true, total: true, paidAt: true, dueDate: true, clientId: true, client: { select: { company: true } } } }),
-    db.expense.findMany({ where: { organizationId, incurredAt: { gte: sixMonthsAgo } }, select: { amount: true, incurredAt: true } }),
-    db.retainer.findMany({ where: { organizationId, status: "Active" }, select: { monthlyValue: true } }),
-    db.timeEntry.findMany({ where: { project: { organizationId }, date: { gte: sixMonthsAgo } }, select: { minutes: true, billable: true } }),
-    db.client.findMany({ where: { organizationId }, select: { id: true, status: true, healthScore: true } }),
+  const [pipelineRows, projectRiskRows, projectRiskCountRows, invoiceTotals, expenseTotals, retainerTotals, timeTotals, billableTotals, clientTotals, activeClients, overdueInvoices, topClientRows, revenueRows, expenseRows] = await Promise.all([
+    db.$queryRaw<PipelineRow[]>(Prisma.sql`
+      SELECT stage, COUNT(*) AS count, COALESCE(SUM(value), 0) AS value,
+        COALESCE(SUM(value * probability / 100), 0) AS weighted,
+        COALESCE(SUM(probability), 0) AS probabilitySum
+      FROM \`Lead\` WHERE organizationId = ${organizationId} GROUP BY stage
+    `),
+    db.$queryRaw<Array<{ id: string; name: string; client: string; progress: number; burn: unknown; dueDate: Date | null }>>(Prisma.sql`
+      SELECT p.id, p.name, c.company AS client, p.progress,
+        CASE WHEN p.budget > 0 THEN p.spent / p.budget * 100 ELSE 0 END AS burn,
+        p.dueDate
+      FROM Project p INNER JOIN Client c ON c.id = p.clientId
+      WHERE p.organizationId = ${organizationId}
+        AND p.status NOT IN ('Complete', 'Archived')
+        AND ((p.budget > 0 AND p.spent / p.budget * 100 > p.progress + 15) OR p.dueDate < ${now})
+      ORDER BY (p.dueDate < ${now}) DESC, (CASE WHEN p.budget > 0 THEN p.spent / p.budget * 100 ELSE 0 END - p.progress) DESC
+      LIMIT 50
+    `),
+    db.$queryRaw<Array<{ count: bigint | number }>>(Prisma.sql`
+      SELECT COUNT(*) AS count FROM Project p
+      WHERE p.organizationId = ${organizationId}
+        AND p.status NOT IN ('Complete', 'Archived')
+        AND ((p.budget > 0 AND p.spent / p.budget * 100 > p.progress + 15) OR p.dueDate < ${now})
+    `),
+    db.invoice.aggregate({ where: { organizationId, status: "Paid" }, _sum: { total: true } }),
+    db.expense.aggregate({ where: { organizationId, incurredAt: { gte: sixMonthsAgo } }, _sum: { amount: true } }),
+    db.retainer.aggregate({ where: { organizationId, status: "Active" }, _sum: { monthlyValue: true } }),
+    db.timeEntry.aggregate({ where: { project: { organizationId }, date: { gte: sixMonthsAgo } }, _sum: { minutes: true } }),
+    db.timeEntry.aggregate({ where: { project: { organizationId }, date: { gte: sixMonthsAgo }, billable: true }, _sum: { minutes: true } }),
+    db.client.aggregate({ where: { organizationId }, _count: { _all: true }, _avg: { healthScore: true } }),
+    db.client.count({ where: { organizationId, status: "Active" } }),
+    db.invoice.count({ where: { organizationId, OR: [{ status: "Overdue" }, { status: "Sent", dueDate: { lt: now } }] } }),
+    db.$queryRaw<Array<{ company: string; value: unknown }>>(Prisma.sql`
+      SELECT c.company, COALESCE(SUM(i.total), 0) AS value
+      FROM Invoice i INNER JOIN Client c ON c.id = i.clientId
+      WHERE i.organizationId = ${organizationId} AND i.status = 'Paid'
+      GROUP BY i.clientId, c.company ORDER BY value DESC LIMIT 1
+    `),
+    db.$queryRaw<MonthRow[]>(Prisma.sql`
+      SELECT DATE_FORMAT(paidAt, '%Y-%m') AS monthKey, COALESCE(SUM(total), 0) AS total
+      FROM Invoice
+      WHERE organizationId = ${organizationId} AND status = 'Paid' AND paidAt >= ${sixMonthsAgo}
+      GROUP BY DATE_FORMAT(paidAt, '%Y-%m')
+    `),
+    db.$queryRaw<MonthRow[]>(Prisma.sql`
+      SELECT DATE_FORMAT(incurredAt, '%Y-%m') AS monthKey, COALESCE(SUM(amount), 0) AS total
+      FROM Expense WHERE organizationId = ${organizationId} AND incurredAt >= ${sixMonthsAgo}
+      GROUP BY DATE_FORMAT(incurredAt, '%Y-%m')
+    `),
   ]);
 
-  const paid = invoices.filter((invoice) => invoice.status === "Paid");
-  const paidRevenue = paid.reduce((sum, invoice) => sum + Number(invoice.total), 0);
-  const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
-  const weightedPipeline = leads.filter((lead) => !["Won", "Lost"].includes(lead.stage)).reduce((sum, lead) => sum + Number(lead.value) * lead.probability / 100, 0);
-  const recurringRevenue = retainers.reduce((sum, retainer) => sum + Number(retainer.monthlyValue), 0);
-  const loggedMinutes = timeEntries.reduce((sum, entry) => sum + entry.minutes, 0);
-  const billableMinutes = timeEntries.filter((entry) => entry.billable).reduce((sum, entry) => sum + entry.minutes, 0);
-  const byClient = new Map<string, { company: string; value: number }>();
-  paid.forEach((invoice) => {
-    const current = byClient.get(invoice.clientId) ?? { company: invoice.client.company, value: 0 };
-    current.value += Number(invoice.total);
-    byClient.set(invoice.clientId, current);
-  });
-  const topClient = Array.from(byClient.values()).sort((a, b) => b.value - a.value)[0] ?? null;
-  const projectRisks = projects.filter((project) => {
-    const burn = Number(project.budget) ? Number(project.spent) / Number(project.budget) * 100 : 0;
-    return burn > project.progress + 15 || Boolean(project.dueDate && project.dueDate < now);
-  }).map((project) => ({
+  const paidRevenue = dbNumber(invoiceTotals._sum.total);
+  const totalExpenses = dbNumber(expenseTotals._sum.amount);
+  const weightedPipeline = pipelineRows.filter((row) => !["Won", "Lost"].includes(row.stage)).reduce((sum, row) => sum + dbNumber(row.weighted), 0);
+  const recurringRevenue = dbNumber(retainerTotals._sum.monthlyValue);
+  const loggedMinutes = Number(timeTotals._sum.minutes ?? 0);
+  const billableMinutes = Number(billableTotals._sum.minutes ?? 0);
+  const topClient = topClientRows[0] ? { company: topClientRows[0].company, value: dbNumber(topClientRows[0].value) } : null;
+  const projectRisks = projectRiskRows.map((project) => ({
     id: project.id,
     name: project.name,
-    client: project.client.company,
+    client: project.client,
     progress: project.progress,
-    burn: Number(project.budget) ? Number(project.spent) / Number(project.budget) * 100 : 0,
+    burn: dbNumber(project.burn),
     dueDate: project.dueDate?.toISOString() ?? null,
   }));
 
   const months = Array.from({ length: 6 }, (_, index) => {
     const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5 + index, 1));
-    const key = `${date.getUTCFullYear()}-${date.getUTCMonth()}`;
+    const key = date.toISOString().slice(0, 7);
     return { key, label: new Intl.DateTimeFormat("en", { month: "short" }).format(date), revenue: 0, expenses: 0 };
   });
   const monthMap = new Map(months.map((month) => [month.key, month]));
-  paid.forEach((invoice) => {
-    if (!invoice.paidAt) return;
-    const month = monthMap.get(`${invoice.paidAt.getUTCFullYear()}-${invoice.paidAt.getUTCMonth()}`);
-    if (month) month.revenue += Number(invoice.total);
+  revenueRows.forEach((row) => {
+    const month = monthMap.get(row.monthKey);
+    if (month) month.revenue = dbNumber(row.total);
   });
-  expenses.forEach((expense) => {
-    const month = monthMap.get(`${expense.incurredAt.getUTCFullYear()}-${expense.incurredAt.getUTCMonth()}`);
-    if (month) month.expenses += Number(expense.amount);
+  expenseRows.forEach((row) => {
+    const month = monthMap.get(row.monthKey);
+    if (month) month.expenses = dbNumber(row.total);
   });
+
+  const leadCount = pipelineRows.reduce((sum, row) => sum + Number(row.count), 0);
+  const probabilityTotal = pipelineRows.reduce((sum, row) => sum + dbNumber(row.probabilitySum), 0);
+  const pipelineMap = new Map(pipelineRows.map((row) => [row.stage, row]));
 
   return {
     metrics: {
       forecast60Days: weightedPipeline + recurringRevenue * 2,
-      forecastConfidence: leads.length ? leads.reduce((sum, lead) => sum + lead.probability, 0) / leads.length : 0,
+      forecastConfidence: leadCount ? probabilityTotal / leadCount : 0,
       utilization: loggedMinutes ? billableMinutes / loggedMinutes * 100 : 0,
       revenueConcentration: paidRevenue && topClient ? topClient.value / paidRevenue * 100 : 0,
       paidRevenue,
@@ -288,18 +333,18 @@ export const getReportsData = cache(async () => {
       recurringRevenue,
     },
     health: {
-      activeClients: clients.filter((client) => client.status === "Active").length,
-      averageClientHealth: clients.length ? clients.reduce((sum, client) => sum + client.healthScore, 0) / clients.length : 0,
-      overdueInvoices: invoices.filter((invoice) => invoice.status === "Overdue" || (invoice.status === "Sent" && invoice.dueDate && invoice.dueDate < now)).length,
-      projectRisks: projectRisks.length,
+      activeClients,
+      averageClientHealth: dbNumber(clientTotals._avg.healthScore),
+      overdueInvoices,
+      projectRisks: Number(projectRiskCountRows[0]?.count ?? 0),
     },
     topClient,
     projectRisks,
     months,
     pipeline: ["New", "Qualified", "Discovery", "Proposal", "Negotiation", "Won", "Lost"].map((stage) => ({
       stage,
-      count: leads.filter((lead) => lead.stage === stage).length,
-      value: leads.filter((lead) => lead.stage === stage).reduce((sum, lead) => sum + Number(lead.value), 0),
+      count: Number(pipelineMap.get(stage)?.count ?? 0),
+      value: dbNumber(pipelineMap.get(stage)?.value),
     })),
   };
 });

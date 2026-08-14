@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
-  ArrowUpRight,
   Bot,
   BriefcaseBusiness,
   CalendarCheck2,
@@ -30,7 +29,11 @@ import {
 import { GrowthSystemShowcase } from "@/components/marketing/growth-system-showcase";
 import { MarketingHero } from "@/components/marketing/marketing-hero";
 import { MarketingReception, ProjectEnquiryForm, TestimonialsCarousel } from "@/components/marketing/marketing-interactions";
+import { ContentCover } from "@/components/marketing/published-content";
 import { Reveal } from "@/components/marketing/reveal";
+import { getHomepageContent } from "@/lib/public-content";
+
+export const dynamic = "force-dynamic";
 
 type Service = {
   icon: LucideIcon;
@@ -70,12 +73,6 @@ const process = [
   { icon: LineChart, title: "Grow", copy: "We analyze, optimize and scale your business growth." },
 ];
 
-const insights = [
-  { icon: Lightbulb, title: "Every Day Is a Learning Day as an Agency Owner", date: "July 14, 2026", read: "2 min read", tone: "from-blue-600 to-cyan-400" },
-  { icon: Rocket, title: "5 Signs Your Startup Idea Is Ready for an MVP", date: "July 07, 2026", read: "4 min read", tone: "from-brand-navy to-blue-600" },
-  { icon: Users, title: "Technology, Purpose, and Meaningful Global Impact", date: "June 17, 2026", read: "4 min read", tone: "from-blue-500 to-indigo-700" },
-];
-
 function SectionHeading({ eyebrow, children, centered = false, inverse = false }: { eyebrow: string; children: React.ReactNode; centered?: boolean; inverse?: boolean }) {
   return (
     <div className={centered ? "mx-auto max-w-3xl text-center" : ""}>
@@ -85,33 +82,9 @@ function SectionHeading({ eyebrow, children, centered = false, inverse = false }
   );
 }
 
-function ProjectVisual({ variant }: { variant: "builders" | "removal" }) {
-  if (variant === "builders") {
-    return (
-      <div className="relative aspect-video overflow-hidden bg-[linear-gradient(135deg,#eff6ff,#ffffff_50%,#cffafe)] p-5 sm:p-7">
-        <div className="absolute -right-10 -top-14 size-48 rounded-full bg-blue-300/35 blur-3xl" />
-        <div className="relative mx-auto h-full max-w-xl overflow-hidden rounded-xl border border-white/90 bg-white shadow-2xl shadow-blue-900/15">
-          <div className="flex h-7 items-center gap-1.5 border-b border-blue-50 px-3"><span className="size-1.5 rounded-full bg-red-300" /><span className="size-1.5 rounded-full bg-amber-300" /><span className="size-1.5 rounded-full bg-emerald-300" /></div>
-          <div className="grid h-[calc(100%-1.75rem)] grid-cols-[0.9fr_1.1fr]">
-            <div className="flex flex-col justify-center p-4 sm:p-6"><span className="h-2 w-16 rounded-full bg-blue-200" /><span className="mt-3 h-5 w-full rounded bg-slate-900" /><span className="mt-2 h-5 w-3/4 rounded bg-slate-900" /><span className="mt-4 h-2 w-full rounded bg-slate-200" /><span className="mt-2 h-2 w-4/5 rounded bg-slate-200" /><span className="mt-5 h-7 w-24 rounded-lg bg-blue-600" /></div>
-            <div className="m-3 overflow-hidden rounded-lg bg-[linear-gradient(145deg,#155dfc,#02d1fa)] p-4"><div className="h-full rounded-lg border border-white/25 bg-white/10 backdrop-blur"><div className="mx-auto mt-4 h-[75%] w-3/4 rounded-t-full bg-white/15" /></div></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="relative aspect-video overflow-hidden bg-slate-950 p-5 sm:p-7">
-      <div className="absolute -left-10 top-1/2 size-48 -translate-y-1/2 rounded-full bg-blue-600/35 blur-3xl" />
-      <div className="relative mx-auto grid h-full max-w-xl grid-cols-[70px_1fr] overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-2xl backdrop-blur">
-        <div className="border-r border-white/10 p-3"><div className="size-8 rounded-lg bg-cyan-400" /><div className="mt-5 space-y-3">{[1, 2, 3, 4].map((item) => <div key={item} className="h-2 rounded-full bg-white/15" />)}</div></div>
-        <div className="p-4"><div className="flex justify-between"><span className="h-3 w-28 rounded bg-white/80" /><span className="size-6 rounded-full bg-blue-400" /></div><div className="mt-4 grid grid-cols-3 gap-2">{["$82k", "38", "94%"].map((value) => <div key={value} className="rounded-lg bg-white/8 p-2"><p className="text-[9px] font-black text-white">{value}</p><div className="mt-2 h-1 rounded bg-cyan-400/50" /></div>)}</div><div className="mt-3 h-[45%] rounded-lg bg-white/6 p-3"><div className="flex h-full items-end gap-1">{[30, 46, 38, 64, 58, 78, 72, 90].map((height, index) => <div key={index} className="flex-1 rounded-t bg-gradient-to-t from-blue-600 to-cyan-300" style={{ height: `${height}%` }} />)}</div></div></div>
-      </div>
-    </div>
-  );
-}
+export default async function MarketingPage() {
+  const { blogPosts, workPosts } = await getHomepageContent();
 
-export default function MarketingPage() {
   return (
     <>
       <MarketingHero />
@@ -171,14 +144,18 @@ export default function MarketingPage() {
 
       <section id="work" className="scroll-mt-24 bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
-          <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><SectionHeading eyebrow="Selected Work / 2026">Digital experiences designed to <span className="text-gradient">perform.</span></SectionHeading><p className="max-w-md text-sm font-semibold leading-7 text-slate-500">A selection of conversion-led platforms and operating systems built around real commercial goals.</p></Reveal>
-          <div className="mt-12 grid gap-7 lg:grid-cols-2">
-            {[
-              { visual: "builders" as const, title: "Builders Website Design London", client: "Ravinder", copy: "A conversion-focused digital experience designed to turn local search traffic into qualified enquiries." },
-              { visual: "removal" as const, title: "Removal System Design", client: "Md Liakat Kawser", copy: "A smarter digital operations system for the UK removal industry, from lead capture to delivery." },
-            ].map((project, index) => <Reveal key={project.title} delay={index * 0.08}><article className="group overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_rgba(37,99,235,0.16)]"><ProjectVisual variant={project.visual} /><div className="p-7 sm:p-8"><div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600"><span className="relative size-2 rounded-full bg-emerald-500"><span className="absolute inset-0 animate-ping rounded-full bg-emerald-400" /></span>Live · Digital Product</div><h3 className="mt-4 text-3xl font-black tracking-[-0.035em] text-slate-950 transition group-hover:text-blue-700">{project.title}</h3><p className="mt-2 text-sm font-bold text-blue-600">{project.client}</p><p className="mt-4 text-sm font-semibold leading-7 text-slate-600">{project.copy}</p><Link href="#enquiry" className="mt-7 inline-flex items-center text-sm font-extrabold text-blue-600">Plan a similar project <ArrowUpRight className="ml-2 size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></Link></div></article></Reveal>)}
-          </div>
-          <Reveal className="mt-10 flex justify-center"><Link href="#enquiry" className="button-primary inline-flex items-center justify-center rounded-xl px-8 py-4 text-sm font-extrabold">Build Something Distinctive <Sparkles className="ml-3 size-4" /></Link></Reveal>
+          <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <SectionHeading eyebrow="Recent work">Digital experiences designed to <span className="text-gradient">perform.</span></SectionHeading>
+            <div className="max-w-md"><p className="text-sm font-semibold leading-7 text-slate-500">The latest published case studies from our studio, managed directly from the M&amp;W Command workspace.</p><Link href="/work" className="mt-4 inline-flex items-center text-sm font-extrabold text-blue-700">Explore all case studies <ArrowRight className="ml-2 size-4" /></Link></div>
+          </Reveal>
+          {workPosts.length ? (
+            <div className="mt-12 grid gap-7 lg:grid-cols-2">
+              {workPosts.map((project, index) => <Reveal key={project.id} delay={index * 0.08}><article className="group overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_rgba(37,99,235,0.16)]"><ContentCover image={project.coverImage} label={project.title} className="aspect-video" /><div className="p-7 sm:p-8"><div className="flex flex-wrap items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600"><span className="relative size-2 rounded-full bg-emerald-500"><span className="absolute inset-0 animate-ping rounded-full bg-emerald-400" /></span>Published{project.industry ? ` · ${project.industry}` : ""}{project.featured ? " · Featured" : ""}</div><h3 className="mt-4 text-3xl font-black tracking-[-0.035em] text-slate-950 transition group-hover:text-blue-700">{project.title}</h3>{project.clientName && <p className="mt-2 text-sm font-bold text-blue-600">{project.clientName}</p>}<p className="mt-4 text-sm font-semibold leading-7 text-slate-600">{project.summary}</p><Link href={`/work/${project.slug}`} className="mt-7 inline-flex items-center text-sm font-extrabold text-blue-600">View case study <ArrowRight className="ml-2 size-4 transition group-hover:translate-x-1" /></Link></div></article></Reveal>)}
+            </div>
+          ) : (
+            <Reveal className="mt-12 rounded-[2rem] border border-dashed border-blue-200 bg-blue-50/55 p-10 text-center"><Sparkles className="mx-auto size-8 text-blue-500" /><h3 className="mt-4 text-2xl font-black text-slate-950">New case studies are being prepared.</h3><p className="mx-auto mt-3 max-w-xl text-sm font-semibold leading-7 text-slate-600">Our newest project stories and measurable outcomes will appear here soon.</p></Reveal>
+          )}
+          <Reveal className="mt-10 flex justify-center"><Link href="/work" className="button-primary inline-flex items-center justify-center rounded-xl px-8 py-4 text-sm font-extrabold">View All Recent Work <ArrowRight className="ml-3 size-4" /></Link></Reveal>
         </div>
       </section>
 
@@ -208,8 +185,12 @@ export default function MarketingPage() {
 
       <section id="insights" className="scroll-mt-24 bg-[radial-gradient(circle_at_top_right,#eff6ff,transparent_28rem),linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] py-20 sm:py-28">
         <div className="mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-12 2xl:px-16">
-          <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><div><SectionHeading eyebrow="Studio Notes">Ideas for building smarter, stronger businesses.</SectionHeading><p className="mt-4 max-w-2xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">Practical thinking on product, marketing, branding, automation, and sustainable agency growth.</p></div><Link href="#enquiry" className="button-secondary inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-sm font-extrabold">Request a growth review <ArrowRight className="ml-3 size-4" /></Link></Reveal>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{insights.map(({ icon: Icon, title, date, read, tone }, index) => <Reveal key={title} delay={index * 0.06}><article className="group h-full overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-100/70"><div className={`grid aspect-[16/9] place-items-center bg-gradient-to-br ${tone}`}><div className="grid size-20 place-items-center rounded-3xl border border-white/30 bg-white/15 text-white shadow-2xl backdrop-blur"><Icon className="size-9" /></div></div><div className="p-5 sm:p-6"><p className="text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-600">Growth Strategy</p><h3 className="mt-3 text-xl font-black leading-snug text-slate-950 transition group-hover:text-blue-700">{title}</h3><div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 text-[0.66rem] font-bold uppercase tracking-[0.1em] text-slate-500"><span>{date}</span><span>{read}</span></div></div></article></Reveal>)}</div>
+          <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><div><SectionHeading eyebrow="Latest insights">Ideas for building smarter, stronger businesses.</SectionHeading><p className="mt-4 max-w-2xl text-sm font-semibold leading-8 text-slate-600 sm:text-base">Freshly published thinking on product, marketing, branding, automation, and sustainable agency growth.</p></div><Link href="/blog" className="button-secondary inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-sm font-extrabold">Browse all articles <ArrowRight className="ml-3 size-4" /></Link></Reveal>
+          {blogPosts.length ? (
+            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{blogPosts.map((post, index) => <Reveal key={post.id} delay={index * 0.06}><article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-100/70"><ContentCover image={post.coverImage} label={post.title} className="aspect-[16/9]" /><div className="flex flex-1 flex-col p-5 sm:p-6"><div className="flex flex-wrap items-center gap-2 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-blue-600"><span>{post.category}</span>{post.featured && <span className="rounded-full bg-cyan-50 px-2 py-1 text-cyan-700">Featured</span>}</div><h3 className="mt-3 text-xl font-black leading-snug text-slate-950 transition group-hover:text-blue-700">{post.title}</h3><p className="mt-3 flex-1 text-sm font-semibold leading-7 text-slate-600">{post.excerpt || "Read the latest perspective from the M&W Labs studio."}</p><div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-5"><span className="text-[0.66rem] font-bold uppercase tracking-[0.1em] text-slate-500">{post.publishedAt ? new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(post.publishedAt) : post.authorName}</span><Link href={`/blog/${post.slug}`} className="inline-flex items-center text-xs font-extrabold text-blue-700">Read article <ArrowRight className="ml-2 size-3.5 transition group-hover:translate-x-1" /></Link></div></div></article></Reveal>)}</div>
+          ) : (
+            <Reveal className="mt-10 rounded-[2rem] border border-dashed border-blue-200 bg-white p-10 text-center"><Lightbulb className="mx-auto size-8 text-blue-500" /><h3 className="mt-4 text-2xl font-black text-slate-950">New insights are being prepared.</h3><p className="mx-auto mt-3 max-w-xl text-sm font-semibold leading-7 text-slate-600">Fresh thinking from the M&amp;W Labs studio will appear here soon.</p></Reveal>
+          )}
         </div>
       </section>
 

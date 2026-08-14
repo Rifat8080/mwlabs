@@ -8,9 +8,9 @@ import { notifyOrganization } from "@/lib/notifications";
 const settingsSchema = z.object({ name: z.string().trim().min(2).max(160) });
 
 async function readSettings(organizationId: string, currentRole: string) {
-  const [organization, members, auditLogs, bookingTypes, contentCount, backgroundJobs] = await Promise.all([
+  const [organization, memberGroups, auditLogs, bookingTypes, contentCount, backgroundJobs] = await Promise.all([
     db.organization.findUniqueOrThrow({ where: { id: organizationId }, select: { id: true, name: true, slug: true, createdAt: true, updatedAt: true } }),
-    db.member.findMany({ where: { organizationId }, select: { role: true } }),
+    db.member.groupBy({ by: ["role"], where: { organizationId }, _count: { _all: true } }),
     db.auditLog.findMany({ where: { organizationId }, orderBy: { createdAt: "desc" }, take: 12, select: { id: true, action: true, resource: true, resourceId: true, createdAt: true, user: { select: { name: true } } } }),
     db.bookingType.count({ where: { organizationId, active: true } }),
     Promise.all([
@@ -22,10 +22,11 @@ async function readSettings(organizationId: string, currentRole: string) {
   ]);
 
   const canonicalUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.BETTER_AUTH_URL || "";
+  const memberCount = memberGroups.reduce((total, group) => total + group._count._all, 0);
   return {
     organization: { ...organization, createdAt: organization.createdAt.toISOString(), updatedAt: organization.updatedAt?.toISOString() ?? null },
     currentRole,
-    roles: Object.entries(members.reduce<Record<string, number>>((counts, member) => ({ ...counts, [member.role]: (counts[member.role] ?? 0) + 1 }), {})).map(([role, count]) => ({ role, count })),
+    roles: memberGroups.map((group) => ({ role: group.role, count: group._count._all })),
     providers: [
       { key: "database", label: "Database", ready: true, detail: "Connected and responding" },
       { key: "email", label: "Transactional email", ready: Boolean(process.env.RESEND_API_KEY && process.env.NOTIFICATION_EMAIL_FROM), detail: process.env.RESEND_API_KEY && process.env.NOTIFICATION_EMAIL_FROM ? "Resend sender configured" : "Add RESEND_API_KEY and NOTIFICATION_EMAIL_FROM" },
@@ -39,7 +40,7 @@ async function readSettings(organizationId: string, currentRole: string) {
       { label: "Owner bootstrap closed", ready: process.env.ALLOW_INITIAL_SIGNUP !== "true", detail: process.env.ALLOW_INITIAL_SIGNUP === "true" ? "Set ALLOW_INITIAL_SIGNUP=false after creating the owner" : "Public owner workspace creation is disabled" },
       { label: "Authentication secret", ready: Boolean(process.env.BETTER_AUTH_SECRET && process.env.BETTER_AUTH_SECRET.length >= 32), detail: "A high-entropy server secret is required" },
       { label: "Canonical HTTPS URL", ready: process.env.NODE_ENV !== "production" || canonicalUrl.startsWith("https://"), detail: process.env.NODE_ENV === "production" ? canonicalUrl || "Not configured" : "Required when deployed to production" },
-      { label: "Role-scoped access", ready: members.some((member) => member.role === "owner"), detail: `${members.length} workspace membership${members.length === 1 ? "" : "s"}` },
+      { label: "Role-scoped access", ready: memberGroups.some((group) => group.role === "owner"), detail: `${memberCount} workspace membership${memberCount === 1 ? "" : "s"}` },
       { label: "Worker authentication", ready: process.env.NODE_ENV !== "production" || Boolean(process.env.BACKGROUND_JOB_SECRET || process.env.CRON_SECRET), detail: process.env.NODE_ENV !== "production" || process.env.BACKGROUND_JOB_SECRET || process.env.CRON_SECRET ? "Background worker endpoint is protected" : "Add BACKGROUND_JOB_SECRET before deployment" },
     ],
     backgroundJobs,

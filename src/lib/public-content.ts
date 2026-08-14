@@ -64,23 +64,71 @@ export function createContentMetadata(
   };
 }
 
-export async function getPublishedBlogPosts() {
-  return db.blogPost.findMany({
-    where: publishedAtOrBeforeNow(),
-    orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      excerpt: true,
-      coverImage: true,
-      category: true,
-      authorName: true,
-      featured: true,
-      publishedAt: true,
-      updatedAt: true,
-    },
-  });
+export async function getHomepageContent() {
+  const where = publishedAtOrBeforeNow();
+  const [blogPosts, workPosts] = await Promise.all([
+    db.blogPost.findMany({
+      where,
+      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+      take: 3,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        coverImage: true,
+        category: true,
+        authorName: true,
+        featured: true,
+        publishedAt: true,
+      },
+    }),
+    db.workPost.findMany({
+      where,
+      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+      take: 2,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        clientName: true,
+        industry: true,
+        summary: true,
+        coverImage: true,
+        featured: true,
+      },
+    }),
+  ]);
+
+  return { blogPosts, workPosts };
+}
+
+export async function getPublishedBlogPosts(page = 1, pageSize = 18) {
+  const where = publishedAtOrBeforeNow();
+  const limit = Math.min(48, Math.max(6, pageSize));
+  const currentPage = Math.max(1, page);
+  const [posts, total] = await Promise.all([
+    db.blogPost.findMany({
+      where,
+      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+      skip: (currentPage - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        coverImage: true,
+        category: true,
+        authorName: true,
+        featured: true,
+        publishedAt: true,
+        updatedAt: true,
+      },
+    }),
+    db.blogPost.count({ where }),
+  ]);
+  return { posts, total, page: currentPage, pages: Math.max(1, Math.ceil(total / limit)) };
 }
 
 export const getPublishedBlogPost = cache(async (slug: string) => {
@@ -89,25 +137,34 @@ export const getPublishedBlogPost = cache(async (slug: string) => {
   });
 });
 
-export async function getPublishedWorkPosts() {
-  return db.workPost.findMany({
-    where: publishedAtOrBeforeNow(),
-    orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      clientName: true,
-      industry: true,
-      services: true,
-      summary: true,
-      coverImage: true,
-      featured: true,
-      completedAt: true,
-      publishedAt: true,
-      updatedAt: true,
-    },
-  });
+export async function getPublishedWorkPosts(page = 1, pageSize = 12) {
+  const where = publishedAtOrBeforeNow();
+  const limit = Math.min(36, Math.max(4, pageSize));
+  const currentPage = Math.max(1, page);
+  const [posts, total] = await Promise.all([
+    db.workPost.findMany({
+      where,
+      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+      skip: (currentPage - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        clientName: true,
+        industry: true,
+        services: true,
+        summary: true,
+        coverImage: true,
+        featured: true,
+        completedAt: true,
+        publishedAt: true,
+        updatedAt: true,
+      },
+    }),
+    db.workPost.count({ where }),
+  ]);
+  return { posts, total, page: currentPage, pages: Math.max(1, Math.ceil(total / limit)) };
 }
 
 export const getPublishedWorkPost = cache(async (slug: string) => {
@@ -122,12 +179,39 @@ export const getPublishedSeoPage = cache(async (slug: string) => {
   });
 });
 
-export async function getSitemapContent() {
+export async function getSitemapCounts() {
   const where = publishedAtOrBeforeNow();
   const [blogPosts, workPosts, seoPages] = await Promise.all([
-    db.blogPost.findMany({ where, select: { slug: true, updatedAt: true } }),
-    db.workPost.findMany({ where, select: { slug: true, updatedAt: true } }),
-    db.seoPage.findMany({ where: { ...where, noIndex: false }, select: { slug: true, updatedAt: true } }),
+    db.blogPost.count({ where }),
+    db.workPost.count({ where }),
+    db.seoPage.count({ where: { ...where, noIndex: false } }),
+  ]);
+  return { blogPosts, workPosts, seoPages };
+}
+
+export async function getSitemapContent(offset = 0, limit = 45_000) {
+  const where = publishedAtOrBeforeNow();
+  const counts = await getSitemapCounts();
+  let remainingOffset = Math.max(0, offset);
+  let remainingLimit = Math.min(45_000, Math.max(1, limit));
+
+  const blogSkip = Math.min(remainingOffset, counts.blogPosts);
+  remainingOffset -= blogSkip;
+  const blogTake = Math.min(remainingLimit, Math.max(0, counts.blogPosts - blogSkip));
+  remainingLimit -= blogTake;
+
+  const workSkip = Math.min(remainingOffset, counts.workPosts);
+  remainingOffset -= workSkip;
+  const workTake = Math.min(remainingLimit, Math.max(0, counts.workPosts - workSkip));
+  remainingLimit -= workTake;
+
+  const seoSkip = Math.min(remainingOffset, counts.seoPages);
+  const seoTake = Math.min(remainingLimit, Math.max(0, counts.seoPages - seoSkip));
+
+  const [blogPosts, workPosts, seoPages] = await Promise.all([
+    blogTake ? db.blogPost.findMany({ where, orderBy: { id: "asc" }, skip: blogSkip, take: blogTake, select: { slug: true, updatedAt: true } }) : [],
+    workTake ? db.workPost.findMany({ where, orderBy: { id: "asc" }, skip: workSkip, take: workTake, select: { slug: true, updatedAt: true } }) : [],
+    seoTake ? db.seoPage.findMany({ where: { ...where, noIndex: false }, orderBy: { id: "asc" }, skip: seoSkip, take: seoTake, select: { slug: true, updatedAt: true } }) : [],
   ]);
   return { blogPosts, workPosts, seoPages };
 }

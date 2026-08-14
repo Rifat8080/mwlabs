@@ -59,6 +59,8 @@ async function cleanup() {
   }
   await pool.query("DELETE FROM `Notification` WHERE message LIKE ? OR title LIKE ?", ["%Workflow Smoke%", "%Workflow Smoke%"]);
   await pool.query("DELETE FROM `AuditLog` WHERE metadata LIKE ?", ["%Workflow Smoke%"]);
+  await pool.query("DELETE FROM `BlogPost` WHERE title = ?", ["Workflow Smoke Blog Post"]);
+  await pool.query("DELETE FROM `WorkPost` WHERE title = ?", ["Workflow Smoke Work Post"]);
   await pool.query("DELETE FROM `SeoPage` WHERE title = ?", ["Workflow Smoke SEO Page"]);
   await pool.query("DELETE FROM `MediaAsset` WHERE originalName = ?", ["workflow-smoke.png"]);
   await pool.query("DELETE FROM `Automation` WHERE name = ?", ["Workflow Smoke Follow-up"]);
@@ -172,6 +174,12 @@ try {
   const seo = await mutate("seo-pages", "POST", { data: { title: "Workflow Smoke SEO Page", summary: "A complete smoke test landing page.", content: "This page proves that publishing, generated slugs, and public rendering work together.", status: "Published", noIndex: true } }, cookie);
   ids.seo = seo.record.id;
   assert(seo.record.slug && seo.record.publishedAt, "Published SEO content did not receive a slug and publication time.");
+  const blog = await mutate("blog-posts", "POST", { data: { title: "Workflow Smoke Blog Post", excerpt: "Published content should reach the homepage and blog archive.", content: "This article proves the admin-to-website publishing workflow.", category: "Workflow", authorName: "M&W Labs", status: "Published", featured: true } }, cookie);
+  ids.blog = blog.record.id;
+  assert(blog.record.slug && blog.record.publishedAt, "Published blog content did not receive a slug and publication time.");
+  const work = await mutate("work-posts", "POST", { data: { title: "Workflow Smoke Work Post", clientName: "Workflow Smoke Ltd", industry: "Testing", summary: "Published work should reach the homepage and work archive.", solution: "The CRM publishing workflow creates a dedicated public case-study page.", status: "Published", featured: true } }, cookie);
+  ids.work = work.record.id;
+  assert(work.record.slug && work.record.publishedAt, "Published work content did not receive a slug and publication time.");
 
   const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=", "base64");
   const form = new FormData();
@@ -185,10 +193,17 @@ try {
   for (const [path, marker] of [["/app", "Welcome back"], ["/app/reports", "Reports &amp; forecasting"], ["/app/settings", "Workspace settings"], ["/app/team", "People &amp; teams"], ["/app/finance", "Finance &amp; billing"]]) {
     const response = await request(path, {}, cookie);
     const html = await response.text();
-    assert(response.ok && html.includes(marker), `${path} did not render its live workspace marker.`);
+    assert(
+      response.ok && html.includes(marker),
+      `${path} did not render its live workspace marker (status ${response.status}; response: ${html.replace(/\s+/g, " ").slice(0, 500)}).`,
+    );
   }
   const publicPage = await request(`/${seo.record.slug}`);
   assert(publicPage.ok && (await publicPage.text()).includes("Workflow Smoke SEO Page"), "The published SEO page did not render publicly.");
+  for (const [path, marker] of [["/", "Workflow Smoke Blog Post"], ["/", "Workflow Smoke Work Post"], ["/blog", "Workflow Smoke Blog Post"], [`/blog/${blog.record.slug}`, "Workflow Smoke Blog Post"], ["/work", "Workflow Smoke Work Post"], [`/work/${work.record.slug}`, "Workflow Smoke Work Post"]]) {
+    const response = await request(path);
+    assert(response.ok && (await response.text()).includes(marker), `${path} did not render published CMS content.`);
+  }
 
   const protectedDelete = await request("/api/crud/clients", { method: "DELETE", body: JSON.stringify({ id: ids.client }) }, cookie);
   assert(protectedDelete.status === 400, "A connected client was destructively deleted instead of being protected.");
@@ -196,7 +211,7 @@ try {
   const deniedFinance = await request("/api/crud/invoices", { method: "PATCH", body: JSON.stringify({ id: ids.invoice, data: { status: "Void" } }) }, cookie);
   assert(deniedFinance.status === 403, "A member role was allowed to change finance records.");
 
-  console.log("Agency workflow smoke test passed: invitations, roles, teams, conversion, automation, delivery, time, finance, durable media, publishing, live pages, deletion safety, and role boundaries.");
+  console.log("Agency workflow smoke test passed: invitations, roles, teams, conversion, automation, delivery, time, finance, durable media, homepage/blog/work/SEO publishing, live pages, deletion safety, and role boundaries.");
 } finally {
   await cleanup();
   await pool.end();

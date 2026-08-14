@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Check, Download, Edit3, ExternalLink, FileSpreadsheet, FileUp, ImageIcon, LoaderCircle, Plus, Search, Sparkles, Trash2, UploadCloud, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Download, Edit3, ExternalLink, FileSpreadsheet, FileUp, ImageIcon, LoaderCircle, Plus, Search, Sparkles, Trash2, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 type CrudRecord = Record<string, unknown> & { id: string };
 type RelationOption = { id: string; label: string };
 type RelationOptions = Record<string, RelationOption[]>;
+type CrudPage = { limit: number; total: number; hasMore: boolean; nextCursor: string | null };
 
 type LiveMetric = {
   label: string;
@@ -125,7 +126,7 @@ async function parseImportFile(file: File) {
   throw new Error("Choose a CSV or XLSX spreadsheet.");
 }
 
-function liveMetrics(records: CrudRecord[], crud: CrudUiConfig, now: number): LiveMetric[] {
+function liveMetrics(records: CrudRecord[], crud: CrudUiConfig, now: number, total: number): LiveMetric[] {
   const terminal = new Set(["complete", "completed", "done", "paid", "accepted", "signed", "active", "published", "archived", "ended"]);
   const attention = new Set(["blocked", "overdue", "urgent", "at risk", "rejected", "no show", "failed"]);
   const statuses = records.map((record) => String(record.status ?? record.stage ?? "").toLowerCase());
@@ -140,11 +141,11 @@ function liveMetrics(records: CrudRecord[], crud: CrudUiConfig, now: number): Li
   const totalValue = valueKey ? records.reduce((sum, record) => sum + Number(record[valueKey] ?? 0), 0) : null;
   const publication = records.some((record) => ["Published", "Draft", "Archived"].includes(String(record.status)));
   const metrics: LiveMetric[] = [
-    { label: `Total ${crud.resource.replaceAll("-", " ")}`, value: String(records.length), detail: "Live workspace records" },
+    { label: `Total ${crud.resource.replaceAll("-", " ")}`, value: String(total), detail: "Live workspace records" },
     publication
-      ? { label: "Published", value: String(records.filter((record) => record.status === "Published").length), detail: `${records.filter((record) => record.status === "Draft").length} drafts`, tone: "positive" }
-      : { label: "Open / in progress", value: String(open), detail: "Not in a terminal stage" },
-    { label: "Needs attention", value: String(needsAttention), detail: needsAttention ? "Overdue or risk-marked" : "No immediate flags", tone: needsAttention ? "warning" : "positive" },
+      ? { label: "Published on page", value: String(records.filter((record) => record.status === "Published").length), detail: `${records.filter((record) => record.status === "Draft").length} drafts on this page`, tone: "positive" }
+      : { label: "Open on page", value: String(open), detail: "Visible non-terminal records" },
+    { label: "Attention on page", value: String(needsAttention), detail: needsAttention ? "Visible overdue or risk-marked" : "No visible flags", tone: needsAttention ? "warning" : "positive" },
   ];
   if (totalValue !== null) metrics.push({ label: "Recorded value", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(totalValue), detail: `Sum of ${valueKey} in workspace reporting currency` });
   else metrics.push({ label: "Updated", value: records[0]?.updatedAt || records[0]?.createdAt ? formatCell(records[0].updatedAt ?? records[0].createdAt, "date") : "—", detail: "Most recent record" });
@@ -316,6 +317,7 @@ function RecordDialog({ crud, initial, relations, onSaved, trigger }: { crud: Cr
             <div key={field.key} className={cn("space-y-2", ["textarea", "image"].includes(field.type) && "sm:col-span-2")}>
               <Label htmlFor={`${field.key}-${initial?.id ?? "new"}`}>{field.label}{field.required && <span className="ml-1 text-destructive">*</span>}</Label>
               <FieldControl field={field} initial={initial} relations={relations} />
+              {crud.publicRoute && field.key === "status" && <p className="text-[10px] leading-5 text-muted-foreground">Only Published content appears on the website. Leave the publish date empty to make it live immediately; a future date schedules it.</p>}
             </div>
           ))}
         </form>
@@ -328,23 +330,18 @@ function RecordDialog({ crud, initial, relations, onSaved, trigger }: { crud: Cr
   );
 }
 
-function ImportDialog({ crud, onImported }: { crud: CrudUiConfig; onImported: (records: CrudRecord[]) => void }) {
+function ImportDialog({ crud, onImported }: { crud: CrudUiConfig; onImported: () => void }) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [pending, setPending] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  function downloadTemplate() {
-    const content = `${crud.fields.map((field) => csvCell(field.key)).join(",")}\n`;
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(new Blob([content], { type: "text/csv;charset=utf-8" }));
-    link.download = `${crud.resource}-import-template.csv`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-  }
+  // No static template: imports are treated dynamically so any spreadsheet columns are accepted.
 
   async function importFile() {
     if (!file) return;
     setPending(true);
+    setProgress(0);
     try {
       if (file.size > 8 * 1024 * 1024) throw new Error("Choose a spreadsheet smaller than 8 MB.");
       const rows = await parseImportFile(file);
@@ -352,44 +349,55 @@ function ImportDialog({ crud, onImported }: { crud: CrudUiConfig; onImported: (r
       if (rows.length > 501) throw new Error("Import up to 500 records at a time.");
       const headers = rows[0].map((value, index) => (index === 0 ? value.replace(/^\uFEFF/, "") : value).trim());
       const allowed = new Map(crud.fields.map((field) => [field.key, field]));
-      const unknown = headers.filter((header) => header && !allowed.has(header));
-      if (unknown.length) throw new Error(`Unknown columns: ${unknown.join(", ")}. Download the current CSV template for the correct field keys.`);
-      const missing = crud.fields.filter((field) => field.required && !headers.includes(field.key));
-      if (missing.length) throw new Error(`Missing required columns: ${missing.map((field) => field.key).join(", ")}.`);
 
-      const imported: CrudRecord[] = [];
+      const prepared: Record<string, unknown>[] = [];
       const failures: string[] = [];
       for (let index = 1; index < rows.length; index += 1) {
         const values = rows[index];
         const data: Record<string, unknown> = {};
         headers.forEach((header, column) => {
           const field = allowed.get(header);
-          if (!field) return;
           const value = values[column]?.trim() ?? "";
+          if (!field) {
+            // Unknown columns are kept as raw values
+            data[header] = value;
+            return;
+          }
           if (field.type === "number") data[header] = value === "" ? "" : Number(value);
           else if (field.type === "checkbox") data[header] = ["true", "yes", "1", "on"].includes(value.toLowerCase());
           else if (field.type === "datetime" && value) data[header] = new Date(value).toISOString();
           else data[header] = value;
         });
+        prepared.push(data);
+      }
+      let imported = 0;
+      const batchSize = 25;
+      for (let offset = 0; offset < prepared.length; offset += batchSize) {
+        const batch = prepared.slice(offset, offset + batchSize);
         const response = await fetch(`/api/crud/${crud.resource}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data }),
+          body: JSON.stringify({ records: batch }),
         });
         const result = await response.json().catch(() => null);
-        if (response.ok && result?.record) imported.push(result.record as CrudRecord);
-        else failures.push(`row ${index + 1}: ${result?.error ?? "save failed"}`);
+        if (!response.ok && response.status !== 207) throw new Error(result?.error ?? `Import stopped after ${imported} records.`);
+        imported += Array.isArray(result?.records) ? result.records.length : 0;
+        for (const failure of Array.isArray(result?.failures) ? result.failures : []) {
+          failures.push(`row ${offset + Number(failure.index) + 2}: ${failure.error ?? "save failed"}`);
+        }
+        setProgress(Math.round(Math.min(prepared.length, offset + batch.length) / prepared.length * 100));
       }
-      if (imported.length) onImported(imported);
-      if (failures.length) throw new Error(`${imported.length} imported; ${failures.length} failed. ${failures.slice(0, 3).join(" · ")}`);
+      if (imported) onImported();
+      if (failures.length) throw new Error(`${imported} imported; ${failures.length} failed. ${failures.slice(0, 3).join(" · ")}`);
       window.dispatchEvent(new Event("mwlabs:notifications-changed"));
-      toast.success(`${imported.length} ${crud.resource.replaceAll("-", " ")} imported`);
+      toast.success(`${imported} ${crud.resource.replaceAll("-", " ")} imported`);
       setOpen(false);
       setFile(null);
     } catch (error) {
       toast.error("Import could not finish", { description: error instanceof Error ? error.message : "Check the spreadsheet and try again." });
     } finally {
       setPending(false);
+      setProgress(0);
     }
   }
 
@@ -399,16 +407,14 @@ function ImportDialog({ crud, onImported }: { crud: CrudUiConfig; onImported: (r
       <DialogContent className="admin-scrollbar max-h-[92dvh] overflow-y-auto p-4 sm:max-w-xl sm:p-6">
         <DialogHeader>
           <DialogTitle>Import {crud.resource.replaceAll("-", " ")}</DialogTitle>
-          <DialogDescription>Upload CSV or XLSX. Use exact field keys; relation columns use record IDs and dates use YYYY-MM-DD.</DialogDescription>
+          <DialogDescription>Upload CSV or XLSX. Columns are mapped dynamically; extra columns are recorded as-is.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
-          <button type="button" onClick={downloadTemplate} className="flex w-full items-center justify-between rounded-xl border bg-muted/25 p-4 text-left transition hover:bg-muted/50">
-            <span><span className="block text-sm font-semibold">Download CSV template</span><span className="mt-1 block text-xs text-muted-foreground">Open it in Excel or Google Sheets, then upload CSV or XLSX.</span></span>
-            <Download className="size-4 text-blue-600" />
-          </button>
+          <div className="flex w-full items-center justify-between rounded-xl border bg-muted/25 p-4 text-left"><span><span className="block text-sm font-semibold">Dynamic import</span><span className="mt-1 block text-xs text-muted-foreground">No template required — all columns will be recorded.</span></span><Download className="size-4 text-blue-600" /></div>
           <Label htmlFor={`spreadsheet-${crud.resource}`}>Completed spreadsheet</Label>
           <Input id={`spreadsheet-${crud.resource}`} type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
-          <p className="text-[11px] leading-5 text-muted-foreground">CSV and XLSX are supported. XLSX imports the first worksheet. Files are validated row by row, up to 500 records or 8 MB per batch.</p>
+          <p className="text-[11px] leading-5 text-muted-foreground">CSV and XLSX are supported. XLSX imports the first worksheet. Up to 500 records are validated and saved in bounded batches so the workspace remains responsive.</p>
+          {pending && <div className="space-y-2"><div className="h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-blue-600 transition-[width]" style={{ width: `${progress}%` }} /></div><p className="text-right text-[10px] font-semibold text-blue-700">{progress}% processed</p></div>}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)} disabled={pending}>Cancel</Button>
@@ -426,78 +432,109 @@ export function ModuleWorkspace({ moduleKey, config, role }: { moduleKey: string
   const canWrite = Boolean(crud && (["owner", "admin"].includes(role) || ["tasks", "calendar-events", "time-entries", "documents", "activities", "knowledge"].includes(crud.resource)));
   const canDelete = ["owner", "admin"].includes(role);
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [records, setRecords] = useState<CrudRecord[]>([]);
   const [relations, setRelations] = useState<RelationOptions>({});
   const [loading, setLoading] = useState(Boolean(crud));
+  const [page, setPage] = useState<CrudPage>({ limit: 50, total: 0, hasMore: false, nextCursor: null });
+  const [cursorHistory, setCursorHistory] = useState<string[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [mountedAt] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setCursorHistory([]);
+      setDebouncedQuery(query.trim());
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     if (!crud) return;
     let active = true;
-    const resources = Array.from(new Set(crud.fields.map((field) => field.relationResource).filter((resource): resource is string => Boolean(resource))));
+    const controller = new AbortController();
+    const cursor = cursorHistory.at(-1);
 
     async function load() {
       setLoading(true);
       try {
-        const [recordResponse, ...relationResponses] = await Promise.all([
-          fetch(`/api/crud/${crud!.resource}`),
-          ...resources.map((resource) => fetch(resource === "members" ? "/api/team" : `/api/crud/${resource}`)),
-        ]);
+        const params = new URLSearchParams({ limit: "50" });
+        if (debouncedQuery) params.set("q", debouncedQuery);
+        if (cursor) params.set("cursor", cursor);
+        const recordResponse = await fetch(`/api/crud/${crud.resource}?${params}`, { signal: controller.signal });
         if (!recordResponse.ok) throw new Error("Could not load this workspace.");
         const recordResult = await recordResponse.json();
-        const relationResults = await Promise.all(relationResponses.map(async (response) => response.ok ? response.json() : { records: [] }));
         if (!active) return;
         setRecords(recordResult.records as CrudRecord[]);
-        setRelations(Object.fromEntries(resources.map((resource, index) => {
-          const result = relationResults[index];
-          if (resource === "members") {
-            return [resource, ((result.members ?? []) as Array<{ userId: string; name: string; email: string }>).map((member) => ({ id: member.userId, label: `${member.name} — ${member.email}` }))];
-          }
-          return [resource, (result.records as CrudRecord[]).map((record) => ({ id: record.id, label: recordLabel(resource, record) }))];
-        })));
+        setPage(recordResult.page as CrudPage);
       } catch (error) {
-        if (active) toast.error("Live records unavailable", { description: error instanceof Error ? error.message : "Refresh and try again." });
+        if (active && !(error instanceof DOMException && error.name === "AbortError")) toast.error("Live records unavailable", { description: error instanceof Error ? error.message : "Refresh and try again." });
       } finally {
         if (active) setLoading(false);
       }
     }
 
     void load();
-    return () => { active = false; };
+    return () => { active = false; controller.abort(); };
+  }, [crud, cursorHistory, debouncedQuery, refreshKey]);
+
+  useEffect(() => {
+    if (!crud) return;
+    let active = true;
+    const controller = new AbortController();
+    const resources = Array.from(new Set(crud.fields.map((field) => field.relationResource).filter((resource): resource is string => Boolean(resource))));
+    async function loadRelations() {
+      const responses = await Promise.all(resources.map((resource) => fetch(resource === "members" ? "/api/team" : `/api/crud/${resource}?limit=100`, { signal: controller.signal })));
+      const results = await Promise.all(responses.map(async (response) => response.ok ? response.json() : { records: [] }));
+      if (!active) return;
+      setRelations(Object.fromEntries(resources.map((resource, index) => {
+        const result = results[index];
+        if (resource === "members") {
+          return [resource, ((result.members ?? []) as Array<{ userId: string; name: string; email: string }>).map((member) => ({ id: member.userId, label: `${member.name} — ${member.email}` }))];
+        }
+        return [resource, (result.records as CrudRecord[]).map((record) => ({ id: record.id, label: recordLabel(resource, record) }))];
+      })));
+    }
+    void loadRelations().catch((error) => {
+      if (active && !(error instanceof DOMException && error.name === "AbortError")) toast.error("Related records unavailable");
+    });
+    return () => { active = false; controller.abort(); };
   }, [crud]);
 
-  const filteredRecords = useMemo(() => records.filter((record) => Object.values(record).join(" ").toLowerCase().includes(query.toLowerCase())), [query, records]);
+  const filteredRecords = records;
   const filteredRows = useMemo(() => config.rows.filter((row) => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase())), [config.rows, query]);
-  const metrics = crud ? liveMetrics(records, crud, mountedAt) : config.metrics;
-  const attentionCount = Number(metrics.find((metric) => metric.label === "Needs attention")?.value ?? 0);
+  const metrics = crud ? liveMetrics(records, crud, mountedAt, page.total) : config.metrics;
+  const attentionCount = Number(metrics.find((metric) => metric.label === "Attention on page")?.value ?? 0);
   const operatingGuide = crud
     ? attentionCount > 0
       ? `${attentionCount} ${attentionCount === 1 ? "record needs" : "records need"} attention based on status or due date. Review those before adding new work.`
-      : `${records.length} live ${crud.resource.replaceAll("-", " ")} ${records.length === 1 ? "record is" : "records are"} connected to this workspace. No immediate status or due-date flags are visible.`
+      : `${page.total} live ${crud.resource.replaceAll("-", " ")} ${page.total === 1 ? "record is" : "records are"} connected to this workspace. This page has no immediate status or due-date flags.`
     : config.insight;
 
   function saveRecord(record: CrudRecord) {
-    setRecords((current) => current.some((item) => item.id === record.id) ? current.map((item) => item.id === record.id ? record : item) : [record, ...current]);
+    setRecords((current) => current.some((item) => item.id === record.id) ? current.map((item) => item.id === record.id ? record : item) : current);
+    if (!records.some((item) => item.id === record.id)) {
+      setCursorHistory([]);
+      setRefreshKey((value) => value + 1);
+    }
   }
 
-  function importRecords(imported: CrudRecord[]) {
-    setRecords((current) => {
-      const next = new Map(current.map((record) => [record.id, record]));
-      imported.forEach((record) => next.set(record.id, record));
-      return Array.from(next.values());
-    });
+  function importRecords() {
+    setCursorHistory([]);
+    setRefreshKey((value) => value + 1);
   }
 
   function exportRecords() {
     if (!crud) return;
-    const keys = Array.from(new Set(["id", ...crud.fields.map((field) => field.key), "createdAt", "updatedAt"]));
+    const recordKeys = filteredRecords.flatMap((r) => Object.keys(r));
+    const keys = Array.from(new Set(["id", ...crud.fields.map((field) => field.key), "createdAt", "updatedAt", ...recordKeys]));
     const lines = [keys.map(csvCell).join(","), ...filteredRecords.map((record) => keys.map((key) => csvCell(record[key])).join(","))];
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" }));
     link.download = `${crud.resource}-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
-    toast.success(`${filteredRecords.length} records exported`);
+    toast.success(`${filteredRecords.length} visible records exported`);
   }
 
   async function deleteRecord(record: CrudRecord) {
@@ -507,6 +544,7 @@ export function ModuleWorkspace({ moduleKey, config, role }: { moduleKey: string
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Unable to delete record");
       setRecords((current) => current.filter((item) => item.id !== record.id));
+      setPage((current) => ({ ...current, total: Math.max(0, current.total - 1) }));
       window.dispatchEvent(new Event("mwlabs:notifications-changed"));
       toast.success(`${crud.singular} deleted`);
     } catch (error) {
@@ -523,7 +561,7 @@ export function ModuleWorkspace({ moduleKey, config, role }: { moduleKey: string
           <p className="admin-page-description">{config.description}</p>
         </div>
         <div className="admin-actions">
-          {crud && <Button variant="outline" className="h-9 bg-white" onClick={exportRecords}><Download className="size-4" /> Export CSV</Button>}
+          {crud && <Button variant="outline" className="h-9 bg-white" onClick={exportRecords}><Download className="size-4" /> Export page</Button>}
           {crud && canWrite && <ImportDialog crud={crud} onImported={importRecords} />}
           {crud && canWrite && <RecordDialog crud={crud} relations={relations} onSaved={saveRecord} trigger={<Button className="h-9"><Plus className="size-4" /> Create {crud.singular}</Button>} />}
         </div>
@@ -531,7 +569,7 @@ export function ModuleWorkspace({ moduleKey, config, role }: { moduleKey: string
 
       {views.length > 1 && (
         <div className="admin-scrollbar mt-6 flex gap-1 overflow-x-auto rounded-xl border bg-white p-1 shadow-sm">
-          {views.map((view) => <button key={view.resource} type="button" onClick={() => { setActiveResource(view.resource); setQuery(""); }} className={cn("whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-semibold capitalize text-muted-foreground transition hover:bg-muted", crud?.resource === view.resource && "bg-brand-navy text-white hover:bg-brand-navy")}>{view.resource.replaceAll("-", " ")}</button>)}
+          {views.map((view) => <button key={view.resource} type="button" onClick={() => { setActiveResource(view.resource); setQuery(""); setDebouncedQuery(""); setCursorHistory([]); }} className={cn("whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-semibold capitalize text-muted-foreground transition hover:bg-muted", crud?.resource === view.resource && "bg-brand-navy text-white hover:bg-brand-navy")}>{view.resource.replaceAll("-", " ")}</button>)}
         </div>
       )}
 
@@ -546,7 +584,7 @@ export function ModuleWorkspace({ moduleKey, config, role }: { moduleKey: string
       <section className="admin-card mt-5 overflow-hidden rounded-2xl">
         <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative w-full sm:max-w-xs"><Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" /><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search this workspace…" className="h-8.5 bg-muted/45 pl-9 text-xs" /></div>
-          <p className="text-[11px] text-muted-foreground">Showing {crud ? filteredRecords.length : filteredRows.length} {query ? "matching" : "total"} records</p>
+          <p className="text-[11px] text-muted-foreground">Showing {crud ? `${filteredRecords.length} of ${page.total}` : filteredRows.length} {query ? "matching" : "total"} records</p>
         </div>
         <div className="admin-mobile-records">
           {loading && <div className="grid min-h-40 place-items-center rounded-xl border border-dashed bg-muted/20 text-center"><div><LoaderCircle className="mx-auto size-5 animate-spin text-blue-600" /><p className="mt-2 text-xs text-muted-foreground">Loading live records…</p></div></div>}
@@ -605,6 +643,15 @@ export function ModuleWorkspace({ moduleKey, config, role }: { moduleKey: string
             </TableBody>
           </Table>
         </div>
+        {crud && (cursorHistory.length > 0 || page.hasMore) && (
+          <div className="flex items-center justify-between gap-3 border-t bg-muted/10 px-4 py-3">
+            <p className="text-[10px] font-medium text-muted-foreground">Page {cursorHistory.length + 1} · {page.limit} records maximum</p>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" disabled={loading || cursorHistory.length === 0} onClick={() => setCursorHistory((current) => current.slice(0, -1))}><ChevronLeft className="size-3.5" /> Previous</Button>
+              <Button variant="outline" size="sm" disabled={loading || !page.hasMore || !page.nextCursor} onClick={() => page.nextCursor && setCursorHistory((current) => [...current, page.nextCursor!])}>Next <ChevronRight className="size-3.5" /></Button>
+            </div>
+          </div>
+        )}
       </section>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1fr_0.72fr]">

@@ -7,10 +7,16 @@ import { detectImageExtension, uploadMimeTypes } from "@/lib/upload-store";
 export const runtime = "nodejs";
 
 const maximumUploadBytes = 8 * 1024 * 1024;
+const maximumMultipartBytes = maximumUploadBytes + 1024 * 1024;
 
 export async function POST(request: Request) {
   const session = await requireApiSession(request);
   if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const declaredBytes = Number(request.headers.get("content-length") || 0);
+  if (declaredBytes > maximumMultipartBytes) {
+    return Response.json({ error: "Images must be 8 MB or smaller." }, { status: 413 });
+  }
 
   try {
     const form = await request.formData();
