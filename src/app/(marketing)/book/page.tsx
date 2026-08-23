@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { ArrowLeft, CheckCircle2, Clock3, ShieldCheck, Sparkles } from "lucide-react";
 
 import { NativeScheduler } from "@/components/marketing/native-scheduler";
-import { auth } from "@/lib/auth";
+import { getCurrentAuthSession } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { readLeadBookingToken } from "@/lib/scheduling";
 
@@ -18,7 +17,7 @@ export const dynamic = "force-dynamic";
 export default async function BookDiscoveryPage({ searchParams }: PageProps<"/book">) {
   const query = await searchParams;
   const tokenLeadId = readLeadBookingToken(query.lead);
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentAuthSession();
 
   const lead = tokenLeadId
     ? await db.lead.findFirst({

@@ -69,6 +69,7 @@ export function LeadRegistrationForm({
   const [pending, setPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [formStartedAt] = useState(() => String(Date.now()));
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -136,7 +137,7 @@ export function LeadRegistrationForm({
       const response = await fetch("/api/registrations/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(profile),
+        body: JSON.stringify({ ...profile, website: String(form.get("website") ?? ""), formStartedAt }),
       });
       const payload = (await response.json().catch(() => null)) as
         | { error?: string }
@@ -228,6 +229,7 @@ export function LeadRegistrationForm({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-8">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="registration-name">Your name</Label>

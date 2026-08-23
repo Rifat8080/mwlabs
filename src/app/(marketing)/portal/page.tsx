@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   ArrowRight,
@@ -16,7 +15,7 @@ import {
 
 import { LeadPortalActions } from "@/components/auth/lead-portal-actions";
 import { LocalMeetingTime } from "@/components/marketing/timezone-control";
-import { auth } from "@/lib/auth";
+import { getCurrentAuthSession } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { createBookingManagePath } from "@/lib/scheduling";
 
@@ -33,7 +32,7 @@ const workflow = [
 ];
 
 export default async function LeadPortalPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentAuthSession();
   if (!session?.user?.id) redirect("/sign-in?next=/portal");
 
   const [membership, lead, user] = await Promise.all([

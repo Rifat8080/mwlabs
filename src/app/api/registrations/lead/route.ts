@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { auth } from "@/lib/auth";
-import { hasTrustedMutationOrigin } from "@/lib/dal";
+import { assessPublicSubmission } from "@/lib/anti-spam";
+import { getAuthSessionFromHeaders, hasTrustedMutationOrigin } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { registerLeadProfile } from "@/lib/lead-registration";
 
@@ -12,6 +12,8 @@ const registrationProfileSchema = z.object({
   serviceInterest: z.string().trim().min(2).max(120),
   budgetRange: z.string().trim().min(2).max(80),
   projectBrief: z.string().trim().min(10).max(4_000),
+  website: z.string().max(0).optional().default(""),
+  formStartedAt: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -19,7 +21,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request origin." }, { status: 403 });
   }
 
-  const session = await auth.api.getSession({ headers: request.headers });
+  const session = await getAuthSessionFromHeaders(request.headers);
   if (!session?.user?.id) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -33,6 +35,9 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
+
+  const spam = assessPublicSubmission(request, { email: session.user.email, name: parsed.data.name, message: parsed.data.projectBrief, honeypot: parsed.data.website, formStartedAt: parsed.data.formStartedAt }, { bucket: "lead-registration", limit: 5, duplicateWindowMs: 30 * 60 * 1_000 });
+  if (!spam.allowed) return spam.error ? Response.json({ error: spam.error }, { status: spam.status }) : Response.json({ registered: true }, { status: spam.status });
 
   const membership = await db.member.findFirst({
     where: { userId: session.user.id },

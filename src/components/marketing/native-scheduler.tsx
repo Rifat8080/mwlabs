@@ -30,6 +30,14 @@ type Confirmation = {
   calendarPath: string | null;
 };
 
+async function readJsonResponse<T>(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    throw new Error("The scheduling service returned an unexpected response. Please refresh and try again.");
+  }
+  return response.json() as Promise<T>;
+}
+
 function dayLabel(date: string) {
   return new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${date}T12:00:00Z`));
 }
@@ -76,6 +84,7 @@ export function NativeScheduler({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
+  const [formStartedAt] = useState(() => String(Date.now()));
 
   useEffect(() => {
     let active = true;
@@ -85,7 +94,7 @@ export function NativeScheduler({
       try {
         const query = selectedType ? `?type=${encodeURIComponent(selectedType)}&days=21` : "?days=21";
         const response = await fetch(`/api/scheduling${query}`, { cache: "no-store" });
-        const result = await response.json();
+        const result = await readJsonResponse<Availability & { error?: string }>(response);
         if (!response.ok) throw new Error(result.error ?? "Available times could not be loaded.");
         if (!active) return;
         setAvailability(result as Availability);
@@ -132,10 +141,12 @@ export function NativeScheduler({
           phone: form.get("phone"),
           company: form.get("company"),
           notes: form.get("notes"),
+          website: form.get("website"),
+          formStartedAt,
           leadToken,
         }),
       });
-      const result = await response.json();
+      const result = await readJsonResponse<Confirmation & { error?: string }>(response);
       if (!response.ok) throw new Error(result.error ?? "The meeting could not be booked.");
       setConfirmation(result as Confirmation);
     } catch (reason) {
@@ -189,6 +200,7 @@ export function NativeScheduler({
           {availability?.selectedType.description && <p className="mt-3 text-xs font-semibold leading-5 text-slate-500">{availability.selectedType.description}</p>}
           {selectedStart && <div className="mt-4 flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-xs font-bold leading-5 text-emerald-800"><CheckCircle2 className="mt-0.5 size-4 shrink-0" /> {longDate(selectedStart, timezone)}</div>}
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <div className="space-y-2"><Label htmlFor="booking-name">Name</Label><Input id="booking-name" name="name" defaultValue={name} required autoComplete="name" /></div>
             <div className="space-y-2"><Label htmlFor="booking-email">Email</Label><Input id="booking-email" name="email" type="email" defaultValue={email} required autoComplete="email" /></div>
             <div className="space-y-2"><Label htmlFor="booking-phone">Phone</Label><Input id="booking-phone" name="phone" defaultValue={phone} autoComplete="tel" /></div>

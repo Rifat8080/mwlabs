@@ -3,13 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Eye, EyeOff, LoaderCircle, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { Auth3DScene } from "@/components/auth/auth-3d-scene";
 
 type AuthFormProps = {
   mode: "sign-in" | "sign-up";
@@ -50,7 +51,7 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
     setPending(true);
     try {
       if (signUpMode) {
-        const result = await authClient.signUp.email({ email, password, name });
+        const result = await authClient.signUp.email({ email, password, name, callbackURL: "/auth/verified" });
         if (result.error) throw new Error(result.error.message);
 
         const workspace = await authClient.organization.create({
@@ -61,7 +62,15 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
           throw new Error(workspace.error?.message ?? "Could not create the workspace.");
         }
         await authClient.organization.setActive({ organizationId: workspace.data.id });
-        await fetch("/api/registrations/owner", { method: "POST" });
+        const upgrade = await fetch("/api/registrations/owner", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ organizationId: workspace.data.id }),
+        });
+        if (!upgrade.ok) {
+          const payload = (await upgrade.json().catch(() => null)) as { error?: string } | null;
+          throw new Error(payload?.error ?? "Could not activate owner access.");
+        }
         toast.success("Your agency workspace is ready");
         router.push("/app");
       } else {
@@ -69,6 +78,7 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
           email,
           password,
           rememberMe: true,
+          callbackURL: nextPath,
         });
         if (result.error) throw new Error(result.error.message);
         router.push(nextPath);
@@ -97,17 +107,19 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
   }
 
   return (
-    <div className="grid min-h-[calc(100svh-4.5rem)] pt-18 lg:grid-cols-[0.92fr_1.08fr]">
-      <section className="flex items-center justify-center px-5 py-14 sm:px-10">
-        <div className="w-full max-w-md">
-          <div className="mb-9">
+    <div className="auth-page relative isolate grid min-h-[calc(100svh-4.5rem)] overflow-hidden bg-[#f5f8fc] pt-18 lg:grid-cols-[0.92fr_1.08fr]">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_10%,rgba(37,99,235,0.12),transparent_28rem),radial-gradient(circle_at_78%_80%,rgba(6,182,212,0.1),transparent_24rem)]" />
+      <section className="flex items-center justify-center px-5 py-12 sm:px-10 sm:py-16">
+        <div className="w-full max-w-[30rem] rounded-[1.75rem] border border-white/80 bg-white/90 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.09)] backdrop-blur-xl sm:p-9">
+          <div className="mb-8">
+            <div className="mb-6 flex items-center gap-2 text-[0.62rem] font-black uppercase tracking-[0.18em] text-blue-700"><span className="grid size-8 place-items-center rounded-lg bg-blue-600 text-white"><LockKeyhole className="size-3.5" /></span> Private workspace</div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               {signUpMode ? "Start your command center" : "Welcome back"}
             </p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
+            <h1 className="mt-4 text-4xl font-semibold tracking-tighter text-slate-950 sm:text-5xl">
               {signUpMode ? "Set up M&W Command." : "Continue to M&W Command."}
             </h1>
-            <p className="mt-4 leading-7 text-muted-foreground">
+            <p className="mt-4 max-w-md leading-7 text-muted-foreground">
               {signUpMode
                 ? "Create the first owner account for M&W Labs. Disable initial signup immediately afterward."
                 : "Return to the private operating system for M&W Labs."}
@@ -165,7 +177,8 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
                 </button>
               </div>
             </div>
-            <Button type="submit" className="h-12 w-full bg-foreground text-background hover:bg-foreground/88" disabled={pending}>
+            {!signUpMode && <div className="-mt-2 text-right"><Link href="/forgot-password" className="text-xs font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground">Forgot password?</Link></div>}
+            <Button type="submit" className="h-12 w-full rounded-xl bg-slate-950 text-white shadow-[0_12px_26px_rgba(15,23,42,0.16)] hover:bg-blue-700" disabled={pending}>
               {pending ? <LoaderCircle className="size-4 animate-spin" /> : signUpMode ? "Create my workspace" : "Sign in"}
               {!pending && <ArrowRight className="size-4" />}
             </Button>
@@ -177,21 +190,19 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
               {signUpMode ? "Sign in" : "Register with M&W"}
             </Link>
           </p>
-          <p className="mt-7 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-            <ShieldCheck className="size-3.5" /> Encrypted, role-scoped, database-backed sessions
+          <p className="mt-7 flex items-center justify-center gap-2 border-t border-slate-100 pt-5 text-xs text-muted-foreground">
+            <ShieldCheck className="size-3.5 text-emerald-600" /> Encrypted, role-scoped, database-backed sessions
           </p>
         </div>
       </section>
 
-      <aside className="noise relative hidden overflow-hidden bg-brand-ink p-12 text-white lg:flex lg:flex-col lg:justify-between">
-        <div className="absolute -right-40 -top-28 size-[620px] rounded-full border border-white/8">
-          <div className="absolute inset-16 rounded-full border border-accent/25" />
-          <div className="absolute inset-36 rounded-full bg-accent/8 blur-2xl" />
-        </div>
-        <div className="relative z-10 flex justify-end"><Sparkles className="size-6 text-accent" /></div>
-        <div className="relative z-10 max-w-xl">
+      <aside className="noise relative hidden min-h-[42rem] overflow-hidden bg-brand-ink text-white lg:flex lg:flex-col lg:justify-between">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_52%_48%,rgba(14,116,144,0.28),transparent_30%),linear-gradient(145deg,#020617,#061b3d_55%,#02111f)]" />
+        <div className="relative z-10 flex items-center justify-between p-12 pb-0"><div><p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-cyan-300">M&amp;W Command / live system</p><p className="mt-2 text-sm font-semibold text-white/55">A clear view of the work ahead.</p></div><Sparkles className="size-6 text-accent" /></div>
+        <div className="absolute inset-0"><Auth3DScene /></div>
+        <div className="relative z-10 max-w-2xl p-12 pt-0">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">Today in your agency</p>
-          <blockquote className="mt-6 text-balance text-4xl font-medium leading-[1.08] tracking-[-0.045em]">
+          <blockquote className="mt-6 max-w-2xl text-balance text-4xl font-medium leading-[1.08] tracking-tighter">
             “I found the client risk, revised the resource plan, and drafted tomorrow&apos;s priorities.”
           </blockquote>
           <div className="mt-9 flex items-center gap-3">
@@ -199,7 +210,7 @@ export function AuthForm({ mode, googleEnabled, nextPath = "/auth/continue" }: A
             <div><p className="text-sm font-semibold">M&amp;W Intelligence</p><p className="text-xs text-white/42">The agency&apos;s second brain</p></div>
           </div>
         </div>
-        <div className="relative z-10 grid grid-cols-3 gap-3">
+        <div className="relative z-10 grid grid-cols-3 gap-3 p-12 pt-0">
           {[['$114k', 'weighted pipeline'], ['57.8%', 'gross margin'], ['91%', 'on-time work']].map(([value, label]) => (
             <div key={label} className="rounded-2xl border border-white/10 bg-white/5 p-4"><p className="text-xl font-semibold">{value}</p><p className="mt-1 text-[11px] text-white/40">{label}</p></div>
           ))}

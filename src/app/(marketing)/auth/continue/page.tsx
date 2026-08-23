@@ -1,13 +1,12 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth";
+import { getCurrentAuthSession } from "@/lib/dal";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function AuthContinuePage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentAuthSession();
   if (!session?.user?.id) redirect("/sign-in");
 
   const [membership, lead] = await Promise.all([

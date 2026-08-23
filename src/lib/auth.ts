@@ -6,7 +6,10 @@ import { nextCookies } from "better-auth/next-js";
 import { organization } from "better-auth/plugins";
 import { z } from "zod";
 
+import { promoteUserToStaff } from "@/lib/account-upgrade";
+import { authCookiePrefix } from "@/lib/auth-shared";
 import { db } from "@/lib/db";
+import { notificationEmailTemplate, sendEmail } from "@/lib/email";
 import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import { ensureSchedulingDefaults } from "@/lib/scheduling";
 import { seedWorkspace } from "@/lib/seed-workspace";
@@ -14,6 +17,39 @@ import { seedWorkspace } from "@/lib/seed-workspace";
 const googleEnabled = Boolean(
   process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
 );
+
+async function sendAuthEmail({
+  to,
+  recipientName,
+  subject,
+  message,
+  actionLabel,
+  actionUrl,
+  idempotencyKey,
+}: {
+  to: string;
+  recipientName: string;
+  subject: string;
+  message: string;
+  actionLabel: string;
+  actionUrl: string;
+  idempotencyKey: string;
+}) {
+  const content = notificationEmailTemplate({
+    recipientName,
+    title: subject,
+    message,
+    actionLabel,
+    actionUrl,
+  });
+  const result = await sendEmail({
+    to,
+    subject: `M&W Command: ${subject}`,
+    ...content,
+    idempotencyKey,
+  });
+  if (result.status === "Failed") console.error(`Could not send ${subject.toLowerCase()} email`, result.error);
+}
 
 async function recordOrganizationActivity({ organizationId, actorId, action, resource, resourceId, title, message }: { organizationId: string; actorId?: string | null; action: string; resource: string; resourceId?: string | null; title: string; message: string }) {
   try {
@@ -78,6 +114,35 @@ export const auth = betterAuth({
     autoSignIn: true,
     minPasswordLength: 10,
     maxPasswordLength: 128,
+    resetPasswordTokenExpiresIn: 60 * 60,
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url, token }) => {
+      await sendAuthEmail({
+        to: user.email,
+        recipientName: user.name,
+        subject: "Reset your password",
+        message: "A password reset was requested for your account. This link expires in one hour and can only be used once.",
+        actionLabel: "Reset password",
+        actionUrl: url,
+        idempotencyKey: `auth-password-reset-${token}`,
+      });
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    expiresIn: 60 * 60 * 24,
+    sendVerificationEmail: async ({ user, url, token }) => {
+      await sendAuthEmail({
+        to: user.email,
+        recipientName: user.name,
+        subject: "Verify your email",
+        message: "Confirm your email address to keep your M&W Command account secure.",
+        actionLabel: "Verify email",
+        actionUrl: url,
+        idempotencyKey: `auth-email-verification-${token}`,
+      });
+    },
   },
   socialProviders: googleEnabled
     ? {
@@ -103,7 +168,7 @@ export const auth = betterAuth({
   },
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
-    cookiePrefix: "mwlabscmd",
+    cookiePrefix: authCookiePrefix,
     database: { generateId: () => crypto.randomUUID() },
   },
   plugins: [
@@ -131,7 +196,8 @@ export const auth = betterAuth({
         });
       },
       organizationHooks: {
-        afterCreateOrganization: async ({ organization: created }) => {
+        afterCreateOrganization: async ({ organization: created, user }) => {
+          await promoteUserToStaff(user.id);
           await ensureSchedulingDefaults(created.id);
           if (process.env.SEED_DEMO_DATA === "true") {
             await seedWorkspace(created.id);
@@ -141,6 +207,7 @@ export const auth = betterAuth({
           await recordOrganizationActivity({ organizationId: invitationOrganization.id, actorId: inviter.id, action: "team.invitation.created", resource: "invitation", resourceId: invitation.id, title: "Team invitation created", message: `${inviter.name} invited ${invitation.email} as ${invitation.role}.` });
         },
         afterAcceptInvitation: async ({ invitation, user, organization: invitationOrganization }) => {
+          await promoteUserToStaff(user.id);
           await recordOrganizationActivity({ organizationId: invitationOrganization.id, actorId: user.id, action: "team.invitation.accepted", resource: "member", resourceId: user.id, title: "New workspace member", message: `${user.name} accepted the invitation and joined as ${invitation.role}.` });
         },
         afterUpdateMemberRole: async ({ member, previousRole, user, organization: memberOrganization }) => {

@@ -1,31 +1,42 @@
+import { z } from "zod";
+
+import { promoteUserToStaff } from "@/lib/account-upgrade";
+import { getAuthSessionFromHeaders, hasTrustedMutationOrigin } from "@/lib/dal";
 import { db } from "@/lib/db";
-import { requireApiSession } from "@/lib/dal";
+
+const ownerRegistrationSchema = z.object({
+  organizationId: z.string().min(1).max(191).optional(),
+});
 
 export async function POST(request: Request) {
-  const session = await requireApiSession(request);
-  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
-  if (!new Set(["owner", "admin"]).has(session.role)) {
+  if (!hasTrustedMutationOrigin(request)) {
+    return Response.json({ error: "Unauthorized request origin." }, { status: 403 });
+  }
+
+  const authSession = await getAuthSessionFromHeaders(request.headers);
+  if (!authSession?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const parsed = ownerRegistrationSchema.safeParse(await request.json().catch(() => ({})));
+  if (!parsed.success) return Response.json({ error: "Invalid owner registration." }, { status: 400 });
+
+  const requestedOrganizationId = parsed.data.organizationId ?? authSession.session.activeOrganizationId;
+  const membership = await db.member.findFirst({
+    where: requestedOrganizationId
+      ? {
+          userId: authSession.user.id,
+          organizationId: requestedOrganizationId,
+        }
+      : { userId: authSession.user.id },
+    orderBy: { createdAt: "asc" },
+    select: { role: true },
+  });
+
+  if (!membership) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!["owner", "admin"].includes(membership.role)) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const registrationLead = await db.lead.findUnique({
-    where: { userId: session.userId },
-    select: { id: true, source: true },
-  });
-
-  await db.user.update({
-    where: { id: session.userId },
-    data: { accountType: "staff" },
-  });
-
-  if (registrationLead?.source === "Website registration") {
-    await db.lead.delete({ where: { id: registrationLead.id } });
-  } else if (registrationLead) {
-    await db.lead.update({
-      where: { id: registrationLead.id },
-      data: { userId: null },
-    });
-  }
+  await promoteUserToStaff(authSession.user.id);
 
   return Response.json({ upgraded: true });
 }

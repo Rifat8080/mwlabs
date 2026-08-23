@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ModuleWorkspace } from "@/components/agency/module-workspace";
 import { NotificationsWorkspace } from "@/components/agency/notifications";
@@ -9,6 +9,7 @@ import { SettingsWorkspace } from "@/components/agency/settings-workspace";
 import { TeamWorkspace } from "@/components/agency/team-workspace";
 import { getReportsData, getWorkspaceContext } from "@/lib/dal";
 import { agencyModules, moduleConfigs } from "@/lib/module-config";
+import { canAccessModule } from "@/lib/permissions";
 
 export async function generateMetadata({ params }: PageProps<"/app/[module]">): Promise<Metadata> {
   const { module } = await params;
@@ -19,6 +20,8 @@ export async function generateMetadata({ params }: PageProps<"/app/[module]">): 
 export default async function ModulePage({ params }: PageProps<"/app/[module]">) {
   const { module } = await params;
   if (!agencyModules.includes(module) || module === "ai") notFound();
+  const workspace = await getWorkspaceContext();
+  if (!canAccessModule(workspace.role, module)) redirect("/app");
   const config = moduleConfigs[module];
   if (!config) notFound();
   if (module === "scheduling") return <SchedulingWorkspace />;
@@ -27,6 +30,5 @@ export default async function ModulePage({ params }: PageProps<"/app/[module]">)
   if (module === "reports") return <ReportsWorkspace data={await getReportsData()} />;
   if (module === "settings") return <SettingsWorkspace />;
 
-  const workspace = await getWorkspaceContext();
   return <ModuleWorkspace moduleKey={module} config={config} role={workspace.role} />;
 }

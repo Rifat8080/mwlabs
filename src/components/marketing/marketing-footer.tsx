@@ -18,7 +18,7 @@ function LinkedInIcon(props: SocialIconProps) {
 }
 
 function YouTubeIcon(props: SocialIconProps) {
-  return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}><path d="M21.55 6.2a2.5 2.5 0 0 0-1.76-1.77C18.23 4 12 4 12 4s-6.23 0-7.79.43A2.5 2.5 0 0 0 2.45 6.2C2 7.76 2 11 2 11s0 3.24.45 4.8a2.5 2.5 0 0 0 1.76 1.77C5.77 18 12 18s6.23 0 7.79-.43a2.5 2.5 0 0 0 1.76-1.77C22 14.24 22 11 22 11s0-3.24-.45-4.8ZM10 14.1V7.9l5.2 3.1-5.2 3.1Z" /></svg>;
+  return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}><path d="M23 12c0-1.66-.16-2.8-.44-3.7-.28-.89-.78-1.6-1.47-2.05C19.6 5.4 15.8 5 12 5s-7.6.4-8.09 1.25C2.22 7.7 1.72 8.41 1.44 9.3 1.16 10.2 1 11.34 1 12s.16 1.8.44 2.7c.28.89.78 1.6 1.47 2.05C4.4 18.6 8.2 19 12 19s7.6-.4 8.09-1.25c.69-.45 1.19-1.16 1.47-2.05.28-.9.44-2.04.44-3.7Zm-13 3.5v-7l6 3.5-6 3.5Z" /></svg>;
 }
 
 const footerGroups = [

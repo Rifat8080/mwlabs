@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { assessPublicSubmission } from "@/lib/anti-spam";
 import { db } from "@/lib/db";
 import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import { createLeadBookingPath } from "@/lib/scheduling";
@@ -12,9 +13,8 @@ const enquirySchema = z.object({
   service: z.string().trim().max(120).optional().default("General enquiry"),
   message: z.string().trim().min(10).max(4_000),
   website: z.string().max(0).optional().default(""),
+  formStartedAt: z.string().optional(),
 });
-
-const visitors = new Map<string, { count: number; resetAt: number }>();
 
 function trustedOrigin(request: Request) {
   const origin = request.headers.get("origin");
@@ -35,26 +35,13 @@ function trustedOrigin(request: Request) {
   return allowed.has(origin);
 }
 
-function withinRateLimit(request: Request) {
-  const key = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "local";
-  const now = Date.now();
-  const current = visitors.get(key);
-  if (!current || current.resetAt < now) {
-    visitors.set(key, { count: 1, resetAt: now + 60 * 60 * 1_000 });
-    return true;
-  }
-  if (current.count >= 5) return false;
-  current.count += 1;
-  return true;
-}
-
 export async function POST(request: Request) {
   if (!trustedOrigin(request)) return Response.json({ error: "Invalid request origin." }, { status: 403 });
-  if (!withinRateLimit(request)) return Response.json({ error: "Too many enquiries. Please try again later." }, { status: 429 });
 
   const parsed = enquirySchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Please check the enquiry details." }, { status: 400 });
-  if (parsed.data.website) return Response.json({ received: true }, { status: 202 });
+  const spam = assessPublicSubmission(request, { email: parsed.data.email, name: parsed.data.name, message: parsed.data.message, honeypot: parsed.data.website, formStartedAt: parsed.data.formStartedAt }, { bucket: "enquiry", limit: 5 });
+  if (!spam.allowed) return spam.error ? Response.json({ error: spam.error }, { status: spam.status }) : Response.json({ received: true }, { status: spam.status });
 
   const organization = await db.organization.findUnique({ where: { slug: "mw-labs" }, select: { id: true } });
   if (!organization) return Response.json({ error: "The enquiry workspace is not configured yet." }, { status: 503 });

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { auth } from "@/lib/auth";
-import { hasTrustedMutationOrigin } from "@/lib/dal";
+import { assessPublicSubmission } from "@/lib/anti-spam";
+import { getAuthSessionFromHeaders, hasTrustedMutationOrigin } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { notifyOrganization, queueWorkflowEmail } from "@/lib/notifications";
 import {
@@ -30,6 +30,8 @@ const bookingSchema = z.object({
   company: z.string().trim().max(160).optional().default(""),
   notes: z.string().trim().max(4_000).optional().default(""),
   leadToken: z.string().max(2_000).optional(),
+  website: z.string().max(0).optional().default(""),
+  formStartedAt: z.string().optional(),
 });
 
 function withinRateLimit(request: Request, bucket: "availability" | "booking", limit: number) {
@@ -53,35 +55,40 @@ function safeError(error: unknown) {
 }
 
 export async function GET(request: Request) {
-  if (!withinRateLimit(request, "availability", 120)) return Response.json({ error: "Too many availability requests." }, { status: 429 });
-  const organization = await db.organization.findUnique({ where: { slug: schedulingOrganizationSlug }, select: { id: true } });
-  if (!organization) return Response.json({ error: "Scheduling is not configured." }, { status: 503 });
-  const url = new URL(request.url);
-  const requestedType = url.searchParams.get("type");
-  const types = await db.bookingType.findMany({
-    where: { organizationId: organization.id, active: true },
-    orderBy: [{ createdAt: "asc" }],
-  });
-  const bookingType = types.find((type) => type.slug === requestedType || type.id === requestedType) ?? types[0];
-  if (!bookingType) return Response.json({ error: "No meeting types are accepting bookings." }, { status: 404 });
+  try {
+    if (!withinRateLimit(request, "availability", 120)) return Response.json({ error: "Too many availability requests." }, { status: 429 });
+    const organization = await db.organization.findUnique({ where: { slug: schedulingOrganizationSlug }, select: { id: true } });
+    if (!organization) return Response.json({ error: "Scheduling is not configured." }, { status: 503 });
+    const url = new URL(request.url);
+    const requestedType = url.searchParams.get("type");
+    const types = await db.bookingType.findMany({
+      where: { organizationId: organization.id, active: true },
+      orderBy: [{ createdAt: "asc" }],
+    });
+    const bookingType = types.find((type) => type.slug === requestedType || type.id === requestedType) ?? types[0];
+    if (!bookingType) return Response.json({ error: "No meeting types are accepting bookings." }, { status: 404 });
 
-  const manageId = readBookingManageToken(url.searchParams.get("booking") ?? undefined);
-  const managedBooking = manageId
-    ? await db.calendarEvent.findFirst({ where: { id: manageId, organizationId: organization.id }, select: { id: true } })
-    : null;
-  const days = await availableDays({
-    organizationId: organization.id,
-    bookingType,
-    from: url.searchParams.get("from") ?? undefined,
-    days: Number(url.searchParams.get("days") ?? 21),
-    excludeEventId: managedBooking?.id,
-  });
+    const manageId = readBookingManageToken(url.searchParams.get("booking") ?? undefined);
+    const managedBooking = manageId
+      ? await db.calendarEvent.findFirst({ where: { id: manageId, organizationId: organization.id }, select: { id: true } })
+      : null;
+    const days = await availableDays({
+      organizationId: organization.id,
+      bookingType,
+      from: url.searchParams.get("from") ?? undefined,
+      days: Number(url.searchParams.get("days") ?? 21),
+      excludeEventId: managedBooking?.id,
+    });
 
-  return Response.json({
-    bookingTypes: types.map(publicBookingType),
-    selectedType: publicBookingType(bookingType),
-    days,
-  }, { headers: { "Cache-Control": "no-store" } });
+    return Response.json({
+      bookingTypes: types.map(publicBookingType),
+      selectedType: publicBookingType(bookingType),
+      days,
+    }, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    console.error("Availability lookup failed", error);
+    return Response.json({ error: "Available times are temporarily unavailable. Please try again shortly." }, { status: 503 });
+  }
 }
 
 export async function POST(request: Request) {
@@ -92,6 +99,8 @@ export async function POST(request: Request) {
   const parsed = bookingSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: parsed.error.issues[0]?.message ?? "Invalid booking details." }, { status: 400 });
   if (!isValidTimezone(parsed.data.timezone)) return Response.json({ error: "Select a valid timezone." }, { status: 400 });
+  const spam = assessPublicSubmission(request, { email: parsed.data.email, name: parsed.data.name, message: parsed.data.notes, honeypot: parsed.data.website, formStartedAt: parsed.data.formStartedAt }, { bucket: "booking", limit: 8, duplicateWindowMs: 30 * 60 * 1_000 });
+  if (!spam.allowed) return spam.error ? Response.json({ error: spam.error }, { status: spam.status }) : Response.json({ received: true }, { status: spam.status });
 
   try {
     const organization = await db.organization.findUnique({ where: { slug: schedulingOrganizationSlug }, select: { id: true } });
@@ -106,7 +115,7 @@ export async function POST(request: Request) {
 
     const normalizedEmail = parsed.data.email.toLowerCase();
     const tokenLeadId = readLeadBookingToken(parsed.data.leadToken);
-    const session = await auth.api.getSession({ headers: request.headers });
+    const session = await getAuthSessionFromHeaders(request.headers);
     const event = await db.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM organization WHERE id = ${organization.id} FOR UPDATE`;
       const requestedEnd = new Date(slot.endAt);

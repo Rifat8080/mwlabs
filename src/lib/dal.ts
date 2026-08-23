@@ -1,12 +1,14 @@
 import "server-only";
 
 import { cache } from "react";
-import { headers } from "next/headers";
+import { headers as nextHeaders } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+
+const authoritativeSessionQuery = { disableCookieCache: true } as const;
 
 function dbNumber(value: unknown) {
   if (value && typeof value === "object" && "toNumber" in value && typeof value.toNumber === "function") return value.toNumber();
@@ -36,8 +38,19 @@ export function hasTrustedMutationOrigin(request: Request) {
   return trustedOrigins.has(origin);
 }
 
+export async function getAuthSessionFromHeaders(headers: Headers) {
+  return auth.api.getSession({
+    headers,
+    query: authoritativeSessionQuery,
+  });
+}
+
+export async function getCurrentAuthSession() {
+  return getAuthSessionFromHeaders(await nextHeaders());
+}
+
 export const verifySession = cache(async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentAuthSession();
   if (!session?.user?.id) redirect("/sign-in");
 
   return {
@@ -52,13 +65,22 @@ export const verifySession = cache(async () => {
 export const getWorkspaceContext = cache(async () => {
   const session = await verifySession();
 
-  const membership = await db.member.findFirst({
-    where: session.activeOrganizationId
-      ? {
+  const activeMembership = session.activeOrganizationId
+    ? await db.member.findFirst({
+        where: {
           userId: session.userId,
           organizationId: session.activeOrganizationId,
-        }
-      : { userId: session.userId },
+        },
+        select: {
+          role: true,
+          organization: { select: { id: true, name: true, slug: true } },
+        },
+      })
+    : null;
+
+  const membership = activeMembership ?? await db.member.findFirst({
+    where: { userId: session.userId },
+    orderBy: { createdAt: "asc" },
     select: {
       role: true,
       organization: { select: { id: true, name: true, slug: true } },
@@ -82,16 +104,22 @@ export const getWorkspaceContext = cache(async () => {
 export async function requireApiSession(request: Request) {
   if (!hasTrustedMutationOrigin(request)) return null;
 
-  const session = await auth.api.getSession({ headers: request.headers });
+  const session = await getAuthSessionFromHeaders(request.headers);
   if (!session?.user?.id) return null;
 
-  const membership = await db.member.findFirst({
-    where: session.session.activeOrganizationId
-      ? {
+  const activeMembership = session.session.activeOrganizationId
+    ? await db.member.findFirst({
+        where: {
           userId: session.user.id,
           organizationId: session.session.activeOrganizationId,
-        }
-      : { userId: session.user.id },
+        },
+        select: { organizationId: true, role: true },
+      })
+    : null;
+
+  const membership = activeMembership ?? await db.member.findFirst({
+    where: { userId: session.user.id },
+    orderBy: { createdAt: "asc" },
     select: { organizationId: true, role: true },
   });
 

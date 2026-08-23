@@ -10,11 +10,12 @@ const fieldClass = "block h-13 w-full rounded-2xl border border-blue-100 bg-blue
 export function ProjectEnquiryForm() {
   const [pending, setPending] = useState(false);
   const [submitted, setSubmitted] = useState<{ bookingPath: string | null } | null>(null);
+  const [formStartedAt] = useState(() => String(Date.now()));
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const payload = Object.fromEntries(new FormData(form).entries());
+    const payload = { ...Object.fromEntries(new FormData(form).entries()), formStartedAt };
     setPending(true);
     try {
       const response = await fetch("/api/enquiries", {

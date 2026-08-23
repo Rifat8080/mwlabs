@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { LeadRegistrationForm } from "@/components/auth/lead-registration-form";
-import { auth } from "@/lib/auth";
+import { getCurrentAuthSession } from "@/lib/dal";
 import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
@@ -14,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export default async function RegisterPage() {
   const [session, workspace] = await Promise.all([
-    auth.api.getSession({ headers: await headers() }),
+    getCurrentAuthSession(),
     db.organization.findUnique({ where: { slug: "mw-labs" }, select: { id: true } }),
   ]);
 

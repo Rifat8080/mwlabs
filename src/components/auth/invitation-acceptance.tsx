@@ -19,6 +19,8 @@ export function InvitationAcceptance({ invitationId }: { invitationId: string })
   async function accept() {
     const result = await authClient.organization.acceptInvitation({ invitationId });
     if (result.error) throw new Error(result.error.message);
+    const organizationId = result.data?.member?.organizationId ?? result.data?.invitation?.organizationId;
+    if (organizationId) await authClient.organization.setActive({ organizationId });
     toast.success("Invitation accepted", { description: "Welcome to the agency workspace." });
     router.push("/app");
     router.refresh();

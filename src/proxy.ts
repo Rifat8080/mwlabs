@@ -1,14 +1,16 @@
 import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
+import { authCookiePrefix, safePostAuthPath } from "@/lib/auth-shared";
+
 export function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request, {
-    cookiePrefix: "mwlabscmd",
+    cookiePrefix: authCookiePrefix,
   });
 
   if (!sessionCookie) {
     const signInUrl = new URL("/sign-in", request.url);
-    signInUrl.searchParams.set("next", request.nextUrl.pathname);
+    signInUrl.searchParams.set("next", safePostAuthPath(`${request.nextUrl.pathname}${request.nextUrl.search}`));
     return NextResponse.redirect(signInUrl);
   }
 

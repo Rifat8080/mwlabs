@@ -52,6 +52,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useSession, signOut } from "@/lib/auth-client";
+import { canAccessModule } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -183,13 +184,15 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-  const [savedPref, setSavedPref] = useState(false);
   const session = useSession();
   const [commandOpen, setCommandOpen] = useState(false);
   const [commandQuery, setCommandQuery] = useState("");
   const [unreadNotifications, setUnreadNotifications] = useState(0);
-  const allNavigation = navigation.flatMap((group) => group.items);
+  const visibleNavigation = navigation.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => canAccessModule(role, item.href === "/app" ? "overview" : item.href.split("/").at(-1) ?? "")),
+  })).filter((group) => group.items.length > 0);
+  const allNavigation = visibleNavigation.flatMap((group) => group.items);
   const currentPage = [...allNavigation]
     .sort((a, b) => b.href.length - a.href.length)
     .find((item) => item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href));
@@ -199,6 +202,23 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
     allNavigation.find((item) => item.href === "/app/tasks"),
     allNavigation.find((item) => item.href === "/app/scheduling"),
   ].filter((item): item is (typeof allNavigation)[number] => Boolean(item));
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const saved = window.localStorage.getItem("mwlabs:sidebarCollapsed");
+      return saved === null ? false : Boolean(JSON.parse(saved));
+    } catch {
+      return false;
+    }
+  });
+  const [savedPref, setSavedPref] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage.getItem("mwlabs:sidebarCollapsed") !== null;
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -222,15 +242,6 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = previousOverflow; };
   }, [commandOpen, mobileOpen]);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("mwlabs:sidebarCollapsed");
-      if (saved !== null) { setCollapsed(JSON.parse(saved)); setSavedPref(true); }
-    } catch (e) {
-      // ignore
-    }
-  }, []);
 
   useEffect(() => {
     function onResize() {
@@ -300,7 +311,7 @@ export function AgencyShell({ children, user, organization, role }: AgencyShellP
         </Link>
       </div>
       <nav className="admin-scrollbar flex-1 overflow-y-auto px-3 py-4" aria-label="Agency workspace">
-        {navigation.map((group) => (
+          {visibleNavigation.map((group) => (
           <div key={group.label} className="mb-5">
             {!collapsed && <p className="mb-1.5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/28">{group.label}</p>}
             <div className="space-y-0.5">
