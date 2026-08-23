@@ -87,7 +87,19 @@ export const getWorkspaceContext = cache(async () => {
     },
   });
 
-  if (!membership) redirect("/portal");
+  if (!membership) {
+    const customerLead = await db.lead.findFirst({
+      where: { userId: session.userId },
+      orderBy: { createdAt: "asc" },
+      select: { organization: { select: { id: true, name: true, slug: true } } },
+    });
+    if (!customerLead) redirect("/register?step=profile");
+    return {
+      user: { id: session.userId, name: session.name, email: session.email, image: session.image },
+      organization: customerLead.organization,
+      role: "customer",
+    };
+  }
 
   return {
     user: {
@@ -98,6 +110,26 @@ export const getWorkspaceContext = cache(async () => {
     },
     organization: membership.organization,
     role: membership.role,
+  };
+});
+
+export const getCustomerDashboardData = cache(async (userId: string) => {
+  const [requests, client] = await Promise.all([
+    db.lead.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 20, select: { id: true, company: true, stage: true, value: true, createdAt: true } }),
+    db.client.findFirst({ where: { userId }, select: { projects: { orderBy: { updatedAt: "desc" }, take: 8, select: { id: true, name: true, code: true, status: true, progress: true, budget: true, spent: true, dueDate: true, client: { select: { company: true } } } }, invoices: { orderBy: { createdAt: "desc" }, take: 8, select: { id: true, number: true, status: true, total: true, dueDate: true, client: { select: { company: true } } } } } }),
+  ]);
+  const projects = client?.projects ?? [];
+  const invoices = client?.invoices ?? [];
+  const paidRevenue = invoices.filter((invoice) => invoice.status === "Paid").reduce((sum, invoice) => sum + Number(invoice.total), 0);
+  const receivables = invoices.filter((invoice) => ["Sent", "Overdue"].includes(invoice.status)).reduce((sum, invoice) => sum + Number(invoice.total), 0);
+  return {
+    asOf: new Date().toISOString(),
+    metrics: { weightedPipeline: requests.reduce((sum, request) => sum + Number(request.value), 0), paidRevenue, receivables, grossMargin: 0, activeClients: client ? 1 : 0, activeProjects: projects.filter((project) => !["Complete", "Archived"].includes(project.status)).length },
+    pipelineByStage: requests.map((request) => ({ stage: request.stage, count: 1, value: Number(request.value) })),
+    revenueSeries: [],
+    signals: requests.slice(0, 4).map((request) => ({ title: request.company, message: `Request status: ${request.stage}.`, href: "/app", tone: "neutral" })),
+    projects: projects.map((project) => ({ ...project, budget: Number(project.budget), spent: Number(project.spent), dueDate: project.dueDate?.toISOString() ?? null })),
+    tasks: [],
   };
 });
 

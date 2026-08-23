@@ -83,9 +83,11 @@ function MetricCard({
   );
 }
 
-export function Dashboard({ data, firstName }: { data: DashboardData; firstName: string }) {
+export function Dashboard({ data, firstName, role = "owner", customer = false }: { data: DashboardData; firstName: string; role?: string; customer?: boolean }) {
   const { metrics } = data;
+  const isAdmin = role === "owner" || role === "admin";
   const dateLabel = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "2-digit", month: "long" }).format(new Date(data.asOf));
+  const primaryActionHref = customer ? "/register?new=1" : "/app/leads";
 
   return (
     <div className="admin-page">
@@ -93,19 +95,19 @@ export function Dashboard({ data, firstName }: { data: DashboardData; firstName:
         <div>
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground"><span className="size-1.5 rounded-full bg-emerald-500" />{dateLabel}</div>
           <h1 className="admin-page-title">Welcome back, {firstName}.</h1>
-          <p className="admin-page-description">Here&apos;s the shape of the agency and where your attention has the most leverage.</p>
+          <p className="admin-page-description">{customer ? "Track your requests, active work, and account finance from one secure workspace." : isAdmin ? "Here&apos;s the shape of the agency and where your attention has the most leverage." : "See the work, priorities, and delivery signals that need your attention."}</p>
         </div>
         <div className="admin-actions">
-          <Button nativeButton={false} render={<Link href="/app/calendar" />} variant="outline" className="h-9 bg-white"><CalendarClock className="size-4" /> This week</Button>
-          <Button nativeButton={false} render={<Link href="/app/leads" />} className="h-9"><Plus className="size-4" /> New lead</Button>
+          <Button nativeButton={false} render={<Link href={customer || !isAdmin ? "/app/tasks" : "/app/calendar"} />} variant="outline" className="h-9 bg-white"><CalendarClock className="size-4" /> {customer || !isAdmin ? "My work" : "This week"}</Button>
+          <Button nativeButton={false} render={<Link href={primaryActionHref} />} className="h-9"><Plus className="size-4" /> {customer ? "New request" : "New lead"}</Button>
         </div>
       </div>
 
       <div className="admin-metrics mt-7">
-        <MetricCard label="Weighted pipeline" value={money.format(metrics.weightedPipeline)} detail={`${data.pipelineByStage.reduce((sum, item) => sum + item.count, 0)} open opportunities`} icon={WalletCards} />
-        <MetricCard label="Revenue collected" value={money.format(metrics.paidRevenue)} detail="Paid invoices in the workspace" icon={CircleDollarSign} />
-        <MetricCard label="Gross margin" value={`${metrics.grossMargin.toFixed(1)}%`} detail="Paid revenue less recorded expenses" icon={TrendingUp} />
-        <MetricCard label="Active relationships" value={`${metrics.activeClients}`} detail={`${metrics.activeProjects} projects in flight`} icon={UsersRound} />
+        <MetricCard label={customer ? "Request value" : isAdmin ? "Weighted pipeline" : "Active projects"} value={customer || isAdmin ? money.format(metrics.weightedPipeline) : `${metrics.activeProjects}`} detail={customer ? `${data.pipelineByStage.length} project requests` : isAdmin ? `${data.pipelineByStage.reduce((sum, item) => sum + item.count, 0)} open opportunities` : "Projects currently in flight"} icon={WalletCards} />
+        <MetricCard label={customer ? "Paid with M&W" : isAdmin ? "Revenue collected" : "Open tasks"} value={customer || isAdmin ? money.format(metrics.paidRevenue) : `${data.tasks.length}`} detail={customer || isAdmin ? "Paid invoices in the workspace" : "Priorities assigned to your team"} icon={CircleDollarSign} />
+        <MetricCard label={customer ? "Outstanding" : isAdmin ? "Gross margin" : "Delivery signals"} value={customer ? money.format(metrics.receivables) : isAdmin ? `${metrics.grossMargin.toFixed(1)}%` : `${data.signals.length}`} detail={customer ? "Invoices awaiting payment" : isAdmin ? "Paid revenue less recorded expenses" : "Updates requiring attention"} icon={TrendingUp} />
+        <MetricCard label={customer ? "Active projects" : "Active relationships"} value={`${customer ? metrics.activeProjects : metrics.activeClients}`} detail={customer ? "Projects currently in flight" : `${metrics.activeProjects} projects in flight`} icon={UsersRound} />
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.55fr_0.85fr]">
@@ -121,7 +123,7 @@ export function Dashboard({ data, firstName }: { data: DashboardData; firstName:
             <div className="flex items-center justify-between"><span className="grid size-9 place-items-center rounded-xl bg-accent text-accent-foreground"><BrainCircuit className="size-4" /></span><Badge className="border-0 bg-white/8 text-[9px] uppercase tracking-[0.13em] text-white/50">Live brief</Badge></div>
             <h2 className="mt-6 text-xl font-semibold tracking-[-0.03em]">Three signals worth your attention.</h2>
             <div className="mt-5 space-y-3">{data.signals.map((signal) => <Link key={signal.title} href={signal.href} className="flex gap-3 rounded-xl border border-white/8 bg-white/[0.035] p-3.5 transition hover:bg-white/8"><span className={cn("mt-0.5 grid size-6 shrink-0 place-items-center rounded-lg", signal.tone === "warning" ? "bg-orange-400/12 text-orange-300" : signal.tone === "cash" ? "bg-sky-400/12 text-sky-300" : "bg-accent/15 text-accent")}>{signal.tone === "warning" ? <CircleAlert className="size-3" /> : signal.tone === "cash" ? <CircleDollarSign className="size-3" /> : <Sparkles className="size-3" />}</span><div><p className="text-xs font-semibold">{signal.title}</p><p className="mt-1 text-[11px] leading-5 text-white/45">{signal.message}</p></div></Link>)}</div>
-            <Button nativeButton={false} render={<Link href="/app/ai" />} className="mt-5 h-9 w-full bg-accent text-xs text-accent-foreground hover:bg-accent/90">Open command brief <ArrowRight className="size-3.5" /></Button>
+            <Button nativeButton={false} render={<Link href={customer ? "/register?new=1" : isAdmin ? "/app/ai" : "/app/tasks"} />} className="mt-5 h-9 w-full bg-accent text-xs text-accent-foreground hover:bg-accent/90">{customer ? "Submit another request" : isAdmin ? "Open command brief" : "Open my tasks"} <ArrowRight className="size-3.5" /></Button>
           </div>
         </section>
       </div>
@@ -130,7 +132,7 @@ export function Dashboard({ data, firstName }: { data: DashboardData; firstName:
         <section className="admin-card rounded-2xl">
           <div className="flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-5"><div><h2 className="text-sm font-semibold">Projects in motion</h2><p className="mt-0.5 text-[11px] text-muted-foreground">Budget, progress, and next deadline</p></div><Button nativeButton={false} render={<Link href="/app/projects" />} variant="ghost" className="shrink-0 text-xs">View all <ArrowUpRight className="size-3.5" /></Button></div>
           <div className="divide-y">
-            {data.projects.map((project, index) => {
+            {data.projects.length ? data.projects.map((project, index) => {
               const burn = project.budget ? (project.spent / project.budget) * 100 : 0;
               return (
                 <div key={project.id} className="grid gap-4 px-4 py-4 sm:grid-cols-[1fr_120px_100px] sm:items-center sm:px-5">
@@ -139,16 +141,16 @@ export function Dashboard({ data, firstName }: { data: DashboardData; firstName:
                   <div className="text-left sm:text-right"><p className={cn("text-xs font-semibold", burn > 85 && "text-orange-700")}>{burn.toFixed(0)}% burn</p><p className="mt-1 text-[10px] text-muted-foreground">{money.format(project.spent)} spent</p></div>
                 </div>
               );
-            })}
+            }) : <div className="p-6 text-sm font-medium text-muted-foreground">No active projects yet. Your project work will appear here as soon as an engagement begins.</div>}
           </div>
         </section>
 
         <section className="admin-card rounded-2xl">
           <div className="flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-5"><div><h2 className="text-sm font-semibold">Today&apos;s focus</h2><p className="mt-0.5 text-[11px] text-muted-foreground">Open commitments across your team</p></div><Button nativeButton={false} render={<Link href="/app/tasks" />} variant="ghost" className="shrink-0 text-xs">All tasks <ArrowUpRight className="size-3.5" /></Button></div>
           <div className="divide-y px-4 sm:px-5">
-            {data.tasks.map((task) => (
+            {data.tasks.length ? data.tasks.map((task) => (
               <Link href="/app/tasks" key={task.id} className="flex items-start gap-3 py-3.5"><span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full border"><Check className="size-3 text-muted-foreground" /></span><div className="min-w-0 flex-1"><p className="truncate text-xs font-medium">{task.title}</p><div className="mt-1.5 flex items-center gap-2 text-[10px] text-muted-foreground"><span>{task.project?.code ?? "OPS"}</span><span>·</span><span>{task.status}</span></div></div><span className={cn("rounded-full px-2 py-1 text-[9px] font-semibold", task.priority === "High" || task.priority === "Urgent" ? "bg-red-50 text-red-700" : task.priority === "Medium" ? "bg-orange-50 text-orange-700" : "bg-muted text-muted-foreground")}>{task.priority}</span></Link>
-            ))}
+            )) : <div className="p-6 text-sm font-medium text-muted-foreground">No open tasks right now. You&apos;re all caught up.</div>}
           </div>
         </section>
       </div>

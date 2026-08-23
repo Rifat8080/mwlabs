@@ -3234,6 +3234,7 @@ export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof Lead
 export const ClientScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  userId: 'userId',
   name: 'name',
   company: 'company',
   email: 'email',
@@ -3878,6 +3879,7 @@ export type LeadOrderByRelevanceFieldEnum = (typeof LeadOrderByRelevanceFieldEnu
 export const ClientOrderByRelevanceFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  userId: 'userId',
   name: 'name',
   company: 'company',
   email: 'email',

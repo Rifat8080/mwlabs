@@ -14,6 +14,7 @@ const registrationProfileSchema = z.object({
   projectBrief: z.string().trim().min(10).max(4_000),
   website: z.string().max(0).optional().default(""),
   formStartedAt: z.string().optional(),
+  newRequest: z.boolean().optional().default(false),
 });
 
 export async function POST(request: Request) {
@@ -71,6 +72,7 @@ export async function POST(request: Request) {
     serviceInterest: parsed.data.serviceInterest,
     budgetRange: parsed.data.budgetRange,
     projectBrief: parsed.data.projectBrief,
+    newRequest: parsed.data.newRequest,
     ipAddress:
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
       request.headers.get("x-real-ip"),

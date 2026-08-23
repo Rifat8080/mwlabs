@@ -147,16 +147,33 @@ type ReceptionMessage = { role: "assistant" | "user"; text: string };
 export function MarketingReception() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [pending, setPending] = useState(false);
   const [messages, setMessages] = useState<ReceptionMessage[]>([
     { role: "assistant", text: "Hi, this is M&W Labs. What are you looking to build or grow today?" },
   ]);
 
-  function submit(event: React.FormEvent<HTMLFormElement>) {
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = input.trim();
-    if (!value) return;
-    setMessages((current) => [...current, { role: "user", text: value }, { role: "assistant", text: "Thanks—your idea sounds like a good fit for a strategy conversation. Use the project enquiry form and the team will respond with a focused next step." }]);
+    if (!value || pending) return;
+    const nextMessages = [...messages, { role: "user" as const, text: value }];
+    setMessages(nextMessages);
     setInput("");
+    setPending(true);
+    try {
+      const response = await fetch("/api/ai/reception", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: value, history: messages.slice(-8) }),
+      });
+      const result = await response.json().catch(() => null) as { answer?: string; error?: string } | null;
+      if (!response.ok) throw new Error(result?.error ?? "Reception is temporarily unavailable.");
+      setMessages([...nextMessages, { role: "assistant", text: result?.answer ?? "Please use the enquiry form and the team will help with the next step." }]);
+    } catch (error) {
+      setMessages([...nextMessages, { role: "assistant", text: error instanceof Error ? error.message : "Please use the enquiry form and the team will help with the next step." }]);
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -171,7 +188,7 @@ export function MarketingReception() {
             {messages.map((message, index) => <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}><div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm font-semibold leading-6 ${message.role === "user" ? "bg-blue-600 text-white" : "border border-blue-100 bg-white text-slate-700"}`}>{message.text}</div></div>)}
           </div>
           <form onSubmit={submit} className="border-t border-blue-100 bg-white p-3">
-            <div className="flex items-end gap-2"><textarea value={input} onChange={(event) => setInput(event.target.value)} rows={2} placeholder="Type your message…" className="min-h-12 flex-1 resize-none rounded-xl border border-blue-100 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-50" /><button type="submit" className="grid size-12 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700" aria-label="Send message"><Send className="size-4" /></button></div>
+            <div className="flex items-end gap-2"><textarea value={input} onChange={(event) => setInput(event.target.value)} rows={2} disabled={pending} placeholder={pending ? "Reception is thinking…" : "Type your message…"} className="min-h-12 flex-1 resize-none rounded-xl border border-blue-100 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-50 disabled:opacity-60" /><button type="submit" disabled={pending || !input.trim()} className="grid size-12 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50" aria-label="Send message">{pending ? <LoaderCircle className="size-4 animate-spin" /> : <Send className="size-4" />}</button></div>
           </form>
         </section>
       )}

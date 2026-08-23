@@ -4,8 +4,9 @@ import { db } from "@/lib/db";
 
 export async function promoteUserToStaff(userId: string) {
   await db.$transaction(async (tx) => {
-    const registrationLead = await tx.lead.findUnique({
+    const registrationLead = await tx.lead.findFirst({
       where: { userId },
+      orderBy: { createdAt: "asc" },
       select: { id: true, source: true },
     });
 

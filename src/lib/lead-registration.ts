@@ -13,6 +13,7 @@ export type LeadRegistrationProfile = {
   budgetRange?: string | null;
   projectBrief?: string | null;
   ipAddress?: string | null;
+  newRequest?: boolean;
 };
 
 function clean(value?: string | null) {
@@ -40,8 +41,9 @@ export async function registerLeadProfile(profile: LeadRegistrationProfile) {
   const email = profile.email.trim().toLowerCase();
   const company = clean(profile.company) ?? "Individual enquiry";
   const phone = clean(profile.phone);
-  const existingByUser = await db.lead.findUnique({
+  const existingByUser = profile.newRequest ? null : await db.lead.findFirst({
     where: { userId: profile.userId },
+    orderBy: { createdAt: "asc" },
     select: { id: true },
   });
   const existingByEmail = existingByUser
@@ -153,7 +155,7 @@ export async function registerLeadProfile(profile: LeadRegistrationProfile) {
       title: "Your M&W Labs project profile is ready",
       message: "Your project details are securely connected to our CRM. You can follow progress and book or manage discovery meetings from your client portal.",
       actionLabel: "Open your secure portal",
-      actionUrl: "/portal",
+      actionUrl: "/app",
       idempotencyKey: `lead-registration-${lead.id}`,
     });
   }

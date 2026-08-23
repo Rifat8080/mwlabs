@@ -11,10 +11,10 @@ export default async function AuthContinuePage() {
 
   const [membership, lead] = await Promise.all([
     db.member.findFirst({ where: { userId: session.user.id }, select: { id: true } }),
-    db.lead.findUnique({ where: { userId: session.user.id }, select: { id: true } }),
+    db.lead.findFirst({ where: { userId: session.user.id }, select: { id: true } }),
   ]);
 
   if (membership) redirect("/app");
-  if (lead) redirect("/portal");
+  if (lead) redirect("/app");
   redirect("/register?step=profile");
 }

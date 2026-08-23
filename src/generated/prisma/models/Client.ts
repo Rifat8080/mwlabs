@@ -41,6 +41,7 @@ export type ClientSumAggregateOutputType = {
 export type ClientMinAggregateOutputType = {
   id: string | null
   organizationId: string | null
+  userId: string | null
   name: string | null
   company: string | null
   email: string | null
@@ -56,6 +57,7 @@ export type ClientMinAggregateOutputType = {
 export type ClientMaxAggregateOutputType = {
   id: string | null
   organizationId: string | null
+  userId: string | null
   name: string | null
   company: string | null
   email: string | null
@@ -71,6 +73,7 @@ export type ClientMaxAggregateOutputType = {
 export type ClientCountAggregateOutputType = {
   id: number
   organizationId: number
+  userId: number
   name: number
   company: number
   email: number
@@ -100,6 +103,7 @@ export type ClientSumAggregateInputType = {
 export type ClientMinAggregateInputType = {
   id?: true
   organizationId?: true
+  userId?: true
   name?: true
   company?: true
   email?: true
@@ -115,6 +119,7 @@ export type ClientMinAggregateInputType = {
 export type ClientMaxAggregateInputType = {
   id?: true
   organizationId?: true
+  userId?: true
   name?: true
   company?: true
   email?: true
@@ -130,6 +135,7 @@ export type ClientMaxAggregateInputType = {
 export type ClientCountAggregateInputType = {
   id?: true
   organizationId?: true
+  userId?: true
   name?: true
   company?: true
   email?: true
@@ -232,6 +238,7 @@ export type ClientGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ClientGroupByOutputType = {
   id: string
   organizationId: string
+  userId: string | null
   name: string
   company: string
   email: string
@@ -270,6 +277,7 @@ export type ClientWhereInput = {
   NOT?: Prisma.ClientWhereInput | Prisma.ClientWhereInput[]
   id?: Prisma.StringFilter<"Client"> | string
   organizationId?: Prisma.StringFilter<"Client"> | string
+  userId?: Prisma.StringNullableFilter<"Client"> | string | null
   name?: Prisma.StringFilter<"Client"> | string
   company?: Prisma.StringFilter<"Client"> | string
   email?: Prisma.StringFilter<"Client"> | string
@@ -281,6 +289,7 @@ export type ClientWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   proposals?: Prisma.ProposalListRelationFilter
   contracts?: Prisma.ContractListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
@@ -292,6 +301,7 @@ export type ClientWhereInput = {
 export type ClientOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   company?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -303,6 +313,7 @@ export type ClientOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
   proposals?: Prisma.ProposalOrderByRelationAggregateInput
   contracts?: Prisma.ContractOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
@@ -314,6 +325,7 @@ export type ClientOrderByWithRelationInput = {
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId?: string
   AND?: Prisma.ClientWhereInput | Prisma.ClientWhereInput[]
   OR?: Prisma.ClientWhereInput[]
   NOT?: Prisma.ClientWhereInput | Prisma.ClientWhereInput[]
@@ -329,17 +341,19 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   proposals?: Prisma.ProposalListRelationFilter
   contracts?: Prisma.ContractListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   retainers?: Prisma.RetainerListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
-}, "id">
+}, "id" | "userId">
 
 export type ClientOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   company?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -363,6 +377,7 @@ export type ClientScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ClientScalarWhereWithAggregatesInput | Prisma.ClientScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Client"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  userId?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Client"> | string
   company?: Prisma.StringWithAggregatesFilter<"Client"> | string
   email?: Prisma.StringWithAggregatesFilter<"Client"> | string
@@ -388,6 +403,7 @@ export type ClientCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
@@ -399,6 +415,7 @@ export type ClientCreateInput = {
 export type ClientUncheckedCreateInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -430,6 +447,7 @@ export type ClientUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
@@ -441,6 +459,7 @@ export type ClientUpdateInput = {
 export type ClientUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -462,6 +481,7 @@ export type ClientUncheckedUpdateInput = {
 export type ClientCreateManyInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -491,6 +511,7 @@ export type ClientUpdateManyMutationInput = {
 export type ClientUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -522,6 +543,7 @@ export type ClientOrderByRelevanceInput = {
 export type ClientCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   company?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -543,6 +565,7 @@ export type ClientAvgOrderByAggregateInput = {
 export type ClientMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   company?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -558,6 +581,7 @@ export type ClientMaxOrderByAggregateInput = {
 export type ClientMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   company?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -584,6 +608,48 @@ export type ClientNullableScalarRelationFilter = {
 export type ClientScalarRelationFilter = {
   is?: Prisma.ClientWhereInput
   isNot?: Prisma.ClientWhereInput
+}
+
+export type ClientCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutUserInput, Prisma.ClientUncheckedCreateWithoutUserInput> | Prisma.ClientCreateWithoutUserInput[] | Prisma.ClientUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutUserInput | Prisma.ClientCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ClientCreateManyUserInputEnvelope
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+}
+
+export type ClientUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutUserInput, Prisma.ClientUncheckedCreateWithoutUserInput> | Prisma.ClientCreateWithoutUserInput[] | Prisma.ClientUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutUserInput | Prisma.ClientCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ClientCreateManyUserInputEnvelope
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+}
+
+export type ClientUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutUserInput, Prisma.ClientUncheckedCreateWithoutUserInput> | Prisma.ClientCreateWithoutUserInput[] | Prisma.ClientUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutUserInput | Prisma.ClientCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ClientUpsertWithWhereUniqueWithoutUserInput | Prisma.ClientUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ClientCreateManyUserInputEnvelope
+  set?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  disconnect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  delete?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  update?: Prisma.ClientUpdateWithWhereUniqueWithoutUserInput | Prisma.ClientUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ClientUpdateManyWithWhereWithoutUserInput | Prisma.ClientUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+}
+
+export type ClientUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutUserInput, Prisma.ClientUncheckedCreateWithoutUserInput> | Prisma.ClientCreateWithoutUserInput[] | Prisma.ClientUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutUserInput | Prisma.ClientCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ClientUpsertWithWhereUniqueWithoutUserInput | Prisma.ClientUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ClientCreateManyUserInputEnvelope
+  set?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  disconnect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  delete?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  update?: Prisma.ClientUpdateWithWhereUniqueWithoutUserInput | Prisma.ClientUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ClientUpdateManyWithWhereWithoutUserInput | Prisma.ClientUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
 }
 
 export type ClientCreateNestedManyWithoutOrganizationInput = {
@@ -716,6 +782,93 @@ export type ClientUpdateOneWithoutDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutDocumentsInput, Prisma.ClientUpdateWithoutDocumentsInput>, Prisma.ClientUncheckedUpdateWithoutDocumentsInput>
 }
 
+export type ClientCreateWithoutUserInput = {
+  id?: string
+  name: string
+  company: string
+  email: string
+  phone?: string | null
+  status?: string
+  healthScore?: number
+  lifetimeValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
+  retainers?: Prisma.RetainerCreateNestedManyWithoutClientInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutUserInput = {
+  id?: string
+  organizationId: string
+  name: string
+  company: string
+  email: string
+  phone?: string | null
+  status?: string
+  healthScore?: number
+  lifetimeValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutClientInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
+  retainers?: Prisma.RetainerUncheckedCreateNestedManyWithoutClientInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutUserInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutUserInput, Prisma.ClientUncheckedCreateWithoutUserInput>
+}
+
+export type ClientCreateManyUserInputEnvelope = {
+  data: Prisma.ClientCreateManyUserInput | Prisma.ClientCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type ClientUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.ClientWhereUniqueInput
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutUserInput, Prisma.ClientUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutUserInput, Prisma.ClientUncheckedCreateWithoutUserInput>
+}
+
+export type ClientUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.ClientWhereUniqueInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutUserInput, Prisma.ClientUncheckedUpdateWithoutUserInput>
+}
+
+export type ClientUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.ClientScalarWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateManyMutationInput, Prisma.ClientUncheckedUpdateManyWithoutUserInput>
+}
+
+export type ClientScalarWhereInput = {
+  AND?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+  OR?: Prisma.ClientScalarWhereInput[]
+  NOT?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+  id?: Prisma.StringFilter<"Client"> | string
+  organizationId?: Prisma.StringFilter<"Client"> | string
+  userId?: Prisma.StringNullableFilter<"Client"> | string | null
+  name?: Prisma.StringFilter<"Client"> | string
+  company?: Prisma.StringFilter<"Client"> | string
+  email?: Prisma.StringFilter<"Client"> | string
+  phone?: Prisma.StringNullableFilter<"Client"> | string | null
+  status?: Prisma.StringFilter<"Client"> | string
+  healthScore?: Prisma.IntFilter<"Client"> | number
+  lifetimeValue?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: Prisma.IntFilter<"Client"> | number
+  createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
+}
+
 export type ClientCreateWithoutOrganizationInput = {
   id?: string
   name: string
@@ -728,6 +881,7 @@ export type ClientCreateWithoutOrganizationInput = {
   onboardingProgress?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
@@ -738,6 +892,7 @@ export type ClientCreateWithoutOrganizationInput = {
 
 export type ClientUncheckedCreateWithoutOrganizationInput = {
   id?: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -782,24 +937,6 @@ export type ClientUpdateManyWithWhereWithoutOrganizationInput = {
   data: Prisma.XOR<Prisma.ClientUpdateManyMutationInput, Prisma.ClientUncheckedUpdateManyWithoutOrganizationInput>
 }
 
-export type ClientScalarWhereInput = {
-  AND?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
-  OR?: Prisma.ClientScalarWhereInput[]
-  NOT?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
-  id?: Prisma.StringFilter<"Client"> | string
-  organizationId?: Prisma.StringFilter<"Client"> | string
-  name?: Prisma.StringFilter<"Client"> | string
-  company?: Prisma.StringFilter<"Client"> | string
-  email?: Prisma.StringFilter<"Client"> | string
-  phone?: Prisma.StringNullableFilter<"Client"> | string | null
-  status?: Prisma.StringFilter<"Client"> | string
-  healthScore?: Prisma.IntFilter<"Client"> | number
-  lifetimeValue?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  onboardingProgress?: Prisma.IntFilter<"Client"> | number
-  createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
-}
-
 export type ClientCreateWithoutProposalsInput = {
   id?: string
   name: string
@@ -813,6 +950,7 @@ export type ClientCreateWithoutProposalsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
@@ -823,6 +961,7 @@ export type ClientCreateWithoutProposalsInput = {
 export type ClientUncheckedCreateWithoutProposalsInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -869,6 +1008,7 @@ export type ClientUpdateWithoutProposalsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
@@ -879,6 +1019,7 @@ export type ClientUpdateWithoutProposalsInput = {
 export type ClientUncheckedUpdateWithoutProposalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -909,6 +1050,7 @@ export type ClientCreateWithoutContractsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
@@ -919,6 +1061,7 @@ export type ClientCreateWithoutContractsInput = {
 export type ClientUncheckedCreateWithoutContractsInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -965,6 +1108,7 @@ export type ClientUpdateWithoutContractsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
@@ -975,6 +1119,7 @@ export type ClientUpdateWithoutContractsInput = {
 export type ClientUncheckedUpdateWithoutContractsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1005,6 +1150,7 @@ export type ClientCreateWithoutProjectsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
@@ -1015,6 +1161,7 @@ export type ClientCreateWithoutProjectsInput = {
 export type ClientUncheckedCreateWithoutProjectsInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -1061,6 +1208,7 @@ export type ClientUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
@@ -1071,6 +1219,7 @@ export type ClientUpdateWithoutProjectsInput = {
 export type ClientUncheckedUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1101,6 +1250,7 @@ export type ClientCreateWithoutInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
@@ -1111,6 +1261,7 @@ export type ClientCreateWithoutInvoicesInput = {
 export type ClientUncheckedCreateWithoutInvoicesInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -1157,6 +1308,7 @@ export type ClientUpdateWithoutInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
@@ -1167,6 +1319,7 @@ export type ClientUpdateWithoutInvoicesInput = {
 export type ClientUncheckedUpdateWithoutInvoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1197,6 +1350,7 @@ export type ClientCreateWithoutRetainersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
@@ -1207,6 +1361,7 @@ export type ClientCreateWithoutRetainersInput = {
 export type ClientUncheckedCreateWithoutRetainersInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -1253,6 +1408,7 @@ export type ClientUpdateWithoutRetainersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
@@ -1263,6 +1419,7 @@ export type ClientUpdateWithoutRetainersInput = {
 export type ClientUncheckedUpdateWithoutRetainersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1293,6 +1450,7 @@ export type ClientCreateWithoutDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutClientsInput
+  user?: Prisma.UserCreateNestedOneWithoutClientsInput
   proposals?: Prisma.ProposalCreateNestedManyWithoutClientInput
   contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
@@ -1303,6 +1461,7 @@ export type ClientCreateWithoutDocumentsInput = {
 export type ClientUncheckedCreateWithoutDocumentsInput = {
   id?: string
   organizationId: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -1349,6 +1508,7 @@ export type ClientUpdateWithoutDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
@@ -1359,6 +1519,7 @@ export type ClientUpdateWithoutDocumentsInput = {
 export type ClientUncheckedUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1376,8 +1537,81 @@ export type ClientUncheckedUpdateWithoutDocumentsInput = {
   retainers?: Prisma.RetainerUncheckedUpdateManyWithoutClientNestedInput
 }
 
+export type ClientCreateManyUserInput = {
+  id?: string
+  organizationId: string
+  name: string
+  company: string
+  email: string
+  phone?: string | null
+  status?: string
+  healthScore?: number
+  lifetimeValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ClientUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  healthScore?: Prisma.IntFieldUpdateOperationsInput | number
+  lifetimeValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutClientsNestedInput
+  proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
+  retainers?: Prisma.RetainerUpdateManyWithoutClientNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  healthScore?: Prisma.IntFieldUpdateOperationsInput | number
+  lifetimeValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutClientNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  retainers?: Prisma.RetainerUncheckedUpdateManyWithoutClientNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  healthScore?: Prisma.IntFieldUpdateOperationsInput | number
+  lifetimeValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  onboardingProgress?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ClientCreateManyOrganizationInput = {
   id?: string
+  userId?: string | null
   name: string
   company: string
   email: string
@@ -1402,6 +1636,7 @@ export type ClientUpdateWithoutOrganizationInput = {
   onboardingProgress?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutClientsNestedInput
   proposals?: Prisma.ProposalUpdateManyWithoutClientNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
@@ -1412,6 +1647,7 @@ export type ClientUpdateWithoutOrganizationInput = {
 
 export type ClientUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1432,6 +1668,7 @@ export type ClientUncheckedUpdateWithoutOrganizationInput = {
 
 export type ClientUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   company?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1523,6 +1760,7 @@ export type ClientCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Type
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
+  userId?: boolean
   name?: boolean
   company?: boolean
   email?: boolean
@@ -1534,6 +1772,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Client$userArgs<ExtArgs>
   proposals?: boolean | Prisma.Client$proposalsArgs<ExtArgs>
   contracts?: boolean | Prisma.Client$contractsArgs<ExtArgs>
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
@@ -1548,6 +1787,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type ClientSelectScalar = {
   id?: boolean
   organizationId?: boolean
+  userId?: boolean
   name?: boolean
   company?: boolean
   email?: boolean
@@ -1560,9 +1800,10 @@ export type ClientSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "name" | "company" | "email" | "phone" | "status" | "healthScore" | "lifetimeValue" | "onboardingProgress" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "name" | "company" | "email" | "phone" | "status" | "healthScore" | "lifetimeValue" | "onboardingProgress" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Client$userArgs<ExtArgs>
   proposals?: boolean | Prisma.Client$proposalsArgs<ExtArgs>
   contracts?: boolean | Prisma.Client$contractsArgs<ExtArgs>
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
@@ -1576,6 +1817,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Client"
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs> | null
     proposals: Prisma.$ProposalPayload<ExtArgs>[]
     contracts: Prisma.$ContractPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
@@ -1586,6 +1828,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     organizationId: string
+    userId: string | null
     name: string
     company: string
     email: string
@@ -1937,6 +2180,7 @@ readonly fields: ClientFieldRefs;
 export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.Client$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   proposals<T extends Prisma.Client$proposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$proposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contracts<T extends Prisma.Client$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Client$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1974,6 +2218,7 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
 export interface ClientFieldRefs {
   readonly id: Prisma.FieldRef<"Client", 'String'>
   readonly organizationId: Prisma.FieldRef<"Client", 'String'>
+  readonly userId: Prisma.FieldRef<"Client", 'String'>
   readonly name: Prisma.FieldRef<"Client", 'String'>
   readonly company: Prisma.FieldRef<"Client", 'String'>
   readonly email: Prisma.FieldRef<"Client", 'String'>
@@ -2329,6 +2574,25 @@ export type ClientDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Clients to delete.
    */
   limit?: number
+}
+
+/**
+ * Client.user
+ */
+export type Client$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

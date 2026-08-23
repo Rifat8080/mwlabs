@@ -15,6 +15,7 @@ const memberModules = new Set([
 ]);
 
 export function canAccessModule(role: WorkspaceRole, module: string) {
+  if (role === "customer") return module === "overview";
   if (role === "owner" || role === "admin") return true;
   return memberModules.has(module);
 }

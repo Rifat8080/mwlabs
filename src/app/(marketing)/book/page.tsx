@@ -25,7 +25,7 @@ export default async function BookDiscoveryPage({ searchParams }: PageProps<"/bo
         select: { name: true, email: true, phone: true, company: true },
       })
     : session?.user?.id
-      ? await db.lead.findUnique({
+      ? await db.lead.findFirst({
           where: { userId: session.user.id },
           select: { name: true, email: true, phone: true, company: true },
         })

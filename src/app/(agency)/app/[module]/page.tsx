@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: PageProps<"/app/[module]">): 
 
 export default async function ModulePage({ params }: PageProps<"/app/[module]">) {
   const { module } = await params;
-  if (!agencyModules.includes(module) || module === "ai") notFound();
   const workspace = await getWorkspaceContext();
+  if (!agencyModules.includes(module) || module === "ai") notFound();
   if (!canAccessModule(workspace.role, module)) redirect("/app");
   const config = moduleConfigs[module];
   if (!config) notFound();

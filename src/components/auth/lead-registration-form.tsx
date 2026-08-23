@@ -58,12 +58,14 @@ type LeadRegistrationFormProps = {
   profileOnly?: boolean;
   defaults?: RegistrationDefaults;
   workspaceReady: boolean;
+  newRequest?: boolean;
 };
 
 export function LeadRegistrationForm({
   profileOnly = false,
   defaults = {},
   workspaceReady,
+  newRequest = false,
 }: LeadRegistrationFormProps) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -137,7 +139,7 @@ export function LeadRegistrationForm({
       const response = await fetch("/api/registrations/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...profile, website: String(form.get("website") ?? ""), formStartedAt }),
+        body: JSON.stringify({ ...profile, website: String(form.get("website") ?? ""), formStartedAt, newRequest }),
       });
       const payload = (await response.json().catch(() => null)) as
         | { error?: string }
@@ -149,7 +151,7 @@ export function LeadRegistrationForm({
       toast.success(profileOnly ? "Your project profile is complete" : "Registration complete", {
         description: "Your project is in the workflow; you can book discovery from the portal.",
       });
-      router.push("/portal");
+      router.push("/app");
       router.refresh();
     } catch (error) {
       toast.error("Could not complete registration", {
@@ -325,7 +327,7 @@ export function LeadRegistrationForm({
             {!profileOnly && (
               <p className="text-center text-sm font-semibold text-slate-500">
                 Already registered?{" "}
-                <Link href="/sign-in?next=/portal" className="font-black text-blue-700 underline decoration-blue-200 underline-offset-4">Sign in to your project</Link>
+                <Link href="/sign-in?next=/app" className="font-black text-blue-700 underline decoration-blue-200 underline-offset-4">Sign in to your workspace</Link>
               </p>
             )}
           </form>
