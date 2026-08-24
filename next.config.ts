@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   distDir: process.env.MWLABS_VERIFY_DIST_DIR ?? ".next",
   poweredByHeader: false,
   outputFileTracingRoot: process.cwd(),
+  // Limit the number of parallel workers compiling pages to prevent database connection exhaustion
+  experimental: {
+    cpus: 4,
+  },
   turbopack: {
     root: process.cwd(),
   },
