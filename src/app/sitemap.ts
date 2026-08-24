@@ -6,7 +6,7 @@ import { getSitemapContent, getSitemapCounts, siteUrl } from "@/lib/public-conte
 export const dynamic = "force-dynamic";
 
 const sitemapSize = 45_000;
-const recoverablePrismaCodes = new Set(["P1001", "P2021", "P2022"]);
+const recoverablePrismaCodes = new Set(["P1001", "P1003", "P2021", "P2022"]);
 const staticRoutes = [
   { pathname: "/", changeFrequency: "weekly", priority: 1 },
   { pathname: "/blog", changeFrequency: "weekly", priority: 0.8 },

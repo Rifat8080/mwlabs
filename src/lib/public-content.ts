@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import type { Metadata } from "next";
 
+import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 
 export const siteUrl = new URL(
@@ -12,6 +13,7 @@ export const siteUrl = new URL(
 );
 
 const publishedAtOrBeforeNow = () => ({ status: "Published", publishedAt: { lte: new Date() } });
+const recoverablePrismaCodes = new Set(["P1001", "P1003", "P2021", "P2022"]);
 
 function absoluteUrl(value: string) {
   return new URL(value, siteUrl).toString();
@@ -19,6 +21,37 @@ function absoluteUrl(value: string) {
 
 function descriptionFallback(value: string) {
   return value.replace(/\s+/g, " ").trim().slice(0, 160);
+}
+
+function isRecoverableContentError(error: unknown) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError && recoverablePrismaCodes.has(error.code)) return true;
+  if (error instanceof Prisma.PrismaClientInitializationError) return true;
+
+  const code = typeof error === "object" && error !== null && "code" in error ? error.code : undefined;
+  if (typeof code === "string" && recoverablePrismaCodes.has(code)) return true;
+
+  const message = error instanceof Error ? error.message : String(error);
+  return /TableDoesNotExist|Can't reach database server|ECONNREFUSED|pool timeout|failed to retrieve a connection/.test(message);
+}
+
+function warnContentFallback(scope: string, error: unknown) {
+  const code = typeof error === "object" && error !== null && "code" in error ? error.code : undefined;
+  const label = error instanceof Error ? error.name : "Unknown error";
+  const detail = typeof code === "string" ? `${label} ${code}` : label;
+
+  console.warn(
+    `Public content is unavailable for ${scope}; returning fallback content. Run npm run db:push or npx prisma migrate deploy against the production database. (${detail})`,
+  );
+}
+
+async function withContentFallback<T>(scope: string, query: () => Promise<T>, fallback: T) {
+  try {
+    return await query();
+  } catch (error) {
+    if (!isRecoverableContentError(error)) throw error;
+    warnContentFallback(scope, error);
+    return fallback;
+  }
 }
 
 type SeoRecord = {
@@ -65,118 +98,126 @@ export function createContentMetadata(
 }
 
 export async function getHomepageContent() {
-  const where = publishedAtOrBeforeNow();
-  const [blogPosts, workPosts] = await Promise.all([
-    db.blogPost.findMany({
-      where,
-      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
-      take: 3,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        coverImage: true,
-        category: true,
-        authorName: true,
-        featured: true,
-        publishedAt: true,
-      },
-    }),
-    db.workPost.findMany({
-      where,
-      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
-      take: 2,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        clientName: true,
-        industry: true,
-        summary: true,
-        coverImage: true,
-        featured: true,
-      },
-    }),
-  ]);
+  return withContentFallback("homepage", async () => {
+    const where = publishedAtOrBeforeNow();
+    const [blogPosts, workPosts] = await Promise.all([
+      db.blogPost.findMany({
+        where,
+        orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+        take: 3,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          coverImage: true,
+          category: true,
+          authorName: true,
+          featured: true,
+          publishedAt: true,
+        },
+      }),
+      db.workPost.findMany({
+        where,
+        orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+        take: 2,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          clientName: true,
+          industry: true,
+          summary: true,
+          coverImage: true,
+          featured: true,
+        },
+      }),
+    ]);
 
-  return { blogPosts, workPosts };
+    return { blogPosts, workPosts };
+  }, { blogPosts: [], workPosts: [] });
 }
 
 export async function getPublishedBlogPosts(page = 1, pageSize = 18) {
-  const where = publishedAtOrBeforeNow();
   const limit = Math.min(48, Math.max(6, pageSize));
   const currentPage = Math.max(1, page);
-  const [posts, total] = await Promise.all([
-    db.blogPost.findMany({
-      where,
-      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
-      skip: (currentPage - 1) * limit,
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        coverImage: true,
-        category: true,
-        authorName: true,
-        featured: true,
-        publishedAt: true,
-        updatedAt: true,
-      },
-    }),
-    db.blogPost.count({ where }),
-  ]);
-  return { posts, total, page: currentPage, pages: Math.max(1, Math.ceil(total / limit)) };
+
+  return withContentFallback("blog listing", async () => {
+    const where = publishedAtOrBeforeNow();
+    const [posts, total] = await Promise.all([
+      db.blogPost.findMany({
+        where,
+        orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+        skip: (currentPage - 1) * limit,
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          coverImage: true,
+          category: true,
+          authorName: true,
+          featured: true,
+          publishedAt: true,
+          updatedAt: true,
+        },
+      }),
+      db.blogPost.count({ where }),
+    ]);
+    return { posts, total, page: currentPage, pages: Math.max(1, Math.ceil(total / limit)) };
+  }, { posts: [], total: 0, page: currentPage, pages: 1 });
 }
 
 export const getPublishedBlogPost = cache(async (slug: string) => {
-  return db.blogPost.findFirst({
+  return withContentFallback(`blog post ${slug}`, () => db.blogPost.findFirst({
     where: { slug, ...publishedAtOrBeforeNow() },
-  });
+  }), null);
 });
 
 export async function getPublishedWorkPosts(page = 1, pageSize = 12) {
-  const where = publishedAtOrBeforeNow();
   const limit = Math.min(36, Math.max(4, pageSize));
   const currentPage = Math.max(1, page);
-  const [posts, total] = await Promise.all([
-    db.workPost.findMany({
-      where,
-      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
-      skip: (currentPage - 1) * limit,
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        clientName: true,
-        industry: true,
-        services: true,
-        summary: true,
-        coverImage: true,
-        featured: true,
-        completedAt: true,
-        publishedAt: true,
-        updatedAt: true,
-      },
-    }),
-    db.workPost.count({ where }),
-  ]);
-  return { posts, total, page: currentPage, pages: Math.max(1, Math.ceil(total / limit)) };
+
+  return withContentFallback("work listing", async () => {
+    const where = publishedAtOrBeforeNow();
+    const [posts, total] = await Promise.all([
+      db.workPost.findMany({
+        where,
+        orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
+        skip: (currentPage - 1) * limit,
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          clientName: true,
+          industry: true,
+          services: true,
+          summary: true,
+          coverImage: true,
+          featured: true,
+          completedAt: true,
+          publishedAt: true,
+          updatedAt: true,
+        },
+      }),
+      db.workPost.count({ where }),
+    ]);
+    return { posts, total, page: currentPage, pages: Math.max(1, Math.ceil(total / limit)) };
+  }, { posts: [], total: 0, page: currentPage, pages: 1 });
 }
 
 export const getPublishedWorkPost = cache(async (slug: string) => {
-  return db.workPost.findFirst({
+  return withContentFallback(`work post ${slug}`, () => db.workPost.findFirst({
     where: { slug, ...publishedAtOrBeforeNow() },
-  });
+  }), null);
 });
 
 export const getPublishedSeoPage = cache(async (slug: string) => {
-  return db.seoPage.findFirst({
+  return withContentFallback(`SEO page ${slug}`, () => db.seoPage.findFirst({
     where: { slug, ...publishedAtOrBeforeNow() },
-  });
+  }), null);
 });
 
 export async function getSitemapCounts() {
